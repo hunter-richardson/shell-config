@@ -2,9 +2,7 @@
 
 function status_ -d 'explain error code'
   builtin set args $status
-  builtin string match quiet $argv >/dev/null;
-    and builtin set -l verbose 1;
-    or  builtin set -l verbose 0
+  builtin argparse 'q' $argv
   builtin test (builtin count $argv) -gt 0;
     and builtin set args (builtin string match -r '[\d]+' $argv)
   for i in $args
@@ -48,7 +46,7 @@ function status_ -d 'explain error code'
         eval "$_ quiet (math -- $i \% 255)"
     end
   end
-  builtin test $verbose -eq 0;
-    and builtin printf 'See %s%shttps://tldp.org/LDP/abs/html/exitcodes.html%s for additional information.\n' $underline $purple $normal
+  builtin set -q $_flag_q;
+    or builtin printf 'See %s%shttps://tldp.org/LDP/abs/html/exitcodes.html%s for additional information.\n' $underline $purple $normal
   return 0
 end
