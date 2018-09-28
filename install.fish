@@ -20,13 +20,13 @@ for i in bash
 end
 
 if builtin test $perms -eq 0
-  builtin set -l profile ~/.bash_profile
+  builtin set -l profile /etc/bash.bashrc
   command ln -v $(command pwd)/fish/fish.nanorc /usr/share/nano/fish.nanorc
   builtin test $uname = Cygwin;
     or command ln -v $(command pwd)/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang
   end
 else
-  builtin set -l profile /etc/bash.bashrc
+  builtin set -l profile ~/.bash_profile
   builtin printf 'include %s/.config/fish/fish.nanorc' $HOME | tee -a ~/.nanorc
   builtin test $uname = Cygwin;
     or command ln -v $(command pwd)/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang

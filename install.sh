@@ -26,14 +26,15 @@ done
 
 if [ $perms -eq 0 ]
 then
-  profile="~/.bash_profile"
+  profile="/etc/bash.bashrc"
   command ln -v $(command pwd)/fish/fish.nanorc /usr/share/nano/fish.nanorc
   if [ $uname != "Cygwin" ]
   then
     command ln -v $(command pwd)/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang
   fi
 else
-  profile="/etc/bash.bashrc"
+  profile="~/.bash_profile"
+  builtin printf 'include %s/.config/fish/fish.nanorc' $HOME | tee -a ~/.nanorc
   if [ $uname != "Cygwin" ]
   then
     command ln -v $(command pwd)/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang
