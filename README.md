@@ -41,7 +41,7 @@ Then modify `~/.bash_profile` to reference it.
 [ -f "/etc/bash/.profile" ] && ( source "/etc/bash/.profile" )
 [ -f "${HOME}/.config/bash/.profile" ] && ( source "${HOME}/.config/bash/.profile" )
 ```
-- However, some installations of [Cygwin](https://cygwin.com) (probably managed by snarky old-timers) don't include new-and-fancy custom shells like [Fish](https://fishshell.com) -- in which case I must resort to bash instead. To this end, I have
+- However, some installations of [Cygwin](https://cygwin.com) (probably managed by snarky old-timers) don't include new-and-fancy custom shells like [Fish](https://fishshell.com) -- in which case I must resort to `bash` instead. To this end, I have
 translated my `fish` functions and aliases into `bash`. To apply them:
 ```shell
 ln -v /path/to/repo/bash/*.sh $conf/bash/
