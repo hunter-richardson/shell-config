@@ -10,6 +10,7 @@ alias gclone 'cd ~/git-repos; for i in $argv; command git clone --verbose --dept
 alias grep 'command grep --color=auto'
 alias ls 'command ls -AhHl --file-type --time-style="+%a %e %b %Y, %H%M %Z" --color=always --append-exe'
 alias mkdir 'command mkdir -pv'
+alias notepad '"/cygdrive/c/Program Files/Notepad++/notepad++.exe"'
 alias nano 'command nano -AEiSU --tabsize=2 --softwrap'
 alias now 'command date "+%H%M %Z" -d now'
 alias refish 'builtin source ~/.config/fish/config.fish'

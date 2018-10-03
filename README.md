@@ -4,8 +4,8 @@ This is the repository for my shell configuration.
 I've written a few functions and aliases that are helpful for my shell in [fish](fish) and its subdirectories. To apply them:
 ```shell
 su - # if applicable
-uname=$(uname -a | awk 'NF>1{print $NF}')
-[ $uname == "Cygwin" ] && ( perms=$(net sessions >/dev/null 2>&1) ) || ( perms=$(sudo -nv ^/dev/null) )
+cygwin=$(command uname -a | command grep -iq "cygwin")
+[ $cygwin -eq 0 ] && ( perms=$(net sessions >/dev/null 2>&1) ) || ( perms=$(sudo -nv ^/dev/null) )
 [ $perms -eq 0 ] && ( conf="/etc" ) || ( conf="${HOME}/.config" )
 mkdir -p $conf/fish/functions $conf/fish/conf.d
 for i in "fish"
@@ -22,7 +22,7 @@ then
   ln -v /path/to/repo/fish/fish.nanorc /usr/share/nano/fish.nanorc
   [ $uname != "Cygwin" ] && ( ln -v /path/to/repo/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang )
 else
-  ln -v /path/to/repo/fish/fish.nanorc ${HOME}/.config/fish/fish.nanorc
+  ln -v /path/to/repo/fish/fish.nanorc $conf/fish/fish.nanorc
   [ $uname != "Cygwin" ] && ( ln -v /path/to/repo/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang )
 fi
 ```
@@ -38,15 +38,16 @@ ln -fv /path/to/repo/bash/.profile $conf/bash/.profile
 ```
 Then modify `~/.bash_profile` to reference it.
 ```shell
-[ -f "/etc/bash/.profile" ] && ( source "/etc/bash/.profile" )
-[ -f "${HOME}/.config/bash/.profile" ] && ( source "${HOME}/.config/bash/.profile" )
+source "$conf/bash/.profile"
 ```
+... where `$conf` is the location of the configuration.
 - However, some installations of [Cygwin](https://cygwin.com) (probably managed by snarky old-timers) don't include new-and-fancy custom shells like [Fish](https://fishshell.com) -- in which case I must resort to `bash` instead. To this end, I have
 translated my `fish` functions and aliases into `bash`. To apply them:
 ```shell
+mkdir -p $conf/bash
 ln -v /path/to/repo/bash/*.sh $conf/bash/
 ```
-And [.profile](bash/.profile) from earlier will pick them up.
+... and [.profile](bash/.profile) from earlier will pick them up.
 - Quick application of this configuration can be attained by executing the [install.sh](install.sh) script. It assumes admin privileges are used if a system-wide configuration is desired, and the current-working directory is the location of this
 repository. (And, for the sake of completeness, I have translated this into `fish` as well:  [install.fish](install.fish).)
 ```shell
