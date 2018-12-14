@@ -16,10 +16,9 @@ function update -d 'automate software updates from installed SPMs'
 
   function __update_git
     sudo updatedb
-    builtin set -l gits (command dirname (sudo locate -eqr '/my-config'))
-    for i in (ls $gits)
-      git -C $gits/$i config --get remote.origin.url;
-        and sudo git -C $gits/$i pull
+    for i in (command ls -1d (command dirname (sudo locate -eq --limit 1 '/shell-config'))/*)
+      git -C $i config --get remote.origin.url;
+        and sudo git -C $i pull
     end
   end
 
