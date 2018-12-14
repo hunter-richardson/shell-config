@@ -20,9 +20,10 @@ function fish_right_prompt -d 'the right prompt'
     end) (command whoami)
   builtin set -l dwnl (count_files ~/Downloads)
   builtin test -n (string trim $dwnl)
-    and builtin printf ' %s%s📥%s' $bold $green $dwnl
+    and builtin printf ' %s%s📥 %s' $bold $green $dwnl
   builtin set -l trsh (count_files ~/.local/share/Trash)
-    and builtin printf ' %s%s🗑 %s' $bold $red $trsh
+  builtin test -n (string trim $trsh)
+    and builtin printf ' %s%s🗑  %s' $bold $red $trsh
   builtin printf ' %s%s%s%s' $bold $magenta (
     if builtin test (command git rev-parse --is-inside-work=tree ^/dev/null)
       builtin set -l url (command git config --get remote.origin.url | builtin string replace -r -i '^(https?://)?(git::0)?(hunter-richardson@)?' '')
