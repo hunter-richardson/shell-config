@@ -21,8 +21,8 @@ include \
   /etc/fish/export_vars.fish \
   /etc/fish/a*s.fish \
   /etc/fish/conf.d/completions/*.fish \
-  /etc/fish/conf.d/functions/*.fish \
-  /etc/fish/conf.d/functions/fundle/*.fish
+  /etc/fish/conf.d/functions/*.fish
+#  /etc/fish/conf.d/functions/fundle/*.fish
 
 builtin test -e "~/Downloads/*";
   and command srm -lrvz ~/Downloads/*
