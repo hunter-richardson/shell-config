@@ -25,6 +25,8 @@ builtin set -g rcolors (builtin set_color -r)
 builtin set -g normal (builtin set_color normal)
 builtin set -g EDITOR /bin/nano
 builtin set -g BROWSER /usr/bin/w3m
+builtin set -g DISPLAY :0.0
+builtin set -g XDG_RUNTIME_DIR $HOME/xdg
 builtin set -g SHELL /usr/bin/fish
 builtin set -g LANG en_US.utf8
 builtin set -g PYTHONIOENCODING 'utf-8'

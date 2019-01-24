@@ -10,7 +10,7 @@ function update -d 'automate software updates from installed SPMs'
   function __update_pip
     for i in (command pip3 list --format=freeze | cut -d= -f1)
       builtin printf '%s\n' (command whereis $i | command cut -d' ' -f2);
-        command pip3 install $i -U -vvv
+        command pip3 install --trusted-host pypi.org --trusted-host files.pythonhosted.org $i -U -vvv
     end
   end
 
