@@ -1,4 +1,4 @@
-﻿#!/bin/fish
+#!/bin/fish
 
 function fish_prompt -d 'the left prompt'
   builtin set -l last_status $status

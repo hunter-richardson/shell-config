@@ -2,7 +2,7 @@
 
 function update -d 'automate software updates from installed SPMs'
   function __update_git
-    for i in /home/RichardsonHR/git-repos/*
+    for i in ~(command whoami)/git-repos/*
           command git -C $i config --get remote.origin.url;
       and command git -C $i pull
     end
