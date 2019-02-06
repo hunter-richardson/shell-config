@@ -6,7 +6,7 @@ function dtrx --description 'alias to GITHUB/moonpyk:dtrx'
   builtin set repo (builtin status filename)
   builtin test -z "$repo";
     and builtin printf 'An error occured while attempting to determine the script directory.\n';
-    and builtin set -e perms uname repo conf;
+    and builtin set -e repo;
     and builtin return 1
   while builtin test -f $repo -o -L $repo;
     builtin set repo (builtin test -L $repo;
