@@ -14,20 +14,15 @@
 #   ...
 # end
 
-
-source /etc/fish/conf.d/functions/include.fish
+set --local MY_DIR (realpath (command dirname (builtin status filename)))
+source $MY_DIR/conf.d/functions/include.fish
 
 include \
-  /etc/fish/export_vars.fish \
-  /etc/fish/a*s.fish \
-  /etc/fish/conf.d/completions/*.fish \
-  /etc/fish/conf.d/functions/*.fish
-#  /etc/fish/conf.d/functions/fundle/*.fish
+  $MY_DIR/export_vars.fish \
+  $MY_DIR/a*s.fish \
+  $MY_DIR/conf.d/completions/*.fish \
+#  $MY_DIR/conf.d/functions/fundle/*.fish
 
 builtin test -e "~/Downloads/*";
   and command srm -lrvz ~/Downloads/*
-#  or  true
-builtin test -e "~/tmux-*.log"
-  and command scp -v ~/tmux-*.log /var/log/tmux/(whoami)/
-  and command srm -lrvz ~/tmux-*.log
 #  or  true

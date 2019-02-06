@@ -19,30 +19,32 @@ command mkdir -p $conf/fish/functions $conf/fish/conf.d $conf/bash $conf/bash/co
 
 for i in tmux.conf
          fish/config.fish
-  command ln -v $repo/$i $conf/$i
+  command ln -v $repo/$uname/$i $conf/$i
 end
 
 for i in fish
          fish/conf.d
          fish/functions
-  command ln -rv $repo/$i/*.fish $conf/$i/
+         fish/completions
+  command ln -rv $repo/$uname/$i/*.fish $conf/$i/
 end
 
 for i in bash
+         bash/conf.d
          bash/conf.d/functions
 do
-  command ln -rv $repo/$i/*.sh $conf/$i/
+  command ln -rv $repo/$uname/$i/*.sh $conf/$i/
 done
 
 if builtin test $perms -eq 0
   command ln -v $repo/$uname/fish/fish.nanorc /usr/share/nano/fish.nanorc
-  if builtin test $uname = Cygwin
+  if builtin test $uname = cygwin
     command ln -v $repo/$uname/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang
   end
 else
   command ln -v $repo/$uname/fish/fish.nanorc $conf/fish/fish.nanorc
   builtin printf 'include %s/fish/fish.nanorc' $conf | command tee -a ~/.nanorc
-  if builtin test $uname = Cygwin
+  if builtin test $uname = cygwin
     command ln -v $repo/$uname/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang
   end
 end

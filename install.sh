@@ -29,26 +29,27 @@ for i in "fish"
          "fish/conf.d/functions"
          "fish/conf.d/completions"
 do
-  command ln -rv $repo/$i/*.fish $conf/$i/
+  command ln -rv $repo/$uname/$i/*.fish $conf/$i/
 done
 
 for i in "bash"
+         "bash/conf.d"
          "bash/conf.d/functions"
 do
-  command ln -rv $repo/$i/*.sh $conf/$i/
+  command ln -rv $repo/$uname/$i/*.sh $conf/$i/
 done
 
 if [ $perms -eq 0 ]
 then
   command ln -v $repo/$uname/fish/fish.nanorc /usr/share/nano/fish.nanorc
-  [ $uname != "Cygwin" ]
+  [ $uname == "ubuntu" ]
   then
     command ln -v $repo/$uname/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang
   fi
 else
   command ln -v $repo/$uname/fish/fish.nanorc $conf/fish/fish.nanorc
   builtin printf 'include %s/fish/fish.nanorc' $conf | command tee -a ~/.nanorc
-  [ $uname != "Cygwin" ]
+  [ $uname == "ubuntu" ]
   then
     command ln -v $repo/$uname/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang
   fi
