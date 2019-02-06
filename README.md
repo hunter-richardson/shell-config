@@ -60,11 +60,10 @@ else
       || ( printf 'source "%s/bash/config.sh"' $conf | tee -a ~/.profile )
 fi
 ```
-- Quick application of this configuration can be attained by executing the [install.sh](install.sh) script. It assumes admin privileges are used if a system-wide configuration is desired, and the current-working directory is the location of this
-repository. (And, for the sake of completeness, I have translated this into `fish` as well:  [install.fish](install.fish).)
+- Quick application of this configuration can be attained by executing the [install.sh](install.sh) script. It assumes admin privileges are used if a system-wide configuration is desired, and the script has not been moved to another directory. (And,
+for the sake of completeness, I have translated the script into `fish` as well:  [install.fish](install.fish).)
 ```shell
-cd /path/to/repo
-source ./install.sh $conf
-cd -
+su - # if applicable
+source /path/to/repo/install.sh $conf
 ```
 ... where `$conf` is the location of the desired configuration.
