@@ -1,5 +1,3 @@
-builtin printf "alias dtrx '%s/dtrx/scripts/dtrx -forv --one-entry=inside'" (builtin dirname $repo) | tee -a $conf/conf.d/aliases.fish
-
 function dtrx --description 'alias to GITHUB/moonpyk:dtrx'
   builtin test -z "$argv";
     and builtin printf 'No arguments given!';
