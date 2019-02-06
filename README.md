@@ -51,18 +51,6 @@ done
 ```
 - To use [Fish](https://fishshell.com) and its configuration described here by default without going through the whole `cshs` trouble, or to use the `bash` functions described, run a command at the bottom of the `~/.profile` file to open a `tmux` session into `fish`. (Make sure both `tmux` and `fish` work before using this!) To apply it:
 ```shell
-if [ $perms -eq 0 ]
-then
-  ln -v $repo/$uname/fish/fish.nanorc /usr/share/nano/fish.nanorc
-  [ $uname == "ubuntu" ]
-      && ( ln -v $repo/$uname/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang )
-else
-  ln -v $repo/$uname/fish/fish.nanorc $conf/fish/fish.nanorc
-  printf 'include %s/fish/fish.nanorc' $conf | command tee -a ~/.nanorc
-  [ $uname == "ubuntu" ]
-      && ( ln -v $repo/$uname/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang )
-fi
-
 if [ -z "$TMUX" -a -n "$(command -v tmux)" ]
 then
   printf 'exec tmux -2u -f %s/tmux.conf' $conf | tee -a ~/.profile
