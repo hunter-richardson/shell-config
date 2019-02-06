@@ -1,3 +1,4 @@
+#!/usr/bin/fish
 function dtrx --description 'alias to GITHUB/moonpyk:dtrx'
   builtin test -z "$argv";
     and builtin printf 'No arguments given!';
