@@ -19,8 +19,8 @@ if [ $uname == 'cygwin' ]
            "fish-source-highlight"
            "plugin-await"
            "plugin-balias"
-    [ -d (command dirname $repo)/$i/functions ]
-         && ( command ln -rv (command dirname $repo)/$i/functions/*.fish $conf/conf.d/functions/ )
+    [ -d $(command dirname /path/to/repo)/$i/functions ]
+         && ( command ln -rv $(command dirname /path/to/repo)/$i/functions/*.fish /path/to/desired/config/conf.d/functions/ )
   done
 fi
 ```
