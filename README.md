@@ -1,69 +1,86 @@
 # my-config
-This is the repository for my shell configuration. I use [Ubuntu](https://ubuntu.com) at home, [Cygwin](https://cygwin.com) at work.
-- [Ubuntu](https://ubuntu.com)/[Cygwin](https://cygwin.com) ships with `bash` as its default shell. My favorite shell is [Fish](https://fishshell.com). I've written a few functions and aliases that are helpful for my shell in [cygwin:fish](cygwin/fish)/[ubuntu:fish](ubuntu/fish) and its subdirectories. To apply them:
+This is the repository for my shell configuration. I use [Ubuntu](https://ubuntu.com) at home and [Cygwin](https://cygwin.com) at work.
+- [Ubuntu](https://ubuntu.com)/[Cygwin](https://cygwin.com) both ship with `bash` as the default shell. My favorite shell is [Fish](https://fishshell.com). I've written a few functions and aliases that are helpful for my shell in
+[cygwin:fish](cygwin/fish)/[ubuntu:fish](ubuntu/fish) and its subdirectories. To apply them:
 ```shell
 su - # if applicable
-if [ $(command uname -o) == 'Cygwin' ]
-then
-  uname='cygwin'
-  perms=$(net sessions >/dev/null 2>&1)
-else
-  uname='ubuntu'
-  perms=$(sudo -nv ^/dev/null)
-fi
-mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions
+[ $(command uname -o) == 'Cygwin' ]
+      && ( uname='cygwin' )
+      && ( uname='ubuntu' )
+[ $(command uname -o) == 'Cygwin' ]
+      && ( perms=$(net sessions >/dev/null 2>&1) )
+      && ( perms=$(sudo -nv ^/dev/null) )
+mkdir -p /path/to/desired/config/fish/conf.d/functions /path/to/desired/config/fish/conf.d/completions
 for i in "fish"
          "fish/conf.d"
          "fish/conf.d/functions"
          "fish/conf.d/completions"
 do
-  ln -rv /path/to/repo/$uname/fish/$i/*.fish $conf/$i/
+  ln -rv /path/to/repo/$uname/fish/$i/*.fish /path/to/desired/config/$i/
 done
 ```
 - The [ubuntu:fish.lang](ubuntu/fish/language-specs/fish.lang)/[cygwin:fish.lang](cygwin/fish/language-specs/fish.lang) and [ubuntu:fish.nanorc](ubuntu/fish/fish.nanorc) files contain configuration for syntax-highlighting of Fish scripts, in `gedit` ([Ubuntu](https://ubuntu.com) only) and `nano`, respectively. To apply them:
 ```shell
+su - # if applicable
+[ $(command uname -o) == 'Cygwin' ]
+      && ( uname='cygwin' )
+      && ( uname='ubuntu' )
+[ $(command uname -o) == 'Cygwin' ]
+      && ( perms=$(net sessions >/dev/null 2>&1) )
+      && ( perms=$(sudo -nv ^/dev/null) )
 if [ $perms -eq 0 ]
 then
   ln -v /path/to/repo/$uname/fish/fish.nanorc /usr/share/nano/fish.nanorc
   [ $uname == "ubuntu" ]
       && ( ln -v /path/to/repo/ubuntu/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang )
 else
-  ln -v /path/to/repo/$uname/fish/fish.nanorc $conf/fish/fish.nanorc
-  printf 'include %s/fish/fish.nanorc' $conf | tee -a ~/.nanorc
+  ln -v /path/to/repo/$uname/fish/fish.nanorc /path/to/desired/config/fish/fish.nanorc
+  printf 'include %s/fish/fish.nanorc' /path/to/desired/config | tee -a ~/.nanorc
   [ $uname == "ubuntu" ]
       && ( ln -v /path/to/repo/ubuntu/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang )
 fi
 ```
-- `tmux` is a terminal multiplexer that sets up a status bar and allows windows to split into panes. The [ubuntu:tmux.conf](ubuntu:tmux.conf)/[cygwin:tmux.conf](cygwin/tmux.conf) file contains my `tmux` configuration. See the [tmux manual](https://man.openbsd.org/OpenBSD-current/man1/tmux.1) for more information. To apply it:
+- `tmux` is a terminal multiplexer that sets up a status bar and allows windows to split into panes. The [ubuntu:tmux.conf](ubuntu/tmux.conf)/[cygwin:tmux.conf](cygwin/tmux.conf) file contains my `tmux` configuration. See the [tmux
+manual](https://man.openbsd.org/OpenBSD-current/man1/tmux.1) for more information. To apply it:
 ```shell
-ln -v /path/to/repo/$uname/tmux.conf $conf/tmux.conf
+[ $(command uname -o) == 'Cygwin' ]
+      && ( uname='cygwin' )
+      && ( uname='ubuntu' )
+ln -v /path/to/repo/$uname/tmux.conf /path/to/desired/config/tmux.conf
 ```
 - Some installations of [Cygwin](https://cygwin.com) (probably managed by snarky old-timers) don't include new-and-fancy custom shells like [Fish](https://fishshell.com) -- in which case I must resort to `bash` instead. To this end, I have
 translated my `fish` functions and aliases into `bash`. To apply them:
 ```shell
-mkdir -p $conf/bash/conf.d/functions
+su - # if applicable
+[ $(command uname -o) == 'Cygwin' ]
+      && ( uname='cygwin' )
+      && ( uname='ubuntu' )
+mkdir -p /path/to/desired/config/bash/conf.d/functions
 for i in "bash"
          "bash/conf.d"
          "bash/conf.d/functions"
 do
-  ln -rv /path/to/repo/$uname/$i/*.sh $conf/$i/
+  ln -rv /path/to/repo/$uname/$i/*.sh /path/to/desired/config/$i/
 done
 ```
 - To use [Fish](https://fishshell.com) and its configuration described here by default without going through the whole `cshs` trouble, or to use the `bash` functions described, run a command at the bottom of the `~/.profile` file to open a `tmux` session into `fish`. (Make sure both `tmux` and `fish` work before using this!) To apply it:
 ```shell
+su - # if applicable
+[ $(command uname -o) == 'Cygwin' ]
+      && ( uname='cygwin' )
+      && ( uname='ubuntu' )
 if [ -z "$TMUX" -a -n "$(command -v tmux)" ]
 then
-  printf 'exec tmux -2u -f %s/tmux.conf' $conf | tee -a ~/.profile
+  printf 'exec tmux -2u -f %s/tmux.conf' /path/to/desired/config | tee -a ~/.profile
 else
   [ -n "$(command -v fish)" ]
       && ( printf 'exec %s' $(command -v fish) | tee -a ~/.profile )
-      || ( printf 'source "%s/bash/config.sh"' $conf | tee -a ~/.profile )
+      || ( printf 'source "%s/bash/config.sh"' /path/to/desired/config | tee -a ~/.profile )
 fi
 ```
 - Quick application of this configuration can be attained by executing the [install.sh](install.sh) script. It assumes admin privileges are used if a system-wide configuration is desired, and the script has not been moved to another directory. (And,
 for the sake of completeness, I have translated the script into `fish` as well:  [install.fish](install.fish).)
 ```shell
 su - # if applicable
-source /path/to/repo/install.sh $conf
+source /path/to/repo/install.sh /path/to/desired/config
 ```
-... where `$conf` is the location of the desired configuration.
