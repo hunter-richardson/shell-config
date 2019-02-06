@@ -1,7 +1,7 @@
 # my-config
 This is the repository for my shell configuration. I use [Ubuntu](https://ubuntu.com) at home and [Cygwin](https://cygwin.com) at work.
 - [Ubuntu](https://ubuntu.com)/[Cygwin](https://cygwin.com) both ship with `bash` as the default shell. My favorite shell is [Fish](https://fishshell.com). I've written a few functions and aliases that are helpful for my shell in
-[cygwin:fish](cygwin/fish)/[ubuntu:fish](ubuntu/fish) and its subdirectories. To apply them:
+[cygwin:fish](cygwin/fish)/[ubuntu:fish](ubuntu/fish) and its subdirectories. Additionally for [Cygwin](https://cygwin.com), I will install [fish-source-highlight](https://github.com/decors/fish-source-highlight), [plugin-await](https://github.com/oh-my-fish/plugin-await), and [plugin-balias](https://github.com/oh-my-fish/plugin-balias), where possible. (For [Ubuntu](https://ubuntu.com), I use [fundle](https://github.com/danhper/fundle) to accomplish this.) To apply them:
 ```shell
 su - # if applicable
 [ $(command uname -o) == 'Cygwin' ]
@@ -18,6 +18,14 @@ for i in "fish"
 do
   ln -rv /path/to/repo/$uname/fish/$i/*.fish /path/to/desired/config/$i/
 done
+if [ $uname == 'cygwin' ]
+  for i in "fish-source-highlight"
+           "plugin-await"
+           "plugin-balias"
+    [ -d (command dirname $repo)/$i/functions ]
+         && ( command ln -rv (command dirname $repo)/$i/functions/*.fish $conf/conf.d/functions/ )
+  done
+fi
 ```
 - The [ubuntu:fish.lang](ubuntu/fish/language-specs/fish.lang) and [ubuntu:fish.nanorc](ubuntu/fish/fish.nanorc)/[cygwin:fish.nanorc](cygwin/fish/fish.nanorc) files contain configuration for syntax-highlighting of Fish scripts, in `gedit` ([Ubuntu](https://ubuntu.com) only) and `nano`, respectively. To apply them:
 ```shell
