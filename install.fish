@@ -37,12 +37,13 @@ for i in fish
   builtin test -d $repo/$uname/$i;
     and command ln -rv $repo/$uname/$i/*.fish $conf/$i/
 end
-for i in fish-source-highlight
-         plugin-await
-         plugin-balias
-  builtin test -d (command dirname $repo)/$i/functions;
-    and command ln -rv (command dirname $repo)/$i/functions/*.fish $conf/conf.d/functions/
-end
+builtin test $uname == cygwin; 
+  and for i in fish-source-highlight
+               plugin-await
+               plugin-balias
+        builtin test -d (command dirname $repo)/$i/functions;
+          and command ln -rv (command dirname $repo)/$i/functions/*.fish $conf/conf.d/functions/
+        end
 
 for i in bash
          bash/conf.d
