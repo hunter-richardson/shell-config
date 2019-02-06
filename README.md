@@ -19,7 +19,7 @@ do
   ln -rv /path/to/repo/$uname/fish/$i/*.fish /path/to/desired/config/$i/
 done
 ```
-- The [ubuntu:fish.lang](ubuntu/fish/language-specs/fish.lang)/[cygwin:fish.lang](cygwin/fish/language-specs/fish.lang) and [ubuntu:fish.nanorc](ubuntu/fish/fish.nanorc) files contain configuration for syntax-highlighting of Fish scripts, in `gedit` ([Ubuntu](https://ubuntu.com) only) and `nano`, respectively. To apply them:
+- The [ubuntu:fish.lang](ubuntu/fish/language-specs/fish.lang) and [ubuntu:fish.nanorc](ubuntu/fish/fish.nanorc)/[cygwin:fish.nanorc](cygwin/fish/fish.nanorc) files contain configuration for syntax-highlighting of Fish scripts, in `gedit` ([Ubuntu](https://ubuntu.com) only) and `nano`, respectively. To apply them:
 ```shell
 su - # if applicable
 [ $(command uname -o) == 'Cygwin' ]
@@ -43,6 +43,7 @@ fi
 - `tmux` is a terminal multiplexer that sets up a status bar and allows windows to split into panes. The [ubuntu:tmux.conf](ubuntu/tmux.conf)/[cygwin:tmux.conf](cygwin/tmux.conf) file contains my `tmux` configuration. See the [tmux
 manual](https://man.openbsd.org/OpenBSD-current/man1/tmux.1) for more information. To apply it:
 ```shell
+su - # if applicable
 [ $(command uname -o) == 'Cygwin' ]
       && ( uname='cygwin' )
       && ( uname='ubuntu' )
@@ -69,14 +70,11 @@ su - # if applicable
 [ $(command uname -o) == 'Cygwin' ]
       && ( uname='cygwin' )
       && ( uname='ubuntu' )
-if [ -z "$TMUX" -a -n "$(command -v tmux)" ]
-then
-  printf 'exec tmux -2u -f %s/tmux.conf' /path/to/desired/config | tee -a ~/.profile
-else
-  [ -n "$(command -v fish)" ]
-      && ( printf 'exec %s' $(command -v fish) | tee -a ~/.profile )
-      || ( printf 'source "%s/bash/config.sh"' /path/to/desired/config | tee -a ~/.profile )
-fi
+[ -z "$TMUX" -a -n "$(command -v tmux)" ]
+      && ( printf 'exec tmux -2u -f %s/tmux.conf' /path/to/desired/config | tee -a ~/.profile )
+      || ( [ -n "$(command -v fish)" ]
+                && ( printf 'exec %s' $(command -v fish) | tee -a ~/.profile )
+                || ( printf 'source "%s/bash/config.sh"' /path/to/desired/config | tee -a ~/.profile ) )
 ```
 - Quick application of this configuration can be attained by executing the [install.sh](install.sh) script. It assumes admin privileges are used if a system-wide configuration is desired, and the script has not been moved to another directory. (And,
 for the sake of completeness, I have translated the script into `fish` as well:  [install.fish](install.fish).)
