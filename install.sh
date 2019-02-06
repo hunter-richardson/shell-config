@@ -17,9 +17,12 @@ for i in "fish" "fish/conf.d/functions" "fish/conf.d/completions"
 do
   [ -d $repo/$uanme/$i ] && ( command ln -rv $repo/$uname/$i/*.fish $conf/$i/ )
 done
-for i in "fish-source-highlight" "plugin-await" "plugin-balias"
-  [ -d (command dirname $repo)/$i/functions ] && ( command ln -rv (command dirname $repo)/$i/functions/*.fish $conf/conf.d/functions/ )
-done
+if [ $uname == 'cygwin' ]
+then
+  for i in "fish-source-highlight" "plugin-await" "plugin-balias"
+    [ -d (command dirname $repo)/$i/functions ] && ( command ln -rv (command dirname $repo)/$i/functions/*.fish $conf/conf.d/functions/ )
+  done
+fi
 
 for i in "bash" "bash/conf.d" "bash/conf.d/functions"
 do
