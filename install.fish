@@ -1,63 +1,65 @@
-if builtin test -z "$conf" -o ! -d "conf" -o ! -r "$conf" -o ! -w "$conf"
-  builtin printf 'Please specify a read/writeable working directory.\n'
-  builtin return 1
-else
-  builtin set conf $argv[1]
-end
+builtin test -z "$argv[1]" -o ! -d "$argv[1]" -o ! -r "$argv[1]" -o ! -w "$argv[1]";
+  and builtin printf 'Please specify a read/writeable working directory.\n';
+  and builtin return 1;
+  or  builtin set conf $argv[1]
 
 if builtin test (command uname -o) = Cygwin
-  builtin set uname cygwin
-  builtin set perms (net sessions >/dev/null 2>&1)
+  builtin set uname cygwin;
+    and builtin set perms (net sessions >/dev/null 2>&1)
 else
-  builtin set uname ubuntu
-  builtin set perms (sudo -nv ^/dev/null)
+  builtin set uname ubuntu;
+    and builtin set perms (sudo -nv ^/dev/null)
 end
 
-builtin set -l repo (realpath (command dirname (builtin status filename)))
-command ln -v $repo/tmux.conf $conf/tmux.conf
-command mkdir -p $conf/fish/functions $conf/fish/conf.d $conf/bash $conf/bash/conf.d/functions
-
-for i in tmux.conf
-         fish/config.fish
-  command ln -v $repo/$uname/$i $conf/$i
+builtin set repo (builtin status filename)
+builtin test -z "$repo";
+  and builtin printf 'An error occured while attempting to determine the script directory.\n';
+  and builtin set -e perms uname repo conf;
+  and builtin return 1
+while builtin test -f $repo -o -L $repo;
+  builtin set repo (builtin test -L $repo;
+                      and return (command readlink $repo))
+                      or  return (command dirname $repo);
 end
+
+builtin test ! -f $repo/$uname/tmux.conf -o ! -d $repo/$uname/fish/conf.d/functions -o ! $repo/$uname/bash/conf.d/functions -o ! -f $repo/$uname/fish/fish.nanorc -o ( $uname = ubuntu -a ! -f $repo/$uname/fish/fish.lang );
+  and builtin printf 'Please run the %s script in the shell-config local repository directory.\n' (builtin status filename);
+  and set -e perms uname repo conf;
+  and builtin return 1;
+
+command mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions $conf/bash/conf.d/functions
+command ln -v $repo/$uname/tmux.conf $conf/tmux.conf
 
 for i in fish
          fish/conf.d
-         fish/functions
-         fish/completions
-  command ln -rv $repo/$uname/$i/*.fish $conf/$i/
+         fish/conf.d/functions
+         fish/conf.d/completions
+  builtin test -d $repo/$uname/$i;
+    and command ln -rv $repo/$uname/$i/*.fish $conf/$i/
 end
 
 for i in bash
          bash/conf.d
          bash/conf.d/functions
-do
-  command ln -rv $repo/$uname/$i/*.sh $conf/$i/
-done
+  builtin test -d $repo/$uname/$i;
+    and command ln -rv $repo/$uname/$i/*.sh $conf/$i/
+end
 
 if builtin test $perms -eq 0
   command ln -v $repo/$uname/fish/fish.nanorc /usr/share/nano/fish.nanorc
-  if builtin test $uname = cygwin
-    command ln -v $repo/$uname/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang
-  end
+  builtin test $uname = ubuntu;
+    and command ln -v $repo/$uname/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang
 else
   command ln -v $repo/$uname/fish/fish.nanorc $conf/fish/fish.nanorc
   builtin printf 'include %s/fish/fish.nanorc' $conf | command tee -a ~/.nanorc
-  if builtin test $uname = cygwin
-    command ln -v $repo/$uname/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang
-  end
+  builtin test $uname = ubuntu;
+    and command ln -v $repo/$uname/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang
 end
 
-if builtin -z "$TMUX" -a (builtin command -v tmux)
-then
-  builtin printf 'exec tmux -2u -f %s/tmux.conf' $conf | tee -a ~/.profile
-else
-  if builtin test (builtin command -v fish)
-    builtin printf 'exec %s' $(builtin command -v fish) | tee -a ~/.profile
-  else
-    builtin printf 'source "%s/bash/config.sh"' $conf | tee -a ~/.profile
-  end
-end
+builtin -z "$TMUX" -a (builtin command -v tmux);
+  and builtin printf 'exec tmux -2u -f %s/tmux.conf' $conf | tee -a ~/.profile
+  or  builtin test (builtin command -v fish);
+      and builtin printf 'exec %s' $(builtin command -v fish) | tee -a ~/.profile;
+      or  builtin printf 'source "%s/bash/config.sh"' $conf | tee -a ~/.profile
 
 set -e perms uname repo conf
