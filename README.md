@@ -1,7 +1,7 @@
 # my-config
 This is the repository for my shell configuration. I use [Ubuntu](https://ubuntu.com) at home and [Cygwin](https://cygwin.com) at work.
 - [Ubuntu](https://ubuntu.com)/[Cygwin](https://cygwin.com) both ship with `bash` as the default shell. My favorite shell is [Fish](https://fishshell.com). I've written a few functions and aliases that are helpful for my shell in
-[cygwin:fish](cygwin/fish)/[ubuntu:fish](ubuntu/fish) and its subdirectories. Additionally for [Cygwin](https://cygwin.com), I will install [fish-source-highlight](https://github.com/decors/fish-source-highlight), [plugin-await](https://github.com/oh-my-fish/plugin-await), and [plugin-balias](https://github.com/oh-my-fish/plugin-balias), where possible. (For [Ubuntu](https://ubuntu.com), I use [fundle](https://github.com/danhper/fundle) to accomplish this.) To apply them:
+[cygwin:fish](cygwin/fish)/[ubuntu:fish](ubuntu/fish) and its subdirectories. Additionally for [Cygwin](https://cygwin.com), I will install [bass](https://github.com/edc/bass), [fish-source-highlight](https://github.com/decors/fish-source-highlight), [plugin-await](https://github.com/oh-my-fish/plugin-await), and [plugin-balias](https://github.com/oh-my-fish/plugin-balias), where possible. (For [Ubuntu](https://ubuntu.com), I use [fundle](https://github.com/danhper/fundle) to accomplish this.) To apply them:
 ```shell
 su - # if applicable
 [ $(command uname -o) == 'Cygwin' ]
@@ -19,7 +19,8 @@ do
   ln -rv /path/to/repo/$uname/fish/$i/*.fish /path/to/desired/config/$i/
 done
 if [ $uname == 'cygwin' ]
-  for i in "fish-source-highlight"
+  for i in "bass"
+           "fish-source-highlight"
            "plugin-await"
            "plugin-balias"
     [ -d (command dirname $repo)/$i/functions ]
