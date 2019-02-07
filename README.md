@@ -8,13 +8,13 @@ then
   [ $(uname -o) == 'Cygwin' ]
         && ( uname='cygwin' )
         && ( uname='ubuntu' )
-  mkdir -p /path/to/desired/config/fish/conf.d/functions /path/to/desired/config/fish/conf.d/completions
+  mkdir -p /path/to/new/config/fish/conf.d/functions /path/to/new/config/fish/conf.d/completions
   for i in 'fish'
            'fish/conf.d'
            'fish/conf.d/functions'
            'fish/conf.d/completions'
   do
-    ln -rv /path/to/repo/$uname/fish/$i/*.fish /path/to/desired/config/$i/
+    ln -rv /path/to/repo/$uname/fish/$i/*.fish /path/to/new/config/$i/
   done
   if [ $uname == 'cygwin' ]
     for i in 'bass'
@@ -22,7 +22,7 @@ then
              'plugin-await'
              'plugin-balias'
       [ -d $(dirname /path/to/repo)/$i/functions ]
-           && ( ln -rv $(dirname /path/to/repo)/$i/functions/*.fish /path/to/desired/config/conf.d/functions/ )
+           && ( ln -rv $(dirname /path/to/repo)/$i/functions/*.fish /path/to/new/config/conf.d/functions/ )
     done
   fi
 fi
@@ -44,8 +44,8 @@ then
     [ $uname == 'ubuntu' ]
         && ( ln -v /path/to/repo/ubuntu/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang )
   else
-    ln -v /path/to/repo/$uname/fish/fish.nanorc /path/to/desired/config/fish/fish.nanorc
-    printf 'include %s/fish/fish.nanorc' /path/to/desired/config | tee -a ~/.nanorc
+    ln -v /path/to/repo/$uname/fish/fish.nanorc /path/to/new/config/fish/fish.nanorc
+    printf 'include %s/fish/fish.nanorc' /path/to/new/config | tee -a ~/.nanorc
     [ $uname == 'ubuntu' ]
         && ( ln -v /path/to/repo/ubuntu/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang )
   fi
@@ -58,7 +58,7 @@ su - # if applicable
 [ $(uname -o) == 'Cygwin' ]
       && ( uname='cygwin' )
       && ( uname='ubuntu' )
-ln -v /path/to/repo/$uname/tmux.conf /path/to/desired/config/tmux.conf
+ln -v /path/to/repo/$uname/tmux.conf /path/to/new/config/tmux.conf
 ```
 - Some installations of [Cygwin](https://cygwin.com) (probably managed by snarky old-timers) don't include new-and-fancy custom shells like [Fish](https://fishshell.com) -- in which case I must resort to `bash` instead. To this end, I have
 translated my `fish` functions and aliases into `bash`. To apply them:
@@ -67,29 +67,26 @@ su - # if applicable
 [ $(uname -o) == 'Cygwin' ]
       && ( uname='cygwin' )
       && ( uname='ubuntu' )
-mkdir -p /path/to/desired/config/bash/conf.d/functions
+mkdir -p /path/to/new/config/bash/conf.d/functions
 for i in 'bash'
          'bash/conf.d'
          'bash/conf.d/functions'
 do
-  ln -rv /path/to/repo/$uname/$i/*.sh /path/to/desired/config/$i/
+  ln -rv /path/to/repo/$uname/$i/*.sh /path/to/new/config/$i/
 done
 ```
 - To use [Fish](https://fishshell.com) and its configuration described here by default without going through the whole `cshs` trouble, or to use the `bash` functions described, run a command at the bottom of the `~/.profile` file to open a `tmux` session into `fish`. (Make sure both `tmux` and `fish` work before using this!) To apply it:
 ```shell
 su - # if applicable
-[ $(uname -o) == 'Cygwin' ]
-      && ( uname='cygwin' )
-      && ( uname='ubuntu' )
 [ -z "$TMUX" -a -n "$(command -v tmux)" ]
-      && ( printf 'exec tmux -2u -f %s/tmux.conf' /path/to/desired/config | tee -a ~/.profile )
+      && ( printf 'exec tmux -2u -f %s/tmux.conf' /path/to/new/config | tee -a ~/.profile )
       || ( [ -n "$(command -v fish)" ]
                 && ( printf 'exec %s' $(command -v fish) | tee -a ~/.profile )
-                || ( printf 'source "%s/bash/config.sh"' /path/to/desired/config | tee -a ~/.profile ) )
+                || ( printf 'source "%s/bash/config.sh"' /path/to/new/config | tee -a ~/.profile ) )
 ```
 - Quick application of this configuration can be attained by executing the [install.sh](install.sh) script. It assumes admin privileges are used if a system-wide configuration is desired, and the script has not been moved to another directory. (And,
 for the sake of completeness, I have translated the script into `fish` as well:  [install.fish](install.fish).)
 ```shell
 su - # if applicable
-source /path/to/repo/install.sh /path/to/desired/config
+source /path/to/repo/install.sh /path/to/new/config
 ```
