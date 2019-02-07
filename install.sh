@@ -11,13 +11,19 @@ done
 [ ! -f $repo/$uname/tmux.conf -o ! -d $repo/$uname/fish/conf.d/functions -o ! -d $repo/$uname/bash/conf.d/functions -o ! -f $repo/$uname/fish/fish.nanorc -o ( $uname == 'ubuntu' -a ! -f $repo/$uname/fish/fish.lang ) ] && ( builtin printf 'Please run the %s script in the shell-config local repository directory.\n' $(command basename ${BASH_SOURCE[0]}); unset perms uname repo conf; builtin return 1 )
 
 command ln -v $repo/$uname/tmux.conf $conf/tmux.conf
+
 command mkdir -p $conf/bash/conf.d/functions
+for i in "bash" "bash/conf.d" "bash/conf.d/functions"
+do
+  [ -d $repo/$uname/$i ] && ( command ln -rv $repo/$uname/$i/*.sh $conf/$i/ )
+done
+
 if [ -n $(builtin command -v fish) ]
 then
   command mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions
   for i in "fish" "fish/conf.d/functions" "fish/conf.d/completions"
   do
-    [ -d $repo/$uanme/$i ] && ( command ln -rv $repo/$uname/$i/*.fish $conf/$i/ )
+    [ -d $repo/$uname/$i ] && ( command ln -rv $repo/$uname/$i/*.fish $conf/$i/ )
   done
   if [ $uname == 'cygwin' ]
   then
@@ -25,10 +31,6 @@ then
       [ -d (command dirname $repo)/$i/functions ] && ( command ln -rv (command dirname $repo)/$i/functions/*.fish $conf/conf.d/functions/ )
     done
   fi
-  for i in "bash" "bash/conf.d" "bash/conf.d/functions"
-  do
-    [ -d $repo/$uanme/$i ] && ( command ln -rv $repo/$uname/$i/*.sh $conf/$i/ )
-  done
 
   if [ $perms -eq 0 ]
   then
