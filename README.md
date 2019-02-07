@@ -2,47 +2,53 @@
 This is the repository for my shell configuration. I use [Ubuntu](https://ubuntu.com) at home and [Cygwin](https://cygwin.com) at work.
 - [Ubuntu](https://ubuntu.com)/[Cygwin](https://cygwin.com) both ship with `bash` as the default shell. My favorite shell is [Fish](https://fishshell.com). I've written a few functions and aliases that are helpful for my shell in [cygwin:fish](cygwin/fish)/[ubuntu:fish](ubuntu/fish) and its subdirectories. Additionally for [Cygwin](https://cygwin.com), I will install fish plugins [bass](https://github.com/edc/bass), [colored-man](https://github.com/decors/fish-colored-man), [highlight](https://github.com/decors/fish-source-highlight), [await](https://github.com/oh-my-fish/plugin-await), and [balias](https://github.com/oh-my-fish/plugin-balias), where possible, and load their functions accordingly. (For [Ubuntu](https://ubuntu.com), I use [fundle](https://github.com/danhper/fundle) to accomplish this.) To apply them:
 ```shell
-su - # if applicable
-[ $(command uname -o) == 'Cygwin' ]
-      && ( uname='cygwin' )
-      && ( uname='ubuntu' )
-mkdir -p /path/to/desired/config/fish/conf.d/functions /path/to/desired/config/fish/conf.d/completions
-for i in "fish"
-         "fish/conf.d"
-         "fish/conf.d/functions"
-         "fish/conf.d/completions"
-do
-  ln -rv /path/to/repo/$uname/fish/$i/*.fish /path/to/desired/config/$i/
-done
-if [ $uname == 'cygwin' ]
-  for i in "bass"
-           "fish-source-highlight"
-           "plugin-await"
-           "plugin-balias"
-    [ -d $(command dirname /path/to/repo)/$i/functions ]
-         && ( command ln -rv $(command dirname /path/to/repo)/$i/functions/*.fish /path/to/desired/config/conf.d/functions/ )
+if [ -n $(builtin command -v fish) ]
+then
+  su - # if applicable
+  [ $(command uname -o) == 'Cygwin' ]
+        && ( uname='cygwin' )
+        && ( uname='ubuntu' )
+  mkdir -p /path/to/desired/config/fish/conf.d/functions /path/to/desired/config/fish/conf.d/completions
+  for i in "fish"
+           "fish/conf.d"
+           "fish/conf.d/functions"
+           "fish/conf.d/completions"
+  do
+    ln -rv /path/to/repo/$uname/fish/$i/*.fish /path/to/desired/config/$i/
   done
+  if [ $uname == 'cygwin' ]
+    for i in "bass"
+             "fish-source-highlight"
+             "plugin-await"
+             "plugin-balias"
+      [ -d $(command dirname /path/to/repo)/$i/functions ]
+           && ( command ln -rv $(command dirname /path/to/repo)/$i/functions/*.fish /path/to/desired/config/conf.d/functions/ )
+    done
+  fi
 fi
 ```
 - The [ubuntu:fish.lang](ubuntu/fish/language-specs/fish.lang) and [ubuntu:fish.nanorc](ubuntu/fish/fish.nanorc)/[cygwin:fish.nanorc](cygwin/fish/fish.nanorc) files contain configuration for syntax-highlighting of Fish scripts, in `gedit` ([Ubuntu](https://ubuntu.com) only) and `nano`, respectively. To apply them:
 ```shell
-su - # if applicable
-[ $(command uname -o) == 'Cygwin' ]
-      && ( uname='cygwin' )
-      && ( uname='ubuntu' )
-[ $(command uname -o) == 'Cygwin' ]
-      && ( perms=$(net sessions >/dev/null 2>&1) )
-      && ( perms=$(sudo -nv ^/dev/null) )
-if [ $perms -eq 0 ]
+if [ -n $(builtin command -v fish) ]
 then
-  ln -v /path/to/repo/$uname/fish/fish.nanorc /usr/share/nano/fish.nanorc
-  [ $uname == "ubuntu" ]
-      && ( ln -v /path/to/repo/ubuntu/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang )
-else
-  ln -v /path/to/repo/$uname/fish/fish.nanorc /path/to/desired/config/fish/fish.nanorc
-  printf 'include %s/fish/fish.nanorc' /path/to/desired/config | tee -a ~/.nanorc
-  [ $uname == "ubuntu" ]
-      && ( ln -v /path/to/repo/ubuntu/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang )
+  su - # if applicable
+  [ $(command uname -o) == 'Cygwin' ]
+        && ( uname='cygwin' )
+        && ( uname='ubuntu' )
+  [ $(command uname -o) == 'Cygwin' ]
+        && ( perms=$(net sessions >/dev/null 2>&1) )
+        && ( perms=$(sudo -nv ^/dev/null) )
+  if [ $perms -eq 0 ]
+  then
+    ln -v /path/to/repo/$uname/fish/fish.nanorc /usr/share/nano/fish.nanorc
+    [ $uname == "ubuntu" ]
+        && ( ln -v /path/to/repo/ubuntu/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang )
+  else
+    ln -v /path/to/repo/$uname/fish/fish.nanorc /path/to/desired/config/fish/fish.nanorc
+    printf 'include %s/fish/fish.nanorc' /path/to/desired/config | tee -a ~/.nanorc
+    [ $uname == "ubuntu" ]
+        && ( ln -v /path/to/repo/ubuntu/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang )
+  fi
 fi
 ```
 - `tmux` is a terminal multiplexer that sets up a status bar and allows windows to split into panes. The [ubuntu:tmux.conf](ubuntu/tmux.conf)/[cygwin:tmux.conf](cygwin/tmux.conf) file contains my `tmux` configuration. See the [tmux
