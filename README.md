@@ -1,4 +1,4 @@
-# my-config
+# shell-config
 This is the repository for my shell configuration. I use [Ubuntu](https://ubuntu.com) at home and [Cygwin](https://cygwin.com) at work.
 - [Ubuntu](https://ubuntu.com) and [Cygwin](https://cygwin.com) both ship with `bash` as the default shell. My favorite shell is [Fish](https://fishshell.com). I've written a few functions and aliases that are helpful for my shell in [cygwin:fish](cygwin/fish)/[ubuntu:fish](ubuntu/fish) and their subdirectories. Additionally for [Cygwin](https://cygwin.com), I will install fish plugins [bass](https://github.com/edc/bass), [colored-man](https://github.com/decors/fish-colored-man), [highlight](https://github.com/decors/fish-source-highlight), [await](https://github.com/oh-my-fish/plugin-await), and [balias](https://github.com/oh-my-fish/plugin-balias), where possible, and load their functions accordingly. (For [Ubuntu](https://ubuntu.com), I use [fundle](https://github.com/danhper/fundle) to accomplish this.) To apply them:
 ```shell
