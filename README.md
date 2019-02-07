@@ -27,7 +27,7 @@ then
   fi
 fi
 ```
-- The [ubuntu:fish.lang](ubuntu/fish/language-specs/fish.lang) and [ubuntu:fish.nanorc](ubuntu/fish/fish.nanorc)/[cygwin:fish.nanorc](cygwin/fish/fish.nanorc) files contain configuration for syntax-highlighting of Fish scripts, in `gedit` ([Ubuntu](https://ubuntu.com) only) and `nano`, respectively. To apply them:
+- The [ubuntu:fish.lang](ubuntu/fish/language-specs/fish.lang) and [ubuntu:fish.nanorc](ubuntu/fish/fish.nanorc) / [cygwin:fish.nanorc](cygwin/fish/fish.nanorc) files contain configuration for syntax-highlighting of Fish scripts, in `gedit` ([Ubuntu](https://ubuntu.com) only) and `nano`, respectively. To apply them:
 ```shell
 if [ -n "$(command -v fish)" ]
 then
@@ -51,7 +51,7 @@ then
   fi
 fi
 ```
-- `tmux` is a terminal multiplexer that sets up a status bar and allows windows to split into panes. The [ubuntu:tmux.conf](ubuntu/tmux.conf)/[cygwin:tmux.conf](cygwin/tmux.conf) files contain my `tmux` configuration. See the [tmux
+- `tmux` is a terminal multiplexer that sets up a status bar and allows windows to split into panes. The [ubuntu:tmux.conf](ubuntu/tmux.conf) / [cygwin:tmux.conf](cygwin/tmux.conf) files contain my `tmux` configuration. See the [tmux
 manual](https://man.openbsd.org/OpenBSD-current/man1/tmux.1) for more information. To apply it:
 ```shell
 su - # if applicable
