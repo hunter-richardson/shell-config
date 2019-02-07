@@ -3,14 +3,6 @@ builtin test -z "$argv[1]" -o ! -d "$argv[1]" -o ! -r "$argv[1]" -o ! -w "$argv[
   and builtin return 1;
   or  builtin set conf $argv[1]
 
-if builtin test (command uname -o) = Cygwin
-  builtin set uname cygwin;
-    and builtin set perms (net sessions >/dev/null 2>&1)
-else
-  builtin set uname ubuntu;
-    and builtin set perms (sudo -nv ^/dev/null)
-end
-
 builtin set repo (builtin status filename)
 builtin test -z "$repo";
   and builtin printf 'An error occured while attempting to determine the script directory.\n';
@@ -20,6 +12,14 @@ while builtin test -f $repo -o -L $repo;
   builtin set repo (builtin test -L $repo;
                       and return (command readlink $repo))
                       or  return (command dirname $repo);
+end
+
+if builtin test (command uname -o) = Cygwin
+  builtin set uname cygwin;
+    and builtin set perms (net sessions >/dev/null 2>&1)
+else
+  builtin set uname ubuntu;
+    and builtin set perms (sudo -nv ^/dev/null)
 end
 
 builtin test ! -f $repo/$uname/tmux.conf -o ! -d $repo/$uname/fish/conf.d/functions -o ! $repo/$uname/bash/conf.d/functions -o ! -f $repo/$uname/fish/fish.nanorc -o ( $uname = ubuntu -a ! -f $repo/$uname/fish/fish.lang );
