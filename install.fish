@@ -39,6 +39,7 @@ for i in fish
 end
 builtin test $uname == cygwin; 
   and for i in bass
+               fish-colored-man
                fish-source-highlight
                plugin-await
                plugin-balias
