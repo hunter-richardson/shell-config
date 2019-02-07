@@ -19,7 +19,7 @@ do
 done
 if [ $uname == 'cygwin' ]
 then
-  for i in "bass" "fish-source-highlight" "plugin-await" "plugin-balias"
+  for i in "bass" "fish-colored-man" "fish-source-highlight" "plugin-await" "plugin-balias"
     [ -d (command dirname $repo)/$i/functions ] && ( command ln -rv (command dirname $repo)/$i/functions/*.fish $conf/conf.d/functions/ )
   done
 fi
