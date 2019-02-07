@@ -1,5 +1,4 @@
 [ -z "$1" -o ! -d "$1" -o ! -r "$1" -o ! -w "$1" ] && ( builtin printf 'Please specify a read/writeable working directory.\n'; builtin return 1 ) || ( conf=$1 )
-[ $(command uname -o) == 'Cygwin' ] && ( uname='cygwin'; perms=$(net sessions >/dev/null 2>&1) ) || ( uname='ubuntu'; perms=$(sudo -nv ^/dev/null) )
 
 repo=${BASH_SOURCE[0]}
 [ -z "$repo" ] && ( builtin printf 'An error occured while attempting to determine the script directory.\n'; unset perms uname repo conf; builtin return 1 )
@@ -8,6 +7,7 @@ do
   [ -L $repo ] && ( repo=$(command readlink -f $repo) ) || ( repo=$(command dirname $repo) )
 done
 
+[ $(command uname -o) == 'Cygwin' ] && ( uname='cygwin'; perms=$(net sessions >/dev/null 2>&1) ) || ( uname='ubuntu'; perms=$(sudo -nv ^/dev/null) )
 [ ! -f $repo/$uname/tmux.conf -o ! -d $repo/$uname/fish/conf.d/functions -o ! -d $repo/$uname/bash/conf.d/functions -o ! -f $repo/$uname/fish/fish.nanorc -o ( $uname == 'ubuntu' -a ! -f $repo/$uname/fish/fish.lang ) ] && ( builtin printf 'Please run the %s script in the shell-config local repository directory.\n' $(command basename ${BASH_SOURCE[0]}); unset perms uname repo conf; builtin return 1 )
 
 command ln -v $repo/$uname/tmux.conf $conf/tmux.conf
