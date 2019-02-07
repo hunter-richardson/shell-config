@@ -15,9 +15,10 @@
 # end
 
 set --local MY_DIR (realname (command dirname (builtin status filename))/..)
+source $MY_DIR/conf.d/aliases.fish
 source $MY_DIR/conf.d/functions/include.fish
 
 include \
   $MY_DIR/conf.d/*.fish \
-  $MY_DIR/conf.d/completions/*.fish \
+  $MY_DIR/conf.d/completions/*.fish
 
