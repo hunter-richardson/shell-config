@@ -13,21 +13,21 @@ done
 command ln -v $repo/$uname/tmux.conf $conf/tmux.conf
 
 command mkdir -p $conf/bash/conf.d/functions
-for i in "bash" "bash/conf.d" "bash/conf.d/functions"
+for i in 'bash' 'bash/conf.d' 'bash/conf.d/functions'
 do
   [ -d $repo/$uname/$i ] && ( command ln -rv $repo/$uname/$i/*.sh $conf/$i/ )
 done
 
-if [ -n $(builtin command -v fish) ]
+if [ -n "$(builtin command -v fish)" ]
 then
   command mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions
-  for i in "fish" "fish/conf.d/functions" "fish/conf.d/completions"
+  for i in 'fish' 'fish/conf.d/functions' 'fish/conf.d/completions'
   do
     [ -d $repo/$uname/$i ] && ( command ln -rv $repo/$uname/$i/*.fish $conf/$i/ )
   done
   if [ $uname == 'cygwin' ]
   then
-    for i in "bass" "fish-colored-man" "fish-source-highlight" "plugin-await" "plugin-balias"
+    for i in 'bass' 'fish-colored-man' 'fish-source-highlight' 'plugin-await' 'plugin-balias'
       [ -d (command dirname $repo)/$i/functions ] && ( command ln -rv (command dirname $repo)/$i/functions/*.fish $conf/conf.d/functions/ )
     done
   fi
