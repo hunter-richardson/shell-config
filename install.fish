@@ -32,7 +32,7 @@ command ln -v $repo/$uname/tmux.conf $conf/tmux.conf
 
 for i in fish fish/conf.d fish/conf.d/functions fish/conf.d/completions
   builtin test -d $repo/$uname/$i;
-    and command ln -rv $repo/$uname/$i/*.fish $conf/$i/
+    and command ln -v $repo/$uname/$i/*.fish $conf/$i/
 end
 builtin test $uname == cygwin; 
   and for i in bass fish-colored-man fish-source-highlight plugin-await plugin-balias
