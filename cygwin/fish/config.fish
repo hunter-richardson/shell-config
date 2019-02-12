@@ -23,6 +23,7 @@ fundle plugin 'edc/bass'
 fundle plugin 'oh-my-fish/plugin-await'
 fundle plugin 'oh-my-fish/plugin-balias'
 fundle plugin 'tuvistavie/oh-my-fish-core'
+fundle init
 
 builtin test (builtin count $MY_DIR/conf.d/*.fish);
   and for i in $MY_DIR/conf.d/*.fish

@@ -7,7 +7,7 @@ function update() {
 
   function __update_git() {
     sudo updatedb
-    for i in $(sudo locate -eiq '/.git')
+    for i in $(sudo locate -eiq '/.git' | grep -v 'fundle')
     do
       sudo git -C $i pull --verbose
     done

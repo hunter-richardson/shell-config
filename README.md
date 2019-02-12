@@ -20,7 +20,7 @@ then
   then
     [ -d $(command dirname $repo)/fundle/functions ]
           && ( command ln -v $(command dirname $repo)/fundle/functions/*.fish $conf/conf.d/functions/ )
-    [ -d $(command dirname $repo)/fundle/completions]
+    [ -d $(command dirname $repo)/fundle/completions ]
           && ( command ln -v $(command dirname $repo)/fundle/completions/*.fish $conf/conf.d/completions/ )
   fi
 fi
