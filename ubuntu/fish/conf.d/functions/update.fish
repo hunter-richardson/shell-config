@@ -17,8 +17,7 @@ function update -d 'automate software updates from installed SPMs'
   function __update_git
     sudo updatedb
     for i in (sudo locate -eiq '/.git')))
-      command git -C (command dirname $i) config --get remote.origin.url;
-        and sudo git -C (command dirname $i) pull
+      sudo git -C (command dirname $i) pull --verbose
     end
   end
 

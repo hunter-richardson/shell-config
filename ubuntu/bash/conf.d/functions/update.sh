@@ -9,7 +9,7 @@ function update() {
     sudo updatedb
     for i in /usr/share/git-repos/*
     do
-      command git -C $i config --get remote.origin.url && sudo git -C $i pull
+      sudo git -C $i pull --verbose
     done
     unset gits
   }
