@@ -30,27 +30,19 @@ builtin test ! -f $repo/$uname/tmux.conf -o ! -d $repo/$uname/fish/conf.d/functi
 command mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions $conf/bash/conf.d/functions
 command ln -v $repo/$uname/tmux.conf $conf/tmux.conf
 
-for i in fish
-         fish/conf.d
-         fish/conf.d/functions
-         fish/conf.d/completions
+for i in fish fish/conf.d fish/conf.d/functions fish/conf.d/completions
   builtin test -d $repo/$uname/$i;
     and command ln -rv $repo/$uname/$i/*.fish $conf/$i/
 end
 builtin test $uname == cygwin; 
-  and for i in bass
-               fish-colored-man
-               fish-source-highlight
-               plugin-await
-               plugin-balias
+  and for i in bass fish-colored-man fish-source-highlight plugin-await plugin-balias
         builtin test -d (command dirname $repo)/$i/functions;
           and command ln -rv (command dirname $repo)/$i/functions/*.fish $conf/conf.d/functions/
-        end
+      end
+  builtin test -d (command dirname $repo)/bass/functions;
+    and command ln -rv (command dirname $repo)/bass/functions/__bass.py $conf/conf.d/functions/
 
-for i in bash
-         bash/conf.d
-         bash/conf.d/functions
-  builtin test -d $repo/$uname/$i;
+for i in bash bash/conf.d bash/conf.d/functions builtin test -d $repo/$uname/$i;
     and command ln -rv $repo/$uname/$i/*.sh $conf/$i/
 end
 

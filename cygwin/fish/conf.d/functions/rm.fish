@@ -19,7 +19,7 @@ function rm --description 'securely erase and remove files or directories'
           and command rm -dv $i
       else if builtin test -f $i
         builtin test -s $i;
-          and command shred -fvxz --remove=unlink --iterations=1 $i
+          and command shred -fuvxz --remove=unlink --iterations=1 $i
           or  command rm -fv $i;
       end
     else

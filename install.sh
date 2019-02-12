@@ -30,6 +30,7 @@ then
     for i in 'bass' 'fish-colored-man' 'fish-source-highlight' 'plugin-await' 'plugin-balias'
       [ -d (command dirname $repo)/$i/functions ] && ( command ln -rv (command dirname $repo)/$i/functions/*.fish $conf/conf.d/functions/ )
     done
+    [ -d (command dirname $repo)/bass/functions ] && ( command ln -rv (command dirname $repo)/bass/functions/__bass.py $conf/conf.d/functions/ )
   fi
 
   if [ $perms -eq 0 ]

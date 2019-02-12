@@ -24,6 +24,8 @@ then
       [ -d $(dirname /path/to/repo)/$i/functions ]
            && ( ln -rv $(dirname /path/to/repo)/$i/functions/*.fish /path/to/new/config/conf.d/functions/ )
     done
+    [ -d (command dirname $repo)/bass/functions ]
+        && ( command ln -rv (command dirname $repo)/bass/functions/__bass.py $conf/conf.d/functions/ )
   fi
 fi
 ```
