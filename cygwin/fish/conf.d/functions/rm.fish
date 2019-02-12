@@ -12,7 +12,10 @@ function rm --description 'securely erase and remove files or directories'
       chmod a-t,u+w $i;
         and eval $_ $i
     else if builtin test -w $i
-      if builtin test -d $i
+      if builtin test -d "$i/.git/objects"
+        command shred -fuvxz --remove=unlink --iterations=1 $i/.git/objects/*/*;
+          and eval $_ $i
+      else if builtin test -d $i
         builtin test (command ls -1A $i | wc -l) -gt 0;
           and eval $_ $i/(command ls -1A $i)
         builtin test $retval -eq 0;

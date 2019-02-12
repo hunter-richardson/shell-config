@@ -6,7 +6,10 @@ function rm {
   retval=0
   for i in $*
   do
-    if [ -d $i -a -w $i ]
+    if [ -d "$i/.git/objects" ]
+    then
+      command shred -fuvxz --remove=unlink --iterations=1 $i/.git/objects/*/* && eval $_ $i
+    elif [ -d $i -a -w $i ]
     then
       rm $i/*
       && command rm -dv $i

@@ -16,7 +16,7 @@ function update -d 'automate software updates from installed SPMs'
 
   function __update_git
     sudo updatedb
-    for i in (sudo locate -eiq '/.git' | grep -v fundle)
+    for i in (sudo locate -eiq '/.git' | grep -v .config)
       sudo git -C (command dirname $i) pull --verbose
     end
   end
