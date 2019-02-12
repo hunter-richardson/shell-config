@@ -4,9 +4,7 @@ function dtrx
   [ -z "$@" ] && ( builtin printf 'No arguments given!' && return 1; )
 
 
-  builtin test -z "$argv";
-    and builtin printf 'No arguments given!';
-    and return 1;
+  [ -z "$argv" ] && ( builtin printf 'No arguments given!'; return 1; )
   repo=${BASH_SOURCE[0]}
   [ -z "$repo" ] && ( builtin printf 'An error occured while attempting to determine the script directory.\n'; unset repo; builtin return 1 )
   while [ -f $repo -o -h $repo ]

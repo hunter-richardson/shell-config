@@ -1,4 +1,9 @@
 #!/bin/fish
 
-set --local MY_DIR (realpath (command dirname (builtin status filename)))
-source $MY_DIR/functions/*.fish
+set --local MY_DIR (command dirname (builtin status filename))
+
+builtin test (builtin count $MY_DIR/functions/*.fish);
+  and for i in $MY_DIR/functions/*.fish
+        source $i
+      end;
+  or  true

@@ -14,14 +14,26 @@
 #   ...
 # end
 
-set --local MY_DIR (realpath (command dirname (builtin status filename)))
-source $MY_DIR/conf.d/functions/include.fish
+set --local MY_DIR (command dirname (builtin status filename))
+builtin test -d $MY_DIR/conf.d/functions.fish;
+  and source $MY_DIR/conf.d/functions.fish;
+  or  true
 
-include \
-  $MY_DIR/export_vars.fish \
-  $MY_DIR/a*s.fish \
-  $MY_DIR/conf.d/completions/*.fish \
-#  $MY_DIR/conf.d/functions/fundle/*.fish
+builtin test (builtin count $MY_DIR/conf.d/*.fish);
+  and for i in $MY_DIR/conf.d/*.fish
+        source $i
+      end;
+  or  true
+
+builtin test (builtin count $MY_DIR/conf.d/completions/*.fish);
+  and for i in $MY_DIR/conf.d/completions/*.fish
+        source $i
+      end;
+  or  true
+
+builtin test -f $MY_DIR/alias.fish;
+  and source $MY_DIR/alias.fish;
+  or  true
 
 builtin test -e "~/Downloads/*";
   and command srm -lrvz ~/Downloads/*
