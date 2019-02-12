@@ -16,15 +16,15 @@ function update -d 'automate software updates from installed SPMs'
 
   function __update_git
     sudo updatedb
-    for i in (command ls -1d (command dirname (sudo locate -eq --limit 1 '/shell-config'))/*)
-      git -C $i config --get remote.origin.url;
-        and sudo git -C $i pull
+    for i in (sudo locate -eiq '/.git')))
+      command git -C (command dirname $i) config --get remote.origin.url;
+        and sudo git -C (command dirname $i) pull
     end
   end
 
   function __update_raw
     sudo updatedb
-    for i in (command cat (sudo locate -eqr '/my-config/dpkg.raw'))
+    for i in (command cat (sudo locate -eiq --limit 1 '/my-config/dpkg.raw'))
       builtin set -l filename (builtin printf '%s' $i | command grep -oE '[^//]+$')
       sudo srm -lvz /usr/local/bin/$filename
       sudo curl -v -o /usr/local/bin/$filename $i

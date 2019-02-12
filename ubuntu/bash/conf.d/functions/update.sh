@@ -2,20 +2,14 @@
 
 function update() {
   function __update_apt() {
-       sudo apt-fast update
-    && sudo apt-fast autoremove -y
-    && sudo apt-fast upgrade -y
-    && sudo apt-fast install -fy
-    && sudo apt-fast clean -y
+    sudo apt-fast update && sudo apt-fast autoremove -y && sudo apt-fast upgrade -y && sudo apt-fast install -fy && sudo apt-fast clean -y
   }
 
   function __update_git() {
     sudo updatedb
-    gits=$(command dirname $(sudo locate -eqr '/my-config'))
-    for i in $(ls $gits)
+    for i in /usr/share/git-repos/*
     do
-      git -C $gits/$i config --get remote.origin.url
-      sudo git -C $gits/$i pull
+      command git -C $i config --get remote.origin.url && sudo git -C $i pull
     done
     unset gits
   }
@@ -23,27 +17,22 @@ function update() {
   function __update_pip() {
     for i in $(command sudo pip3 list --format=freeze | cut -d= -f1)
     do
-      builtin printf '%s\n' (command whereis $i | command cut -d' ' -f2)
-      sudo pip3 install $i -U -vvv
+      builtin printf '%s\n' (command whereis $i | command cut -d' ' -f2) && sudo pip3 install $i -U -vvv
     done
   }
 
   function __update_raw() {
     sudo updatedb
-    for i in $(command cat $(sudo locate -eqr '/my-config/dpkg.raw'))
+    for i in $(command cat $(sudo locate -eiq '/my-config/dpkg.raw'))
     do
-      filename=$(buildin printf '%s' $i | command grep -oE '[^//]+$')
-      sudo srm -lvz /usr/local/bin/$filename
-      sudo curl -v -o /usr/local/bin/$filename $i
-      sudo chmod +x /usr/local/bin/$filename
+      filename=$(buildin printf '%s' $i | command grep -oE '[^//]+$') && sudo srm -lvz /usr/local/bin/$filename && sudo curl -v -o /usr/local/bin/$filename $i && sudo chmod +x /usr/local/bin/$filename
     done
   }
 
   function __update_snap() {
     for i in $(command sudo snap list | command sed -n '1!p' | command cut -d' ' -f1)
     do
-      builtin printf '%s\n' (command whereis $i | command cut -d' ' -f2)
-      sudo snap refresh $i
+      builtin printf '%s\n' (command whereis $i | command cut -d' ' -f2) && sudo snap refresh $i
     done
   }
 
@@ -59,11 +48,7 @@ function update() {
     do
       case "$s" in
                    all)
-                        __update_apt
-                     && __update_git
-                     && __update_pip
-                     && __update_raw
-                     && __update_snap
+                     __update_apt && __update_git && __update_pip && __update_raw && __update_snap
                      ;;
                    apt)
                      __update_apt
