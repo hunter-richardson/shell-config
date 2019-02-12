@@ -14,7 +14,7 @@ then
            'fish/conf.d/functions'
            'fish/conf.d/completions'
   do
-    ln -rv /path/to/repo/$uname/fish/$i/*.fish /path/to/new/config/$i/
+    ln -v /path/to/repo/$uname/fish/$i/*.fish /path/to/new/config/$i/
   done
   if [ $uname == 'cygwin' ]
     for i in 'bass'
@@ -22,7 +22,7 @@ then
              'plugin-await'
              'plugin-balias'
       [ -d $(dirname /path/to/repo)/$i/functions ]
-           && ( ln -rv $(dirname /path/to/repo)/$i/functions/*.fish /path/to/new/config/conf.d/functions/ )
+           && ( ln -v $(dirname /path/to/repo)/$i/functions/*.fish /path/to/new/config/conf.d/functions/ )
     done
   fi
 fi
@@ -72,7 +72,7 @@ for i in 'bash'
          'bash/conf.d'
          'bash/conf.d/functions'
 do
-  ln -rv /path/to/repo/$uname/$i/*.sh /path/to/new/config/$i/
+  ln -v /path/to/repo/$uname/$i/*.sh /path/to/new/config/$i/
 done
 ```
 - To use [Fish](https://fishshell.com) and its configuration described here by default without going through the whole `cshs` trouble, or to use the `bash` functions described, run a command at the bottom of the `~/.profile` file to open a `tmux` session into `fish`. (Make sure both `tmux` and `fish` work before using this!) To apply it:
