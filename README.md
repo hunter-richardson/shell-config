@@ -1,6 +1,6 @@
 # shell-config
 This is the repository for my shell configuration. I use [Ubuntu](https://ubuntu.com) at home and [Cygwin](https://cygwin.com) at work.
-- [Ubuntu](https://ubuntu.com) and [Cygwin](https://cygwin.com) both ship with `bash` as the default shell. My favorite shell is [Fish](https://fishshell.com). I've written a few functions and aliases that are helpful for my shell in [cygwin:fish](cygwin/fish)/[ubuntu:fish](ubuntu/fish) and their subdirectories. Additionally for [Cygwin](https://cygwin.com), I will install fish plugins [bass](https://github.com/edc/bass), [colored-man](https://github.com/decors/fish-colored-man), [highlight](https://github.com/decors/fish-source-highlight), [await](https://github.com/oh-my-fish/plugin-await), and [balias](https://github.com/oh-my-fish/plugin-balias), where possible, and load their functions accordingly. (For [Ubuntu](https://ubuntu.com), I use [fundle](https://github.com/danhper/fundle) to accomplish this.) To apply them:
+- [Ubuntu](https://ubuntu.com) and [Cygwin](https://cygwin.com) both ship with `bash` as the default shell. My favorite shell is [Fish](https://fishshell.com). I've written a few functions and aliases that are helpful for my shell in [cygwin:fish](cygwin/fish)/[ubuntu:fish](ubuntu/fish) and their subdirectories. Additionally for [Cygwin](https://cygwin.com), I will install several fish plugins using [fundle](https://github.com/danhper/fundle). (For [Ubuntu](https://ubuntu.com), I use a system-wide [fundle](https://github.com/danhper/fundle) configuration to accomplish this.) To apply them:
 ```shell
 if [ -n "$(command -v fish)" ]
 then
@@ -17,15 +17,11 @@ then
     ln -v /path/to/repo/$uname/fish/$i/*.fish /path/to/new/config/$i/
   done
   if [ $uname == 'cygwin' ]
-    for i in 'bass'
-             'fish-source-highlight'
-             'plugin-await'
-             'plugin-balias'
-      [ -d $(dirname /path/to/repo)/$i/functions ]
-           && ( ln -v $(dirname /path/to/repo)/$i/functions/*.fish /path/to/new/config/conf.d/functions/ )
-    done
-    [ -d (command dirname $repo)/bass/functions ]
-        && ( command ln -rv (command dirname $repo)/bass/functions/__bass.py $conf/conf.d/functions/ )
+  then
+    [ -d $(command dirname $repo)/fundle/functions ]
+          && ( command ln -v $(command dirname $repo)/fundle/functions/*.fish $conf/conf.d/functions/ )
+    [ -d $(command dirname $repo)/fundle/completions]
+          && ( command ln -v $(command dirname $repo)/fundle/completions/*.fish $conf/conf.d/completions/ )
   fi
 fi
 ```
@@ -44,12 +40,12 @@ then
   then
     ln -v /path/to/repo/$uname/fish/fish.nanorc /usr/share/nano/fish.nanorc
     [ $uname == 'ubuntu' ]
-        && ( ln -v /path/to/repo/ubuntu/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang )
+          && ( ln -v /path/to/repo/ubuntu/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang )
   else
     ln -v /path/to/repo/$uname/fish/fish.nanorc /path/to/new/config/fish/fish.nanorc
     printf 'include %s/fish/fish.nanorc' /path/to/new/config | tee -a ~/.nanorc
     [ $uname == 'ubuntu' ]
-        && ( ln -v /path/to/repo/ubuntu/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang )
+          && ( ln -v /path/to/repo/ubuntu/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang )
   fi
 fi
 ```

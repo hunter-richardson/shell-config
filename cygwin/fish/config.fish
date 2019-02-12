@@ -19,6 +19,11 @@ builtin test -d $MY_DIR/conf.d/functions.fish;
   and source $MY_DIR/conf.d/functions.fish;
   or  true
 
+fundle plugin 'edc/bass'
+fundle plugin 'oh-my-fish/plugin-await'
+fundle plugin 'oh-my-fish/plugin-balias'
+fundle plugin 'tuvistavie/oh-my-fish-core'
+
 builtin test (builtin count $MY_DIR/conf.d/*.fish);
   and for i in $MY_DIR/conf.d/*.fish
         source $i
@@ -32,6 +37,5 @@ builtin test (builtin count $MY_DIR/conf.d/completions/*.fish);
   or  true
 
 builtin test -f $MY_DIR/alias.fish;
-  and echo test alias;
   and source $MY_DIR/alias.fish;
   or  true

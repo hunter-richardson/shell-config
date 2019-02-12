@@ -27,10 +27,8 @@ then
   done
   if [ $uname == 'cygwin' ]
   then
-    for i in 'bass' 'fish-colored-man' 'fish-source-highlight' 'plugin-await' 'plugin-balias'
-      [ -d (command dirname $repo)/$i/functions ] && ( command ln -v (command dirname $repo)/$i/functions/*.fish $conf/conf.d/functions/ )
-    done
-    [ -d (command dirname $repo)/bass/functions ] && ( command ln -rv (command dirname $repo)/bass/functions/__bass.py $conf/conf.d/functions/ )
+    [ -d $(command dirname $repo)/fundle/functions ] && ( command ln -v $(command dirname $repo)/fundle/functions/*.fish $conf/conf.d/functions/ )
+    [ -d $(command dirname $repo)/fundle/completions] && ( command ln -v $(command dirname $repo)/fundle/completions/*.fish $conf/conf.d/completions/ )
   fi
 
   if [ $perms -eq 0 ]

@@ -34,13 +34,12 @@ for i in fish fish/conf.d fish/conf.d/functions fish/conf.d/completions
   builtin test -d $repo/$uname/$i;
     and command ln -v $repo/$uname/$i/*.fish $conf/$i/
 end
-builtin test $uname == cygwin; 
-  and for i in bass fish-colored-man fish-source-highlight plugin-await plugin-balias
-        builtin test -d (command dirname $repo)/$i/functions;
-          and command ln -rv (command dirname $repo)/$i/functions/*.fish $conf/conf.d/functions/
-      end
-  builtin test -d (command dirname $repo)/bass/functions;
-    and command ln -rv (command dirname $repo)/bass/functions/__bass.py $conf/conf.d/functions/
+if builtin test $uname == cygwin
+  builtin test -d (command dirname $repo)/fundle/functions;
+    and command ln -v (command dirname $repo)/fundle/functions/*.fish $conf/conf.d/functions/
+  builtin test -d (command dirname $repo)/fundle/completions;
+    and command ln -v (command dirname $repo)/fundle/completions/*.fish $conf/conf.d/completions/
+end
 
 for i in bash bash/conf.d bash/conf.d/functions builtin test -d $repo/$uname/$i;
     and command ln -rv $repo/$uname/$i/*.sh $conf/$i/
