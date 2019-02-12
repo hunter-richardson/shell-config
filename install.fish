@@ -39,9 +39,21 @@ if builtin test $uname == cygwin
     and command ln -v (command dirname $repo)/fundle/functions/*.fish $conf/conf.d/functions/
   builtin test -d (command dirname $repo)/fundle/completions;
     and command ln -v (command dirname $repo)/fundle/completions/*.fish $conf/conf.d/completions/
+  builtin test -d (command dirname $repo)/fundle;
+    and fundle install
+  for i in (fundle list | command grep -v https://github.com)
+    chmod a+x $conf/fish/fundle/$i/functions/*
+  end
+else
+  sudo fish --command="source $conf/fish/conf.d/functions/fundle.fish; fundle install"
+  for i in (sudo fish --command="source $conf/fish/conf.d/fundle.fish; fundle list | command grep -v https://github.com")
+    sudo chmod a+x /root/.config/fish/fundle/$i/functions/*
+    sudo ln -v /root/.config/fish/fundle/$i/functions/* $conf/fish/conf.d/functions/
+  end
 end
 
-for i in bash bash/conf.d bash/conf.d/functions builtin test -d $repo/$uname/$i;
+for i in bash bash/conf.d bash/conf.d/functions
+  builtin test -d $repo/$uname/$i;
     and command ln -rv $repo/$uname/$i/*.sh $conf/$i/
 end
 

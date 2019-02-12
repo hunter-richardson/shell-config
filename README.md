@@ -24,6 +24,19 @@ then
           && ( command ln -v $(command dirname $repo)/fundle/functions/*.fish $conf/conf.d/functions/ )
     [ -d $(command dirname $repo)/fundle/completions ]
           && ( command ln -v $(command dirname $repo)/fundle/completions/*.fish $conf/conf.d/completions/ )
+    [ -d $(command dirname $repo)/fundle ]
+          && ( fundle install )
+    for i in $(fish --command="source $conf/fish/conf.d/fundle.fish; fundle list | grep -v 'https://github.com'")
+    do
+      chmod a+x $conf/fish/fundle/$i/functions/*
+    done
+  else
+    sudo fish --command="source $conf/fish/conf.d/functions/fundle.fish; fundle install"
+    for i in $(sudo fish --command="source $conf/fish/conf.d/fundle.fish; fundle list | grep -v 'https://github.com'")
+    do
+      sudo chmod a+x /root/.config/fish/fundle/$i/functions/*
+      sudo ln -v /root/.config/fish/fundle/$i/functions/* $conf/fish/conf.d/functions/
+    done
   fi
 fi
 ```
@@ -42,7 +55,7 @@ then
   then
     ln -v /path/to/repo/$uname/fish/fish.nanorc /usr/share/nano/fish.nanorc
     [ $uname == 'ubuntu' ]
-          && ( ln -v /path/to/repo/ubuntu/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang )
+          && ( sudo ln -v /path/to/repo/ubuntu/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang )
   else
     ln -v /path/to/repo/$uname/fish/fish.nanorc /path/to/new/config/fish/fish.nanorc
     printf 'include %s/fish/fish.nanorc' /path/to/new/config | tee -a ~/.nanorc

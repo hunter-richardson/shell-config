@@ -29,12 +29,24 @@ then
   then
     [ -d $(command dirname $repo)/fundle/functions ] && ( command ln -v $(command dirname $repo)/fundle/functions/*.fish $conf/conf.d/functions/ )
     [ -d $(command dirname $repo)/fundle/completions ] && ( command ln -v $(command dirname $repo)/fundle/completions/*.fish $conf/conf.d/completions/ )
+    [ -d $(command dirname $repo)/fundle ] && ( fish --command="fundle install" )
+    for i in $(fish --command="source $conf/fish/functions/fundle.fish; fundle list | command grep -v 'https://github.com'")
+    do
+      chmod a+x $conf/fish/fundle/$i/functions/*
+    done
+  else
+    sudo fish --command="source $conf/fish/conf.d/functions/fundle.fish; fundle install"
+    for i in $(sudo fish --command="source $conf/fish/functions/fundle.fish; fundle list | command grep -v 'https://github.com'")
+    do
+      sudo chmod a+x /root/.config/fish/fundle/$i/functions/*
+      sudo ln -v /root/.config/fish/fundle/$i/functions/* $conf/fish/conf.d/functions/
+    done
   fi
 
   if [ $perms -eq 0 ]
   then
     command ln -v $repo/$uname/fish/fish.nanorc /usr/share/nano/fish.nanorc
-    [ $uname == 'ubuntu' ] && ( command ln -v $repo/$uname/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang )
+    [ $uname == 'ubuntu' ] && ( command sudo ln -v $repo/$uname/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang )
   else
     command ln -v $repo/$uname/fish/fish.nanorc $conf/fish/fish.nanorc && builtin printf 'include %s/fish/fish.nanorc' $conf | command tee -a ~/.nanorc
     [ $uname == 'ubuntu' ] && ( command ln -v $repo/$uname/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang )
