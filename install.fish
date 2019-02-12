@@ -35,7 +35,7 @@ for i in fish
          fish/conf.d/functions
          fish/conf.d/completions
   builtin test -d $repo/$uname/$i;
-    and command ln -rv $repo/$uname/$i/*.fish $conf/$i/
+    and command ln -v $repo/$uname/$i/*.fish $conf/$i/
 end
 builtin test $uname == cygwin; 
   and for i in bass
@@ -44,14 +44,14 @@ builtin test $uname == cygwin;
                plugin-await
                plugin-balias
         builtin test -d (command dirname $repo)/$i/functions;
-          and command ln -rv (command dirname $repo)/$i/functions/*.fish $conf/conf.d/functions/
+          and command ln -v (command dirname $repo)/$i/functions/*.fish $conf/conf.d/functions/
         end
 
 for i in bash
          bash/conf.d
          bash/conf.d/functions
   builtin test -d $repo/$uname/$i;
-    and command ln -rv $repo/$uname/$i/*.sh $conf/$i/
+    and command ln -v $repo/$uname/$i/*.sh $conf/$i/
 end
 
 if builtin test $perms -eq 0
