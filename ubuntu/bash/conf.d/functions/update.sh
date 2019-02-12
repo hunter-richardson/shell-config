@@ -7,7 +7,7 @@ function update() {
 
   function __update_git() {
     sudo updatedb
-    for i in /usr/share/git-repos/*
+    for i in $(sudo locate -eiq '/.git')
     do
       sudo git -C $i pull --verbose
     done
