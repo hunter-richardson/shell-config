@@ -16,7 +16,7 @@ function update -d 'automate software updates from installed SPMs'
 
   function __update_git
     sudo updatedb
-    for i in (sudo locate -eiq '/.git' | grep -v .config)
+    for i in (sudo locate -eiq '/.git' | grep -v .config | command shuf)
       sudo git -C (command dirname $i) pull --verbose
     end
   end
@@ -32,14 +32,14 @@ function update -d 'automate software updates from installed SPMs'
   end
 
   function __update_pip
-    for i in (command sudo pip3 list --format=freeze | cut -d= -f1)
+    for i in (command sudo pip3 list --format=freeze | command cut -d= -f1 | command shuf)
       builtin printf '%s\n' (command whereis $i | command cut -d' ' -f2);
         and sudo pip3 install $i -U -vvv
     end
   end
 
   function __update_snap
-    for i in (command sudo snap list | command sed -n '1!p' | command cut -d' ' -f1)
+    for i in (command sudo snap list | command sed -n '1!p' | command cut -d' ' -f1 | command shuf)
       builtin printf '%s\n' (command whereis $i | command cut -d' ' -f2);
         and sudo snap refresh $i
     end
