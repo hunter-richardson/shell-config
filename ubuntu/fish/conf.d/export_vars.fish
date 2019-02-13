@@ -36,4 +36,5 @@ builtin set -g PYTHONIOENCODING 'utf-8'
 builtin set -g LESS ' -R '
 builtin set -g bookmarks ''
 builtin set -g nocmdhist commands directories bookmarks cat less ll ls
+builtin set -g grc_plugin_execs cat cvs df diff dig gcc g++ ifconfig make mount mtr netstat ping ps tail traceroute wdiff
 
