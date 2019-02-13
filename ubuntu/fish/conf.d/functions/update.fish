@@ -10,8 +10,7 @@ function update -d 'automate software updates from installed SPMs'
   end
 
   function __update_fundle
-    sudo -u root fish -c "fundle self-update"
-    sudo -u root fish -c "fundle clean; and fundle update"
+    sudo -u root fish -c "fundle self-update; and fundle clean; and fundle update"
   end
 
   function __update_git
@@ -23,7 +22,7 @@ function update -d 'automate software updates from installed SPMs'
 
   function __update_raw
     sudo updatedb
-    for i in (command cat (sudo locate -eiq --limit 1 '/my-config/dpkg.raw'))
+    for i in (command cat (sudo locate -eiq --limit 1 '/my-config/dpkg.raw') | command shuf)
       builtin set -l filename (builtin printf '%s' $i | command grep -oE '[^//]+$')
       sudo srm -lvz /usr/local/bin/$filename
       sudo curl -v -o /usr/local/bin/$filename $i

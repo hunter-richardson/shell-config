@@ -7,7 +7,7 @@ function update() {
 
   function __update_git() {
     sudo updatedb
-    for i in $(sudo locate -eiq '/.git' | grep -v '.config')
+    for i in $(sudo locate -eiq '/.git' | grep -v '.config' | command shuf)
     do
       sudo git -C $i pull --verbose
     done
@@ -15,7 +15,7 @@ function update() {
   }
 
   function __update_pip() {
-    for i in $(command sudo pip3 list --format=freeze | cut -d= -f1)
+    for i in $(command sudo pip3 list --format=freeze | cut -d= -f1 | command shuf)
     do
       builtin printf '%s\n' (command whereis $i | command cut -d' ' -f2) && sudo pip3 install $i -U -vvv
     done
@@ -23,14 +23,14 @@ function update() {
 
   function __update_raw() {
     sudo updatedb
-    for i in $(command cat $(sudo locate -eiq '/my-config/dpkg.raw'))
+    for i in $(command cat $(sudo locate -eiq '/my-config/dpkg.raw') | command shuf)
     do
       filename=$(buildin printf '%s' $i | command grep -oE '[^//]+$') && sudo srm -lvz /usr/local/bin/$filename && sudo curl -v -o /usr/local/bin/$filename $i && sudo chmod +x /usr/local/bin/$filename
     done
   }
 
   function __update_snap() {
-    for i in $(command sudo snap list | command sed -n '1!p' | command cut -d' ' -f1)
+    for i in $(command sudo snap list | command sed -n '1!p' | command cut -d' ' -f1 | command shuf)
     do
       builtin printf '%s\n' (command whereis $i | command cut -d' ' -f2) && sudo snap refresh $i
     done
