@@ -3,20 +3,11 @@ builtin test -z "$argv[1]" -o ! -d "$argv[1]" -o ! -r "$argv[1]" -o ! -w "$argv[
   and builtin return 1;
   or  builtin set conf $argv[1]
 
-builtin set repo (builtin status filename)
-builtin test -z "$repo";
-  and builtin printf 'An error occured while attempting to determine the script directory.\n';
-  and builtin set -e perms uname repo conf;
-  and builtin return 1
-while builtin test -f $repo -o -L $repo;
-  builtin set repo (builtin test -L $repo;
-                      and return (command readlink $repo))
-                      or  return (command dirname $repo);
-end
+builtin set repo (command find ~ -type d -name shell-config)
 
 if builtin test (command uname -o) = Cygwin
   builtin set uname cygwin;
-    and builtin set perms (net sessions >/dev/null 2>&1)
+    and builtin set perms (command id -G | command grep -qE '\<554\>')
 else
   builtin set uname ubuntu;
     and builtin set perms (sudo -nv ^/dev/null)
@@ -35,15 +26,20 @@ for i in fish fish/conf.d fish/conf.d/functions fish/conf.d/completions
     and command ln -v $repo/$uname/$i/*.fish $conf/$i/
 end
 if builtin test $uname == cygwin
-  builtin test -d (command dirname $repo)/fundle/functions;
-    and command ln -v (command dirname $repo)/fundle/functions/*.fish $conf/conf.d/functions/
-  builtin test -d (command dirname $repo)/fundle/completions;
-    and command ln -v (command dirname $repo)/fundle/completions/*.fish $conf/conf.d/completions/
-  builtin test -d (command dirname $repo)/fundle;
-    and fundle install
-  for i in (fundle list | command grep -v https://github.com)
-    chmod a+x $conf/fish/fundle/$i/functions/*
-  end
+  builtin test ! -d (command find ~ d -name fundle);
+    and cd (command dirname $repo);
+    and command git clone --verbose --depth 1 https://github.com/danhper/fundle ./fundle
+    and cd -
+  builtin test -d (command find ~ d -name fundle)/functions;
+    and command ln -v (command find ~ d -name fundle)/functions/*.fish $conf/conf.d/functions/
+  builtin test -d (command find ~ d -name fundle)/completions;
+    and command ln -v (command find ~ d -name fundle)/completions/*.fish $conf/conf.d/completions/
+  builtin test -d (command find ~ d -name fundle);
+    and source $conf/fish/conf.d/*/fundle.fish;
+    and fundle install;
+    and for i in (fundle list | command grep -v https://github.com)
+          command chmod a+x $conf/fish/fundle/$i/functions/*
+        end
 else
   sudo fish --command="source $conf/fish/conf.d/functions/fundle.fish; fundle install"
   for i in (sudo fish --command="source $conf/fish/conf.d/fundle.fish; fundle list | command grep -v https://github.com")

@@ -1,13 +1,8 @@
 [ -z "$1" -o ! -d "$1" -o ! -r "$1" -o ! -w "$1" ] && ( builtin printf 'Please specify a read/writeable working directory.\n'; builtin return 1 ) || ( conf=$1 )
 
-repo=${BASH_SOURCE[0]}
-[ -z "$repo" ] && ( builtin printf 'An error occured while attempting to determine the script directory.\n'; unset perms uname repo conf; builtin return 1 )
-while [ -f $repo -o -h $repo ]
-do
-  [ -L $repo ] && ( repo=$(command readlink -f $repo) ) || ( repo=$(command dirname $repo) )
-done
+repo=$(command find ~ -type d -name 'shell-config')
 
-[ $(command uname -o) == 'Cygwin' ] && ( uname='cygwin'; perms=$(net sessions >/dev/null 2>&1) ) || ( uname='ubuntu'; perms=$(sudo -nv ^/dev/null) )
+[ $(command uname -o) == 'Cygwin' ] && ( uname='cygwin'; perms=$(command id -G | command grep -qE '\<554\>') ) || ( uname='ubuntu'; perms=$(sudo -nv ^/dev/null) )
 [ ! -f $repo/$uname/tmux.conf -o ! -d $repo/$uname/fish/conf.d/functions -o ! -d $repo/$uname/bash/conf.d/functions -o ! -f $repo/$uname/fish/fish.nanorc -o ( $uname == 'ubuntu' -a ! -f $repo/$uname/fish/fish.lang ) ] && ( builtin printf 'Please run the %s script in the shell-config local repository directory.\n' $(command basename ${BASH_SOURCE[0]}); unset perms uname repo conf; builtin return 1 )
 
 command ln -v $repo/$uname/tmux.conf $conf/tmux.conf
@@ -27,16 +22,20 @@ then
   done
   if [ $uname == 'cygwin' ]
   then
-    [ -d $(command dirname $repo)/fundle/functions ] && ( command ln -v $(command dirname $repo)/fundle/functions/*.fish $conf/conf.d/functions/ )
-    [ -d $(command dirname $repo)/fundle/completions ] && ( command ln -v $(command dirname $repo)/fundle/completions/*.fish $conf/conf.d/completions/ )
-    [ -d $(command dirname $repo)/fundle ] && ( fish --command="fundle install" )
-    for i in $(fish --command="source $conf/fish/functions/fundle.fish; fundle list | command grep -v 'https://github.com'")
-    do
-      chmod a+x $conf/fish/fundle/$i/functions/*
-    done
+    [ ! -d $(command find ~ d -name 'fundle') ] && ( cd $(command dirname $repo) && command git clone --verbose --depth 1 https://github.com/danhper/fundle ./fundle && cd - )
+    [ -d $(command find ~ d -name 'fundle')/functions ] && ( command ln -v $(command find ~ d -name 'fundle')/functions/*.fish $conf/conf.d/functions/ )
+    [ -d $(command find ~ d -name 'fundle')/completions ] && ( command ln -v $(command find ~ d -name 'fundle')/completions/*.fish $conf/conf.d/completions/ )
+    if [ -d $(command find ~ d -name 'fundle') ]
+    then
+      command fish --command="source $conf/fish/functions/fundle.fish; and fundle install";
+      for i in $(fish --command="source $conf/fish/functions/fundle.fish; and fundle list | command grep -v 'https://github.com'")
+      do
+        command chmod a+x $conf/fish/fundle/$i/functions/*
+      done
+    fi
   else
-    sudo fish --command="source $conf/fish/conf.d/functions/fundle.fish; fundle install"
-    for i in $(sudo fish --command="source $conf/fish/functions/fundle.fish; fundle list | command grep -v 'https://github.com'")
+    sudo fish --command="source $conf/fish/conf.d/functions/fundle.fish; and fundle install"
+    for i in $(sudo fish --command="source $conf/fish/functions/fundle.fish; and fundle list | command grep -v 'https://github.com'")
     do
       sudo chmod a+x /root/.config/fish/fundle/$i/functions/*
       sudo ln -v /root/.config/fish/fundle/$i/functions/* $conf/fish/conf.d/functions/

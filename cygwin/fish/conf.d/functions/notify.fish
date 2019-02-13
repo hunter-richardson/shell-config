@@ -7,6 +7,8 @@ function notify -d 'beep when the given or most recent command completes'
   builtin test -z $proc;
     and builtin return 0;
     or  command tail -f --pid=$proc;
+      and builtin test (command -v spd-say);
       and speak 'done';
-      and return 0
+      and return 0;
+      or  return 0
 end

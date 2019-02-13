@@ -21,4 +21,5 @@ function exit
 	      command tmux kill-window 2>/dev/null
 	  end
   end
+  exit
 end

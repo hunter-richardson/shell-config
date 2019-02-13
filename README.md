@@ -20,19 +20,23 @@ then
   done
   if [ $uname == 'cygwin' ]
   then
-    [ -d $(command dirname $repo)/fundle/functions ]
-          && ( command ln -v $(command dirname $repo)/fundle/functions/*.fish $conf/conf.d/functions/ )
-    [ -d $(command dirname $repo)/fundle/completions ]
-          && ( command ln -v $(command dirname $repo)/fundle/completions/*.fish $conf/conf.d/completions/ )
-    [ -d $(command dirname $repo)/fundle ]
-          && ( fundle install )
-    for i in $(fish --command="source $conf/fish/conf.d/fundle.fish; fundle list | grep -v 'https://github.com'")
+    [ ! -d $(command find ~ d -name 'fundle') ]
+          && ( cd $(command dirname $repo)
+            && command git clone --verbose --depth 1 https://github.com/danhper/fundle ./fundle
+            && cd - )
+    [ -d $(command find ~ d -name 'fundle')/functions ]
+          && ( command ln -v $(command find ~ d -name 'fundle')/functions/*.fish $conf/conf.d/functions/ )
+    [ -d $(command find ~ d -name 'fundle')/completions ]
+          && ( command ln -v $(command find ~ d -name 'fundle')/completions/*.fish $conf/conf.d/completions/ )
+    [ -d $(command find ~ d -name 'fundle') ]
+          && ( fish --command="source $conf/fish/conf.d/fundle.fish; and fundle install" )
+    for i in $(fish --command="source $conf/fish/conf.d/fundle.fish; and fundle list | grep -v 'https://github.com'")
     do
       chmod a+x $conf/fish/fundle/$i/functions/*
     done
   else
-    sudo fish --command="source $conf/fish/conf.d/functions/fundle.fish; fundle install"
-    for i in $(sudo fish --command="source $conf/fish/conf.d/fundle.fish; fundle list | grep -v 'https://github.com'")
+    sudo fish --command="source $conf/fish/conf.d/functions/fundle.fish; and fundle install"
+    for i in $(sudo fish --command="source $conf/fish/conf.d/fundle.fish; and fundle list | grep -v 'https://github.com'")
     do
       sudo chmod a+x /root/.config/fish/fundle/$i/functions/*
       sudo ln -v /root/.config/fish/fundle/$i/functions/* $conf/fish/conf.d/functions/
@@ -49,7 +53,7 @@ then
         && ( uname='cygwin' )
         && ( uname='ubuntu' )
   [ uname == 'cygwin' ]
-        && ( perms=$(net sessions >/dev/null 2>&1) )
+        && ( perms=$(command id -G | command grep -qE '\<554\>') )
         && ( perms=$(sudo -nv ^/dev/null) )
   if [ $perms -eq 0 ]
   then

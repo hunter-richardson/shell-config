@@ -1,21 +1,9 @@
 #!/usr/bin/fish
 function dtrx --description 'alias to GITHUB/moonpyk:dtrx'
   builtin test -z "$argv";
-    and builtin printf 'No arguments given!';
-    and return 1
-  builtin set repo (builtin status filename)
-  builtin test -z "$repo";
-    and builtin printf 'An error occured while attempting to determine the script directory.\n';
-    and builtin set -e repo;
-    and builtin return 1
-  while builtin test -f $repo -o -L $repo;
-    builtin set repo (builtin test -L $repo;
-                        and builtin printf '%s' (command readlink $repo);
-                        or  builtin printf '%s' (command dirname $repo))
-  end
-  builtin test ! -f (command dirname $repo)/dtrx/scripts/dtrx;
-    and builtin printf '%s not installed!' https://github.com/moonpyk/dtrx;
-    and return 0;
-    or  command python (command dirname $repo)/dtrx/scripts/dtrx -forv --one-entry=inside $argv
-  set -e repo
+    and builtin printf 'Usage: dtrx [options] archive [archive2 ...]\n\ndtrx: error: you did not list any archives';
+    and return 2
+  builtin test (command find ~ -type f -name 'dtrx');
+    and command python $(command find ~ -type f -name 'dtrx') $argv;
+    or  builtin printf '%s not installed!' https://github.com/moonpyk/dtrx
 end
