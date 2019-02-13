@@ -38,8 +38,8 @@ then
     sudo fish --command="source $conf/fish/conf.d/functions/fundle.fish; and fundle install"
     for i in $(sudo fish --command="source $conf/fish/functions/fundle.fish; and fundle list | command grep -v 'https://github.com'")
     do
-      sudo chmod a+x /root/.config/fish/fundle/$i/functions/*
-      sudo ln -v /root/.config/fish/fundle/$i/functions/* $conf/fish/conf.d/functions/
+      [ -d $conf/fish/fundle/$i/completions ] && ( sudo chmod a+x $conf/fish/fundle/$i/completions/* && sudo ln -v /root/.config/fish/fundle/$i/completions/* $conf/fish/conf.d/completions/ )
+      [ -d $conf/fish/fundle/$i/functions ] && ( sudo chmod a+x $conf/fish/fundle/$i/functions/* && sudo ln -v /root/.config/fish/fundle/$i/functions/* $conf/fish/conf.d/functions/ )
     done
   fi
 
