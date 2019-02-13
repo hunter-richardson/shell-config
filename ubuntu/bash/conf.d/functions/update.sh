@@ -7,7 +7,7 @@ function update() {
 
   function __update_git() {
     sudo updatedb
-    for i in $(sudo locate -eiq '/.git' | grep -v '.config' | command shuf)
+    for i in $(sudo locate -eiq '/.git' | grep -v '/.config/' | command shuf)
     do
       sudo git -C $i pull --verbose
     done
