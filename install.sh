@@ -30,7 +30,8 @@ then
       command fish --command="builtin source $conf/fish/functions/fundle.fish; and fundle install";
       for i in $(fish --command="builtin source $conf/fish/functions/fundle.fish; and fundle list | command grep -v 'https://github.com'")
       do
-        command chmod a+x $conf/fish/fundle/$i/functions/*
+        [ -d $conf/fish/fundle/$i/completions ] && ( command chmod a+x $conf/fish/fundle/$i/completions/* )
+        [ -d $conf/fish/fundle/$i/functions ] && ( command chmod a+x $conf/fish/fundle/$i/functions/* )
       done
     fi
   else
