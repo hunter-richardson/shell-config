@@ -38,6 +38,7 @@ then
             && ( chmod a+x $conf/fish/fundle/$i/functions/* )
     done
   else
+    sudo wget https://git.io/fundle -O /root/.config/fish/functions/fundle.fish
     sudo fish --command="source $conf/fish/conf.d/functions/fundle.fish; and fundle install"
     for i in $(sudo fish --command="source $conf/fish/conf.d/fundle.fish; and fundle list | grep -v 'https://github.com'")
     do
