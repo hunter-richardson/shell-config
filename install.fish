@@ -44,8 +44,9 @@ if builtin test $uname == cygwin
             and command chmod a+x $conf/fish/fundle/$i/functions/*
         end
 else
-  sudo fish --command="source $conf/fish/conf.d/functions/fundle.fish; fundle install"
-  for i in (sudo fish --command="source $conf/fish/conf.d/fundle.fish; fundle list | command grep -v https://github.com")
+  sudo wget https://git.io/fundle -O /root/.config/fish/functions/fundle.fish
+  sudo fish --command="source /root/.config/fish/functions/fundle.fish; fundle install"
+  for i in (sudo fish --command="source /root/.config/fish/functions/fundle.fish; fundle list | command grep -v https://github.com")
     builtin test -d $conf/fish/fundle/$i/completions;
       and sudo chmod a+x $conf/fish/fundle/$i/completions/*;
       and sudo ln -v /root/.config/fish/fundle/$i/completions/* $conf/fish/conf.d/completions/
