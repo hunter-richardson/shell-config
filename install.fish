@@ -31,11 +31,11 @@ if builtin test $uname == cygwin
     and command git clone --verbose --depth 1 https://github.com/danhper/fundle ./fundle
     and cd -
   builtin test -d (command find ~ d -name fundle)/functions;
-    and command ln -v (command find ~ d -name fundle)/functions/*.fish $conf/conf.d/functions/
+    and command ln -v (command find ~ d -name fundle)/functions/*.fish $conf/fish/conf.d/functions/
   builtin test -d (command find ~ d -name fundle)/completions;
-    and command ln -v (command find ~ d -name fundle)/completions/*.fish $conf/conf.d/completions/
+    and command ln -v (command find ~ d -name fundle)/completions/*.fish $conf/fish/conf.d/completions/
   builtin test -d (command find ~ d -name fundle);
-    and source $conf/fish/conf.d/*/fundle.fish;
+    and builtin source $conf/fish/conf.d/*/fundle.fish;
     and fundle install;
     and for i in (fundle list | command grep -v https://github.com)
           command chmod a+x $conf/fish/fundle/$i/functions/*

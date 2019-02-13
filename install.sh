@@ -23,12 +23,12 @@ then
   if [ $uname == 'cygwin' ]
   then
     [ ! -d $(command find ~ d -name 'fundle') ] && ( cd $(command dirname $repo) && command git clone --verbose --depth 1 https://github.com/danhper/fundle ./fundle && cd - )
-    [ -d $(command find ~ d -name 'fundle')/functions ] && ( command ln -v $(command find ~ d -name 'fundle')/functions/*.fish $conf/conf.d/functions/ )
-    [ -d $(command find ~ d -name 'fundle')/completions ] && ( command ln -v $(command find ~ d -name 'fundle')/completions/*.fish $conf/conf.d/completions/ )
+    [ -d $(command find ~ d -name 'fundle')/functions ] && ( command ln -v $(command find ~ d -name 'fundle')/functions/*.fish $conf/fish/conf.d/functions/ )
+    [ -d $(command find ~ d -name 'fundle')/completions ] && ( command ln -v $(command find ~ d -name 'fundle')/completions/*.fish $conf/fish/conf.d/completions/ )
     if [ -d $(command find ~ d -name 'fundle') ]
     then
-      command fish --command="source $conf/fish/functions/fundle.fish; and fundle install";
-      for i in $(fish --command="source $conf/fish/functions/fundle.fish; and fundle list | command grep -v 'https://github.com'")
+      command fish --command="builtin source $conf/fish/functions/fundle.fish; and fundle install";
+      for i in $(fish --command="builtin source $conf/fish/functions/fundle.fish; and fundle list | command grep -v 'https://github.com'")
       do
         command chmod a+x $conf/fish/fundle/$i/functions/*
       done

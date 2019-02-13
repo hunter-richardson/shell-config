@@ -20,15 +20,15 @@ then
   done
   if [ $uname == 'cygwin' ]
   then
-    [ ! -d $(command find ~ d -name 'fundle') ]
-          && ( cd $(command dirname $repo)
-            && command git clone --verbose --depth 1 https://github.com/danhper/fundle ./fundle
+    [ ! -d $(find ~ d -name 'fundle') ]
+          && ( cd $(dirname $repo)
+            && git clone --verbose --depth 1 https://github.com/danhper/fundle ./fundle
             && cd - )
-    [ -d $(command find ~ d -name 'fundle')/functions ]
-          && ( command ln -v $(command find ~ d -name 'fundle')/functions/*.fish $conf/conf.d/functions/ )
-    [ -d $(command find ~ d -name 'fundle')/completions ]
-          && ( command ln -v $(command find ~ d -name 'fundle')/completions/*.fish $conf/conf.d/completions/ )
-    [ -d $(command find ~ d -name 'fundle') ]
+    [ -d $(find ~ d -name 'fundle')/functions ]
+          && ( ln -v $(find ~ d -name 'fundle')/functions/*.fish $conf/fish/conf.d/functions/ )
+    [ -d $(find ~ d -name 'fundle')/completions ]
+          && ( ln -v $(find ~ d -name 'fundle')/completions/*.fish $conf/fish/conf.d/completions/ )
+    [ -d $(find ~ d -name 'fundle') ]
           && ( fish --command="source $conf/fish/conf.d/fundle.fish; and fundle install" )
     for i in $(fish --command="source $conf/fish/conf.d/fundle.fish; and fundle list | grep -v 'https://github.com'")
     do
@@ -53,7 +53,7 @@ then
         && ( uname='cygwin' )
         && ( uname='ubuntu' )
   [ uname == 'cygwin' ]
-        && ( perms=$(command id -G | command grep -qE '\<554\>') )
+        && ( perms=$(id -G | grep -qE '\<554\>') )
         && ( perms=$(sudo -nv ^/dev/null) )
   if [ $perms -eq 0 ]
   then
