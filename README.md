@@ -32,14 +32,21 @@ then
           && ( fish --command="source $conf/fish/conf.d/fundle.fish; and fundle install" )
     for i in $(fish --command="source $conf/fish/conf.d/fundle.fish; and fundle list | grep -v 'https://github.com'")
     do
-      chmod a+x $conf/fish/fundle/$i/functions/*
+      [ -d $conf/fish/fundle/$i/comletions ]
+            && ( chmod a+x $conf/fish/fundle/$i/comletions/* )
+      [ -d $conf/fish/fundle/$i/functions ]
+            && ( chmod a+x $conf/fish/fundle/$i/functions/* )
     done
   else
     sudo fish --command="source $conf/fish/conf.d/functions/fundle.fish; and fundle install"
     for i in $(sudo fish --command="source $conf/fish/conf.d/fundle.fish; and fundle list | grep -v 'https://github.com'")
     do
-      sudo chmod a+x /root/.config/fish/fundle/$i/functions/*
-      sudo ln -v /root/.config/fish/fundle/$i/functions/* $conf/fish/conf.d/functions/
+      [ -d $conf/fish/fundle/$i/comletions ]
+            && ( sudo chmod a+x $conf/fish/fundle/$i/comletions/*
+              && sudo ln -v /root/.config/fish/fundle/$i/completions/* $conf/fish/conf.d/completions/ )
+      [ -d $conf/fish/fundle/$i/functions ]
+            && ( sudo chmod a+x $conf/fish/fundle/$i/functions/*
+              && sudo ln -v /root/.config/fish/fundle/$i/functions/* $conf/fish/conf.d/functions/ )
     done
   fi
 fi
