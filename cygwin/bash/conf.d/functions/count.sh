@@ -2,17 +2,9 @@
 
 function count {
   dir=$1
-  if [ -z $dir ]
-  then dir=$(builtin pwd)
-  elif [ ! -e $dir -o ! -d $dir ]
-  then return 2
-  fi
+  [ -z $dir ] && dir=$(builtin pwd) || [ ! -e $dir -o ! -d $dir ] && return 2
   count=$(command ls -1A $dir | command wc -l)
-  if [ $count -gt 1 ]
-  then builtin printf '%u' $count
-  elif [ $count -eq 1 ]
-  then builtin printf '%s' $(command ls -1A $dir)
-  fi
+  [ $count -gt 1 ] && builtin printf '%u' $count || [ $count -eq 1 ] && builtin printf '%s' $(command ls -1A $dir)
   unset count dir
 }
 

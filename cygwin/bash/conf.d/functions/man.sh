@@ -11,8 +11,6 @@ function man {
   LESS_TERMCAP_ue=$(builtin printf '\e[0m')
   LESS='-R -s'
 
-  [ -z "$MANPATH" ] && ( MANPATH=$(builtin command -v manpath) ) || ( MANPATH=$(echo $MANPATH | tr ' ' ':') )
-
+  [ -z "$MANPATH" ] && MANPATH=$(builtin command -v manpath) || MANPATH=$(echo $MANPATH | tr ' ' ':')
   command man $argv
-
 }

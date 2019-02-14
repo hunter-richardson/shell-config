@@ -3,22 +3,13 @@
 function gclone() {
   if [ $(command members sudo | command grep $(command whoami)) -o $(command members root | command grep $(command whoami)) ]
   then
-    if [ $# -eq 0 ]
-    then
-      builtin "No repository selected!"
-      return 2
-    else
-      for i in $@
-      do
-        IFS='/' builtin read -ra URL_PARTS <<< $i
-        repo=$(builtin echo ${URL_PARTS[-1]} | command cut -d'.' -f1)
-        if [ -z $repo ]
-        then
-          builtin "No repository selected!"
-        else
-          sudo git clone --verbose --depth 1 $i /usr/share/git-repos/$repo
-        fi
-      done
+    [ $# -eq 0 ] && builtin "No repository selected!" && return 2
+    for i in $@
+    do
+      IFS='/' builtin read -ra URL_PARTS <<< $i
+      repo=$(builtin echo ${URL_PARTS[-1]} | command cut -d'.' -f1)
+      [ -z $repo ] && builtin "No repository selected!" || sudo git clone --verbose --depth 1 $i /usr/share/git-repos/$repo
+    done
   else
     builtin printf "You are not a sudoer!"
     return 121

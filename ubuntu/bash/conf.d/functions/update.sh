@@ -36,42 +36,26 @@ function update() {
     done
   }
 
-  if [ $(command members sudo | command grep $(command whoami)) -o $(command members root | command grep $(command whoami)) ]
-  then
-    if [ $# -eq 0 ]
-    then
-      SPMs="apt git pip raw snap"
-    else
-      SPMs=$(builtin printf "%s\n" $@ | command sort -diu)
-    fi
-    for s in $SPMs
-    do
-      case "$s" in
-                   all)
-                     __update_apt && __update_git && __update_pip && __update_raw && __update_snap
-                     ;;
-                   apt)
-                     __update_apt
-                     ;;
-                   git)
-                     __update_git
-                     ;;
-        (pip|python)3?)
-                     __update_pip
-                     ;;
-                   raw)
-                     __update_raw
-                     ;;
-                  snap)
-                     __update_snap
-                     ;;
-                     *)
-                     builtin printf "\a\tUsage:  update [apt | fundle user | git | raw | pip pip3 python python3 | snap | all]\n\tupdate all =:= update apt fundle git pip raw snap\n\tDefault:  update apt git pip raw snap"
-    done
-  else
-    builtin printf "You are not a sudoer!"
-    return 121
-  fi
+  [ ! $(command members sudo | command grep $(command whoami)) -a ! $(command members root | command grep $(command whoami)) ] && builtin printf "You are not a sudoer!" && return 121
+  [ $# -eq 0 ] && SPMs="apt git pip raw snap" || SPMs=$(builtin printf "%s\n" $@ | command sort -diu)
+  for s in $SPMs
+  do
+    case "$s" in
+                 all)
+                   __update_apt && __update_git && __update_pip && __update_raw && __update_snap;;
+                 apt)
+                   __update_apt;;
+                 git)
+                   __update_git;;
+      (pip|python)3?)
+                   __update_pip;;
+                 raw)
+                   __update_raw;;
+                snap)
+                   __update_snap;;
+                   *)
+                   builtin printf "\a\tUsage:  update [apt | fundle user | git | raw | pip pip3 python python3 | snap | all]\n\tupdate all =:= update apt fundle git pip raw snap\n\tDefault:  update apt git pip raw snap"
+  done
 
   unset -f __update_apt
   unset -f __update_git

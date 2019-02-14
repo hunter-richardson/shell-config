@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function format {
-  [ -z "$1" ] && ( actions="normal" ) || ( actions=$1 )
+  [ -z "$1" ] && actions="normal" || actions=$1
   for i in $actions
   do
     case $i in

@@ -1,9 +1,6 @@
 #!/bin/bash
 
 function notify() {
-  if [ $# -gt 0 ]
-  then
-    builtin eval $@ &
-  fi
+  [ $# -gt 0 ] && builtin eval $@ &
   builtin wait %! && speak 'done'
 }
