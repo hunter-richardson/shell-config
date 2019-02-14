@@ -35,6 +35,9 @@ builtin test -f $MY_DIR/alias.fish;
   and source $MY_DIR/alias.fish;
   or  true
 
+builtin test (command -v pip3) -a (command pip3 show thefuck) -a -f $MY_DIR/functions/thefuck-command-line.fish;
+  and bind \e\e 'thefuck-command-line'
+
 builtin test -e "~/Downloads/*";
   and command srm -lrvz ~/Downloads/*
 #  or  true
