@@ -41,8 +41,8 @@ function fish_prompt -d 'the left prompt'
         builtin printf ' %s⊷ %s' $magenta $commit
       end
     end
-  else if builtin test $last_status -gt 0
-    builtin printf '%s%u\a ⋜ *)))>∈ ' $red $last_status
+  else if builtin test (builtin contains $last_status (command seq 1 121)) -a (functions -q strerror)
+    builtin printf '%s%u : %s\a ⋜ *)))>∈ ' $red $last_status (strerror $last_status)
   else
     builtin printf '%s%s :D' $cyan (
       if builtin test (date '+%p' -d "now - 6 hour") = AM
