@@ -18,7 +18,7 @@ function fish_prompt -d 'the left prompt'
             $yellow (builtin count (command git status --porcelain | command grep -v '?')) $nobold $white $bold;
       or  builtin printf ' %s✔ ' $green
     builtin set -l commit (command git rev-parse --short HEAD)
-    if builtin test (string trim $commit)
+    if builtin test (builtin string trim $commit)
       if builtin test (sudo -nv ^/dev/null)
         builtin set -l tally (sudo git fetch --all; command git rev-list --count --left-right @{u}...HEAD)
         builtin set -l upstr ''
@@ -41,7 +41,7 @@ function fish_prompt -d 'the left prompt'
         builtin printf ' %s⊷ %s' $magenta $commit
       end
     end
-  else if builtin test (builtin contains $last_status (command seq 1 121)) -a (functions -q strerror)
+  else if builtin test $last_status -ge 1 -a $last_status -le 121 -a (builtin functions -q strerror)
     builtin printf '%s%u : %s\a ⋜ *)))>∈ ' $red $last_status (strerror $last_status)
   else
     builtin printf '%s%s :D' $cyan (

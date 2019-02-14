@@ -21,7 +21,7 @@ function fish_prompt -d 'the left prompt'
     if builtin test (string trim $commit)
       builtin printf ' %s⊷ %s' $magenta $commit
     end
-  else if builtin test (builtin contains $last_status (command seq 1 121)) -a builtin functions -q strerror
+  else if builtin test $last_status -ge 1 -a $last_status -le 121 -a (builtin functions -q strerror)
     builtin printf '%s%u : %s%s] %s<*)))><' $red $last_status (strerror $last_status) $white $red
   else
     builtin printf '%s%s :D' $cyan (
