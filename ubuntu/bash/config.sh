@@ -5,3 +5,5 @@ do
   source $i/*.sh
 done
 unset MY_DIR
+
+[ -n "$(command -v pip)" -a -n "$(command pip show thefuck)" ] && eval "$(thefuck --alias --enable-experimental-instant-mode)"
