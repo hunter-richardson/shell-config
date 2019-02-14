@@ -15,9 +15,6 @@
 # end
 
 set --local MY_DIR (command dirname (builtin status filename))
-builtin test -d $MY_DIR/conf.d/functions.fish;
-  and source $MY_DIR/conf.d/functions.fish;
-  or  true
 
 fundle plugin 'edc/bass'
 fundle plugin 'decors/fish-colored-man'
@@ -29,6 +26,21 @@ fundle plugin 'oh-my-fish/plugin-errno'
 #fundle plugin 'oh-my-fish/plugin-xdg'
 fundle plugin 'tuvistavie/oh-my-fish-core'
 fundle init
+
+if builtin test ! -d $MY_DIR/fundle
+  fundle install
+  for i in (fundle list | command grep -v https://github.com)
+    builtin test -d $MY_DIR/fundle/$i/completions;
+      and chmod a+x $MY_DIR/fish/fundle/$i/completions/*
+    builtin test -d $MY_DIR/fundle/$i/functions;
+      and chmod a+x $MY_DIR/fish/fundle/$i/functions/*
+  end
+end
+
+builtin test -f $MY_DIR/conf.d/functions.fish;
+  and source $MY_DIR/conf.d/functions.fish;
+  or  true
+
 
 builtin test (builtin count $MY_DIR/conf.d/*.fish);
   and for i in $MY_DIR/conf.d/*.fish
