@@ -22,8 +22,8 @@ then
   done
   if [ $uname == 'cygwin' ]
   then
-    sudo wget https://git.io/fundle -O $conf/fish/functions/fundle.fish
-    sudo fish --command="source $conf/fish/config.fish"
+    wget https://git.io/fundle -O $conf/fish/functions/fundle.fish
+    fish --command="source $conf/fish/config.fish"
   else
     sudo wget https://git.io/fundle -O /root/.config/fish/functions/fundle.fish
     sudo fish --command="source /root/.config/fish/config.fish"
