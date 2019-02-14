@@ -22,6 +22,7 @@ builtin test -d $MY_DIR/conf.d/functions.fish;
 fundle plugin 'edc/bass'
 fundle plugin 'decors/fish-colored-man'
 fundle plugin 'decors/fish-source-highlight'
+fundle plugin 'laughedelic/pisces'
 fundle plugin 'oh-my-fish/plugin-await'
 fundle plugin 'oh-my-fish/plugin-balias'
 fundle plugin 'oh-my-fish/plugin-errno'
