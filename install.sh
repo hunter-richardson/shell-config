@@ -22,18 +22,8 @@ then
   done
   if [ $uname == 'cygwin' ]
   then
-    [ ! -d $(command find ~ d -name 'fundle') ] && ( cd $(command dirname $repo) && command git clone --verbose --depth 1 https://github.com/danhper/fundle ./fundle && cd - )
-    [ -d $(command find ~ d -name 'fundle')/functions ] && ( command ln -v $(command find ~ d -name 'fundle')/functions/*.fish $conf/fish/conf.d/functions/ )
-    [ -d $(command find ~ d -name 'fundle')/completions ] && ( command ln -v $(command find ~ d -name 'fundle')/completions/*.fish $conf/fish/conf.d/completions/ )
-    if [ -d $(command find ~ d -name 'fundle') ]
-    then
-      command fish --command="builtin source $conf/fish/functions/fundle.fish; and fundle install";
-      for i in $(fish --command="builtin source $conf/fish/functions/fundle.fish; and fundle list | command grep -v 'https://github.com'")
-      do
-        [ -d $conf/fish/fundle/$i/completions ] && ( command chmod a+x $conf/fish/fundle/$i/completions/* )
-        [ -d $conf/fish/fundle/$i/functions ] && ( command chmod a+x $conf/fish/fundle/$i/functions/* )
-      done
-    fi
+    sudo wget https://git.io/fundle -O $conf/fish/functions/fundle.fish
+    sudo fish --command="source $conf/fish/config.fish"
   else
     sudo wget https://git.io/fundle -O /root/.config/fish/functions/fundle.fish
     sudo fish --command="source /root/.config/fish/config.fish"
