@@ -26,23 +26,8 @@ for i in fish fish/conf.d fish/conf.d/functions fish/conf.d/completions
     and command ln -v $repo/$uname/$i/*.fish $conf/$i/
 end
 if builtin test $uname == cygwin
-  builtin test ! -d (command find ~ d -name fundle);
-    and cd (command dirname $repo);
-    and command git clone --verbose --depth 1 https://github.com/danhper/fundle ./fundle
-    and cd -
-  builtin test -d (command find ~ d -name fundle)/functions;
-    and command ln -v (command find ~ d -name fundle)/functions/*.fish $conf/fish/conf.d/functions/
-  builtin test -d (command find ~ d -name fundle)/completions;
-    and command ln -v (command find ~ d -name fundle)/completions/*.fish $conf/fish/conf.d/completions/
-  builtin test -d (command find ~ d -name fundle);
-    and builtin source $conf/fish/conf.d/*/fundle.fish;
-    and fundle install;
-    and for i in (fundle list | command grep -v https://github.com)
-          builtin test -d /root/.config/fish/fundle/$i/completions;
-            and command chmod a+x /root/.config/fish/fundle/$i/completions/*
-          builtin test -d /root/.config/fish/fundle/$i/functions;
-            and command chmod a+x /root/.config/fish/fundle/$i/functions/*
-        end
+  wget https://git.io/fundle -O $conf/fish/functions/fundle.fish
+  fish --command="source $conf/fish/config.fish"
 else
   sudo wget https://git.io/fundle -O /root/.config/fish/functions/fundle.fish
   sudo fish --command="source /root/.config/fish/config.fish"
