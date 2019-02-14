@@ -2,8 +2,11 @@
 
 function fish_right_prompt -d 'the right prompt'
   builtin set -l cmd_performance $CMD_DURATION
-  builtin test $cmd_performance -gt 0;
-    and builtin printf '%s%s  %u ms' $bold $blue $cmd_performance
+  if builtin test $cmd_performance -gt 0
+    builtin functions -q humanize_duration;
+      and builtin printf '%s%s  %s ms' $bold $blue (builtin printf '%u' $cmd_performance | humanize_duration);
+      or  builtin printf '%s%s  %u ms' $bold $blue $cmd_performance
+  end
   builtin printf ' %s%s%s %s' $bold $cyan (command whoami)
   builtin printf ' %s%s%s%s' $bold $magenta (
     if builtin test (command git rev-parse --is-inside-work=tree ^/dev/null)
