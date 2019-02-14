@@ -5,19 +5,8 @@ function rm {
   retval=0
   for i in $*
   do
-    if [ -d "$i/.git/objects" ]
-    then
-      command shred -fuvxz --remove=unlink --iterations=1 $i/.git/objects/*/* && eval $_ $i
-    elif [ -d $i -a -w $i ]
-      rm $i/*
-      && command rm -dv $i
-    elif [ -f $i -a -w $i ]
-    then
-      [ $(command stat --printf="%s" $i) == 0 ] && command shred -fvxz --remove=unlink --iterations=1 $i || command rm -fv $i
-    else
-      builtin printf 'Cannot delete %s%s%s!\n' $(format bold red) $i $(format normal)
-      set retval 2
-    fi
+    [ -d "$i/.git/objects" ] && command shred -fuvxz --remove=unlink --iterations=1 $i/.git/objects/*/* && eval $_ $i || [ -d $i -a -w $i ] && rm $i/* && command rm -dv $i || [ -f $i -a -w $i ] [ $(command stat --printf="%U" $i) == 0 ] && command shred 
+    -fvxz --remove=unlink --iterations=1 $i || command rm -fv $i || builtin printf 'Cannot delete %s%s%s!\n' $(format bold red) $i $(format normal) && set retval 2
   done
   return $retval
 }
