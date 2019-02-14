@@ -5,6 +5,7 @@ function update -d 'automate software updates with git and fundle'
     and fundle clean;
     and fundle update
   for i in (command find ~ -type d -name .git | command grep -v /.config/ | command shuf)
-    command git -C (command dirname $i) pull --verbose
+    builtin printf 'Updating %s ...' (command git -C $i config --get remote.origin.url);
+      and command git -C $i pull --verbose
   end
 end

@@ -9,9 +9,8 @@ function update() {
     sudo updatedb
     for i in $(sudo locate -eiq '/.git' | grep -v '/.config/' | command shuf)
     do
-      sudo git -C $i pull --verbose
+      builtin printf 'Updating %s ...' $(command git -C $i config --get remote.origin.url) && sudo git -C $i pull --verbose
     done
-    unset gits
   }
 
   function __update_pip() {
