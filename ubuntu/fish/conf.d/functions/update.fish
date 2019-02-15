@@ -48,8 +48,11 @@ function update -d 'automate software updates from installed SPMs'
   end
 
   builtin test ! (command members sudo | command grep (command whoami)) -a ! (command members root | command grep (command whoami));
-    and builtin echo 'You are not a sudoer!'
+    and builtin printf 'You are not a sudoer!'
     and return 121
+  builtin test ! (command iwgetid);
+    and builtin printf 'Unable to establish Internet connection!';
+    and return 0
   builtin test (builtin count $argv) = 0;
     and builtin set -l SPMs apt git pip snap;
     or  builtin set -l SPMs (builtin printf '%s\n' $argv | command sort -diu)
