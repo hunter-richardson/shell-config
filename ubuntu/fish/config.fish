@@ -15,27 +15,21 @@
 # end
 
 set --local MY_DIR (command dirname (builtin status filename))
-builtin test -d $MY_DIR/conf.d/functions.fish;
-  and source $MY_DIR/conf.d/functions.fish;
-  or  true
 
-builtin test (builtin count $MY_DIR/conf.d/*.fish);
-  and for i in $MY_DIR/conf.d/*.fish
-        source $i
-      end;
-  or  true
-
-builtin test (builtin count $MY_DIR/conf.d/completions/*.fish);
-  and for i in $MY_DIR/conf.d/completions/*.fish
-        source $i
-      end;
-  or  true
+for i in conf.d/functions conf.d conf.d/completions
+  builtin test (builtin count $MY_DIR/$i/*.fish)
+    and for f in $MY_DIR/$i/*.fish
+          builtin source $f;
+            and builtin printf 'source %s\n' $f
+        end
+end
 
 builtin test -f $MY_DIR/alias.fish;
   and source $MY_DIR/alias.fish;
+  and builtin printf 'source %s/alias.fish' $MY_DIR
   or  true
 
-builtin test (command -v pip3) -a (command pip3 show thefuck) -a -f $MY_DIR/functions/thefuck-command-line.fish;
+builtin test (command -v pip3) -a (command pip3 show thefuck) -a -f builtin functions -q thefuck-command-line;
   and bind \e\e 'thefuck-command-line'
 
 builtin test -e "~/Downloads/*";

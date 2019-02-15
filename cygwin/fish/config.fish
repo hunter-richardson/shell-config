@@ -33,32 +33,23 @@ end
 if builtin test ! -d $MY_DIR/fundle
   fundle install
   for i in (fundle list | command grep -v https://github.com)
+    builtin printf 'load plugin %s\n' $i | builtin string replace / :
     builtin test -d $MY_DIR/fundle/$i/completions;
       and command chmod -c a+x $MY_DIR/fish/fundle/$i/completions/*
+      and builtin source $MY_DIR/fish/fundle/$i/completions/*
     builtin test -d $MY_DIR/fundle/$i/functions;
       and command chmod -c a+x $MY_DIR/fish/fundle/$i/functions/*
+      and builtin source $MY_DIR/fish/fundle/$i/functions/*
   end
 end
 
-builtin test -f $MY_DIR/conf.d/functions.fish;
-  and builtin source $MY_DIR/conf.d/functions.fish;
-  and builtin printf 'source %s/conf.d/functions.fish\n' $MY_DIR
-  or  true
-
-
-builtin test (builtin count $MY_DIR/conf.d/*.fish);
-  and for i in $MY_DIR/conf.d/*.fish
-        builtin source $i;
-          and builtin printf 'source %s\n' $i
-      end;
-  or  true
-
-builtin test (builtin count $MY_DIR/conf.d/completions/*.fish);
-  and for i in $MY_DIR/conf.d/completions/*.fish
-        builtin source $i;
-          and builtin printf 'source %s\n' $i
-      end;
-  or  true
+for i in conf.d/functions conf.d conf.d/completions
+  builtin test (builtin count $MY_DIR/$i/*.fish);
+    and for f in $MY_DIR/$i/*.fish
+          builtin source $f;
+            and builtin printf 'source %s\n' $f
+        end
+end
 
 builtin test -f $MY_DIR/alias.fish;
   and builtin source $MY_DIR/alias.fish;

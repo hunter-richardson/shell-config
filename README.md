@@ -1,14 +1,14 @@
 # shell-config
 This is the repository for my shell configuration. I use [Ubuntu](https://ubuntu.com) at home and [Cygwin](https://cygwin.com) at work.
-- Before configuring the shell in [Cygwin](https://cygwin.com), first pull down a few `git` repositories. [repos.git](cygwin/repos.git) lists the repos I use for [Cygwin](https://cygwin.com).
+- Before configuring the shell in [Cygwin](https://cygwin.com), first pull down a few `git` repositories. [repos.git](cygwin/git/repos.git) lists the repos I use for [Cygwin](https://cygwin.com).
 ```bash
 su - # if applicable
 [ $(uname -o) == 'Cygwin' ]
       && ( uname='cygwin' )
       && ( uname='ubuntu' )
 if [ $uname == 'cygwin' ]
-  wget https://raw.githubusercontent.com/hunter-richardson/my-config/master/etc/git/config -O /path/to/new/config/git/config
-  for i in $(cat /path/to/repo/cygwin/repos.git)
+  ln -v /path/to/repo/cygwin/git/config /path/to/new/config/git/
+  for i in $(cat /path/to/repo/cygwin/git/repos.git)
   do
     echo $i && git clone --verbose --depth 1 $i $(dirname /path/to/repo)/$(echo $i | grep -oE '[^//]+$' | cut -d'.' -f1)
   done

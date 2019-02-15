@@ -13,20 +13,21 @@ else
     and builtin set perms (sudo -nv ^/dev/null)
 end
 
-builtin test ! -f $repo/cygwin/repos.git -o ! -f $repo/$uname/tmux.conf -o ! -d $repo/$uname/fish/conf.d/functions -o ! $repo/$uname/bash/conf.d/functions -o ! -f $repo/$uname/fish/fish.nanorc -o ( $uname = ubuntu -a ! -f $repo/$uname/fish/fish.lang );
+builtin test ! -f $repo/cygwin/git/repos.git -o ! -f $repo/cygwin/git/config -o ! -f $repo/$uname/tmux.conf -o ! -d $repo/$uname/fish/conf.d/functions -o ! $repo/$uname/bash/conf.d/functions -o ! -f $repo/$uname/fish/fish.nanorc -o ( $uname = ubuntu -a 
+! -f $repo/$uname/fish/fish.lang );
   and builtin printf 'Please run the %s script in the shell-config local repository directory.\n' (builtin status filename);
   and set -e perms uname repo conf;
   and builtin return 1;
 
+command mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions $conf/bash/conf.d/functions
+command ln -v $repo/$uname/tmux.conf $conf/tmux.conf
+
 builtin test $uname = cygwin;
-  and command wget https://raw.githubusercontent.com/hunter-richardson/my-config/master/etc/git/config -O $conf/git/config;
-  and for i in (command cat $repo/cygwin/repos.git | command shuf)
+  and command ln -v $repo/cygwin/git/config $conf/git/config
+  and for i in (command cat $repo/cygwin/git/repos.git | command shuf)
         builtin printf '%s\n' $i;
           and command git clone --verbose --depth 1 $i $(command dirname $repo)/$(builtin printf '%s' $i | command grep -oE [^//]+$ | command cut -d'.' -f1)
       end
-
-command mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions $conf/bash/conf.d/functions
-command ln -v $repo/$uname/tmux.conf $conf/tmux.conf
 
 for i in fish
          fish/conf.d
