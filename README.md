@@ -80,7 +80,7 @@ su - # if applicable
 [ $(uname -o) == 'Cygwin' ]
       && ( uname='cygwin' )
       && ( uname='ubuntu' )
-ln -v /path/to/repo/$uname/tmux.conf /path/to/new/config/tmux.conf
+ln -v /path/to/repo/$uname/.tmux/tmux.conf ~/.tmux.conf
 ```
 - Some installations of [Cygwin](https://cygwin.com) (probably managed by snarky old-timers) don't include new-and-fancy custom shells like [Fish](https://fishshell.com) -- in which case I must resort to `bash` instead. To this end, I have
 translated my `fish` functions and aliases into `bash`. To apply them:
@@ -101,7 +101,7 @@ done
 ```bash
 su - # if applicable
 [ -z "$TMUX" -a -n "$(command -v tmux)" ]
-      && ( printf 'exec tmux -2u -f %s/tmux.conf' /path/to/new/config | tee -a ~/.profile )
+      && ( printf 'exec tmux -2u -f %s/tmux.conf' ${HOME} | tee -a ~/.profile )
       || ( [ -n "$(command -v fish)" ]
                 && ( printf 'exec %s' $(command -v fish) | tee -a ~/.profile )
                 || ( printf 'source "%s/bash/config.sh"' /path/to/new/config | tee -a ~/.profile ) )

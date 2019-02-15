@@ -13,14 +13,14 @@ else
     and builtin set perms (sudo -nv ^/dev/null)
 end
 
-builtin test ! -f $repo/cygwin/git/repos.git -o ! -f $repo/cygwin/git/config -o ! -f $repo/$uname/tmux.conf -o ! -d $repo/$uname/fish/conf.d/functions -o ! $repo/$uname/bash/conf.d/functions -o ! -f $repo/$uname/fish/fish.nanorc -o ( $uname = ubuntu -a 
-! -f $repo/$uname/fish/fish.lang );
+builtin test ! -f $repo/cygwin/git/repos.git -o ! -f $repo/cygwin/git/config -o ! -f $repo/$uname/tmux/tmux.conf -o ! -d $repo/$uname/fish/conf.d/functions -o ! $repo/$uname/bash/conf.d/functions -o ! -f $repo/$uname/fish/fish.nanorc -o ( $uname = 
+ubuntu -a ! -f $repo/$uname/fish/fish.lang );
   and builtin printf 'Please run the %s script in the shell-config local repository directory.\n' (builtin status filename);
   and set -e perms uname repo conf;
   and builtin return 1;
 
-command mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions $conf/bash/conf.d/functions
-command ln -v $repo/$uname/tmux.conf $conf/tmux.conf
+command mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions $conf/bash/conf.d/functions ~/.tmux
+command ln -v $repo/$uname/tmux/tmux.conf ~/.tmux.conf
 
 builtin test $uname = cygwin;
   and command ln -v $repo/cygwin/git/config $conf/git/config

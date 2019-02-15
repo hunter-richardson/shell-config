@@ -3,11 +3,11 @@
 repo=$(command find ~ -type d -name 'shell-config')
 
 [ $(command uname -o) == 'Cygwin' ] && ( uname='cygwin'; perms=$(command id -G | command grep -qE '\<554\>') ) || ( uname='ubuntu'; perms=$(sudo -nv ^/dev/null) )
-[ ! -f $repo/cygwin/git/repos.git -o ! -f $repo/cygwin/git/config -o ! -f $repo/$uname/tmux.conf -o ! -d $repo/$uname/fish/conf.d/functions -o ! -d $repo/$uname/bash/conf.d/functions -o ! -f $repo/$uname/fish/fish.nanorc -o ( $uname == 'ubuntu' -a ! -f 
-$repo/$uname/fish/fish.lang ) ] && ( builtin printf 'Please run the %s script in the shell-config local repository directory.\n' $(command basename ${BASH_SOURCE[0]}); unset perms uname repo conf; builtin return 1 )
+[ ! -f $repo/cygwin/git/repos.git -o ! -f $repo/cygwin/git/config -o ! -f $repo/$uname/.tmux/tmux.conf -o ! -d $repo/$uname/fish/conf.d/functions -o ! -d $repo/$uname/bash/conf.d/functions -o ! -f $repo/$uname/fish/fish.nanorc -o ( $uname == 'ubuntu' 
+-a ! -f $repo/$uname/fish/fish.lang ) ] && ( builtin printf 'Please run the %s script in the shell-config local repository directory.\n' $(command basename ${BASH_SOURCE[0]}); unset perms uname repo conf; builtin return 1 )
 
 command mkdir -p $conf/bash/conf.d/functions $conf/git
-command ln -v $repo/$uname/tmux.conf $conf/tmux.conf
+command ln -v $repo/$uname/tmux.conf ~/.tmux.conf
 
 if [ $uname == 'cygwin' ]
 then
