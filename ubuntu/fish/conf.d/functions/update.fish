@@ -61,7 +61,7 @@ function update -d 'automate software updates from installed SPMs'
         and __update_snap
       case apt
         __update_apt
-      case fundle user
+      case fundle
         __update_fundle
       case git
         __update_git
@@ -72,7 +72,7 @@ function update -d 'automate software updates from installed SPMs'
       case snap
         __update_snap
       case '*'
-        builtin printf '\a\tUsage:  update [apt | fundle user | git | raw | pip pip3 python python3 | snap | all]\n\tupdate all =:= update apt fundle git pip snap\n\tDefault:  update apt git pip snap'
+        builtin printf '\a\tUsage:  update [apt | fundle | git | raw | pip pip3 python python3 | snap | all]\n\tupdate all =:= update apt fundle git pip snap\n\tDefault:  update apt git pip snap'
     end
   end
 
