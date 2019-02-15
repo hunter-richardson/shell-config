@@ -41,7 +41,7 @@
 [log]        abbrevcommit = false
              date = format-local:%A %d %B %Y, %H%M %Z
              decorate = full
-[merge]      verifysignatures = true
+[merge]      verifysignatures = false
              renormalize = true
 [push]       default = simple
              gpgsign = false
