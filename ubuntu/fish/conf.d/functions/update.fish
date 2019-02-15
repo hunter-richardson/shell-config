@@ -18,8 +18,8 @@ function update -d 'automate software updates from installed SPMs'
     for i in (sudo locate -eiq '/.git' | grep -v /.config/ | command shuf)
       builtin printf 'Updating %s ...\n' (command git -C $i config --get remote.origin.url);
         and sudo git -C (command dirname $i) pull --verbose
-        builtin test $i = hunter-richardson/shell-config;
-          and source /etc/fish/config.fish
+      builtin test $i = hunter-richardson/shell-config;
+        and source /etc/fish/config.fish
     end
   end
 
@@ -34,14 +34,14 @@ function update -d 'automate software updates from installed SPMs'
   end
 
   function __update_pip
-    for i in (command sudo pip3 list --format=freeze | command cut -d= -f1 | command shuf)
+    for i in (sudo pip3 list --format=freeze | command cut -d= -f1 | command shuf)
       builtin printf '%s\n' (command whereis $i | command cut -d' ' -f2);
         and sudo pip3 install $i -U -vvv
     end
   end
 
   function __update_snap
-    for i in (command sudo snap list | command sed -n '1!p' | command cut -d' ' -f1 | command shuf)
+    for i in (sudo snap list | command sed -n '1!p' | command cut -d' ' -f1 | command shuf)
       builtin printf '%s\n' (command whereis $i | command cut -d' ' -f2);
         and sudo snap refresh $i
     end
