@@ -42,7 +42,7 @@ if builtin test $uname == cygwin
 else
   for i in functions completions
     sudo wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /root/.config/fish/conf.d/$i/fundle.fish;
-      and sudo chmod -c a+x /root/.config/fish/conf.d/$i/fundle.fish
+      and sudo chmod -c o+x /root/.config/fish/conf.d/$i/fundle.fish
   end
   sudo fish --command="source /root/.config/fish/config.fish"
 end

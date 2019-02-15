@@ -3,10 +3,7 @@ This is the repository for my shell configuration. I use [Ubuntu](https://ubuntu
 - Before configuring the shell in [Cygwin](https://cygwin.com), first pull down a few `git` repositories. [repos.git](cygwin/git/repos.git) lists the repos I use for [Cygwin](https://cygwin.com).
 ```bash
 su - # if applicable
-[ $(uname -o) == 'Cygwin' ]
-      && ( uname='cygwin' )
-      && ( uname='ubuntu' )
-if [ $uname == 'cygwin' ]
+if [ $(uname -o) == 'Cygwin' ]
   ln -v /path/to/repo/cygwin/git/config /path/to/new/config/git/
   for i in $(cat /path/to/repo/cygwin/git/repos.git)
   do
@@ -37,14 +34,16 @@ then
     for i in 'functions'
              'completions'
     do
-      wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /path/to/new/config/conf.d/$i/fundle.fish && chmod -c a+x /path/to/new/config/fish/conf.d/$i/fundle.fish
+      wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /path/to/new/config/conf.d/$i/fundle.fish
+          && chmod -c a+x /path/to/new/config/fish/conf.d/$i/fundle.fish
     done
     fish --command="source /path/to/new/config/fish/config.fish"
   else
     for i in 'functions'
              'completions'
     do
-      sudo wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /root/.config/conf.d/$i/fundle.fish && chmod -c a+x /root/.config/fish/conf.d/$i/fundle.fish
+      sudo wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /root/.config/conf.d/$i/fundle.fish
+          && chmod -c o+x /root/.config/fish/conf.d/$i/fundle.fish
     done
     sudo fish --command="source /root/.config/config.fish"
   fi
