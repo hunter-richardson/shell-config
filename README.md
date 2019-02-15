@@ -1,5 +1,19 @@
 # shell-config
 This is the repository for my shell configuration. I use [Ubuntu](https://ubuntu.com) at home and [Cygwin](https://cygwin.com) at work.
+- Before configuring the shell in [Cygwin](https://cygwin.com), first pull down a few `git` repositories. [repos.git](cygwin/repos.git) lists the repos I use for [Cygwin](https://cygwin.com).
+```bash
+su - # if applicable
+[ $(uname -o) == 'Cygwin' ]
+      && ( uname='cygwin' )
+      && ( uname='ubuntu' )
+if [ $uname == 'cygwin' ]
+  wget https://raw.githubusercontent.com/hunter-richardson/my-config/master/etc/git/config -O /path/to/new/config/git/config
+  for i in $(cat /path/to/repo/cygwin/repos.git)
+  do
+    echo $i && git clone --verbose --depth 1 $i $(dirname /path/to/repo)/$(echo $i | grep -oE '[^//]+$' | cut -d'.' -f1)
+  done
+fi
+```
 - [Ubuntu](https://ubuntu.com) and [Cygwin](https://cygwin.com) both ship with `bash` as the default shell. My favorite shell is [Fish](https://fishshell.com). I've written a few functions and aliases that are helpful for my shell in 
 [cygwin:fish](cygwin/fish)/[ubuntu:fish](ubuntu/fish) and their subdirectories. Additionally for [Cygwin](https://cygwin.com), I will use [`fundle`](https://github.com/danhper/fundle) to install several `fish` plugins, listed in 
 [cygwin:config.fish](cygwin/fish/config.fish). (For [Ubuntu](https://ubuntu.com), I use [system-wide `fundle` configuration](https://github.com/hunter-richardson/my-config/blob/master/root/.config/fish/config.fish) to accomplish this.) To apply them:
@@ -20,25 +34,18 @@ then
   done
   if [ $uname == 'cygwin' ]
   then
-    [ ! -d $(find ~ d -name 'fundle') ]
-          && ( cd $(dirname $repo)
-            && git clone --verbose --depth 1 https://github.com/danhper/fundle ./fundle
-            && cd - )
-    [ -d $(find ~ d -name 'fundle')/functions ]
-          && ( ln -v $(find ~ d -name 'fundle')/functions/*.fish $conf/fish/conf.d/functions/ )
-    [ -d $(find ~ d -name 'fundle')/completions ]
-          && ( ln -v $(find ~ d -name 'fundle')/completions/*.fish $conf/fish/conf.d/completions/ )
-    [ -d $(find ~ d -name 'fundle') ]
-          && ( fish --command="source $conf/fish/conf.d/fundle.fish; and fundle install" )
-    for i in $(fish --command="source $conf/fish/conf.d/fundle.fish; and fundle list | grep -v 'https://github.com'")
+    for i in 'functions'
+             'completions'
     do
-      [ -d $conf/fish/fundle/$i/comletions ]
-            && ( chmod a+x $conf/fish/fundle/$i/comletions/* )
-      [ -d $conf/fish/fundle/$i/functions ]
-            && ( chmod a+x $conf/fish/fundle/$i/functions/* )
+      wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /path/to/new/config/conf.d/$i/fundle.fish && chmod -c a+x /path/to/new/config/fish/conf.d/$i/fundle.fish
     done
+    fish --command="source /path/to/new/config/fish/config.fish"
   else
-    sudo wget https://git.io/fundle -O /root/.config/fish/functions/fundle.fish
+    for i in 'functions'
+             'completions'
+    do
+      sudo wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /root/.config/conf.d/$i/fundle.fish && chmod -c a+x /root/.config/fish/conf.d/$i/fundle.fish
+    done
     sudo fish --command="source /root/.config/config.fish"
   fi
 fi

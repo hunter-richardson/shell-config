@@ -14,6 +14,7 @@ function rm --description 'securely erase and remove files or directories'
     else if builtin test -w $i
       if builtin test -d "$i/.git/objects"
         command shred -fuvxz --remove=unlink --iterations=1 $i/.git/objects/*/*;
+          and command rm -dv $i/.git/objects/* $i/.git/objects
           and eval $_ $i
       else if builtin test -d $i
         builtin test (command ls -1A $i | wc -l) -gt 0;

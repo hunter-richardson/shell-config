@@ -13,27 +13,47 @@ else
     and builtin set perms (sudo -nv ^/dev/null)
 end
 
-builtin test ! -f $repo/$uname/tmux.conf -o ! -d $repo/$uname/fish/conf.d/functions -o ! $repo/$uname/bash/conf.d/functions -o ! -f $repo/$uname/fish/fish.nanorc -o ( $uname = ubuntu -a ! -f $repo/$uname/fish/fish.lang );
+builtin test ! -f $repo/cygwin/repos.git -o ! -f $repo/$uname/tmux.conf -o ! -d $repo/$uname/fish/conf.d/functions -o ! $repo/$uname/bash/conf.d/functions -o ! -f $repo/$uname/fish/fish.nanorc -o ( $uname = ubuntu -a ! -f $repo/$uname/fish/fish.lang );
   and builtin printf 'Please run the %s script in the shell-config local repository directory.\n' (builtin status filename);
   and set -e perms uname repo conf;
   and builtin return 1;
 
+builtin test $uname = cygwin;
+  and command wget https://raw.githubusercontent.com/hunter-richardson/my-config/master/etc/git/config -O $conf/git/config;
+  and for i in (command cat $repo/cygwin/repos.git | command shuf)
+        builtin printf '%s\n' $i;
+          and command git clone --verbose --depth 1 $i $(command dirname $repo)/$(builtin printf '%s' $i | command grep -oE [^//]+$ | command cut -d'.' -f1)
+      end
+
 command mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions $conf/bash/conf.d/functions
 command ln -v $repo/$uname/tmux.conf $conf/tmux.conf
 
-for i in fish fish/conf.d fish/conf.d/functions fish/conf.d/completions
+for i in fish
+         fish/conf.d
+         fish/conf.d/functions
+         fish/conf.d/completions
   builtin test -d $repo/$uname/$i;
     and command ln -v $repo/$uname/$i/*.fish $conf/$i/
 end
 if builtin test $uname == cygwin
-  wget https://git.io/fundle -O $conf/fish/functions/fundle.fish
+  for i in functions
+           completions
+    command wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O $conf/fish/conf.d/$i/fundle.fish;
+      and command chmod -c a+x $conf/fish/conf.d/$i/fundle.fish
+  end
   fish --command="source $conf/fish/config.fish"
 else
-  sudo wget https://git.io/fundle -O /root/.config/fish/functions/fundle.fish
+  for i in functions
+           completions
+    sudo wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /root/.config/fish/conf.d/$i/fundle.fish;
+      and sudo chmod -c a+x /root/.config/fish/conf.d/$i/fundle.fish
+  end
   sudo fish --command="source /root/.config/fish/config.fish"
 end
 
-for i in bash bash/conf.d bash/conf.d/functions
+for i in bash
+         bash/conf.d
+         bash/conf.d/functions
   builtin test -d $repo/$uname/$i;
     and command ln -rv $repo/$uname/$i/*.sh $conf/$i/
 end
