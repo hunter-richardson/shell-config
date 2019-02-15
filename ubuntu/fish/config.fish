@@ -26,12 +26,13 @@ end
 
 builtin test -f $MY_DIR/alias.fish;
   and source $MY_DIR/alias.fish;
-  and builtin printf 'source %s/alias.fish' $MY_DIR
+  and builtin printf 'source %s/alias.fish' $MY_DIR;
   or  true
 
 builtin test (command -v pip3) -a (command pip3 show thefuck) -a -f builtin functions -q thefuck-command-line;
-  and bind \e\e 'thefuck-command-line'
+  and bind \e\e 'thefuck-command-line';
+  or  true
 
-builtin test -e "~/Downloads/*";
+builtin test (builtin count "~/Downloads/*");
   and command srm -lrvz ~/Downloads/*
-#  or  true
+  or  true
