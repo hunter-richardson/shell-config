@@ -53,5 +53,5 @@ end
 
 builtin test -f $MY_DIR/alias.fish;
   and builtin source $MY_DIR/alias.fish;
-  and builtin printf 'source %s/alias.fish\n' $MY_DIR
+  and builtin printf 'source %s/alias.fish\n' $MY_DIR;
   or  true
