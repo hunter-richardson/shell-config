@@ -15,7 +15,7 @@ function update() {
   }
 
   function __update_pip() {
-    for i in $(command sudo pip3 list --format=freeze | cut -d= -f1 | command shuf)
+    for i in $(sudo pip3 list --format=freeze | cut -d= -f1 | command shuf)
     do
       builtin printf '%s\n' (command whereis $i | command cut -d' ' -f2) && sudo pip3 install $i -U -vvv
     done
@@ -30,7 +30,7 @@ function update() {
   }
 
   function __update_snap() {
-    for i in $(command sudo snap list | command sed -n '1!p' | command cut -d' ' -f1 | command shuf)
+    for i in $(sudo snap list | command sed -n '1!p' | command cut -d' ' -f1 | command shuf)
     do
       builtin printf '%s\n' (command whereis $i | command cut -d' ' -f2) && sudo snap refresh $i
     done
