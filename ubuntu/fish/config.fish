@@ -29,7 +29,7 @@ builtin test -f $MY_DIR/alias.fish;
   and builtin printf 'source %s/alias.fish' $MY_DIR;
   or  true
 
-builtin test (command -v pip3) -a (command pip3 show thefuck) -a -f builtin functions -q thefuck-command-line;
+builtin test (builtin command -v pip3) -a (builtin command pip3 show thefuck) -a (builtin functions -q thefuck-command-line);
   and bind \e\e 'thefuck-command-line';
   or  true
 
