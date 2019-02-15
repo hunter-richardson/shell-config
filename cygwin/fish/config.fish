@@ -34,12 +34,11 @@ if builtin test ! -d $MY_DIR/fundle
   fundle install
   for i in (fundle list | command grep -v https://github.com)
     builtin printf 'load plugin %s\n' $i | builtin string replace / :
-    builtin test -d $MY_DIR/fundle/$i/completions;
-      and command chmod -c a+x $MY_DIR/fish/fundle/$i/completions/*
-      and builtin source $MY_DIR/fish/fundle/$i/completions/*
-    builtin test -d $MY_DIR/fundle/$i/functions;
-      and command chmod -c a+x $MY_DIR/fish/fundle/$i/functions/*
-      and builtin source $MY_DIR/fish/fundle/$i/functions/*
+    for f in functions completions
+      test -d $MY_DIR/fish/fundle/$i/$f;
+        and chmod a+x $MY_DIR/fish/fundle/$i/$f/*;
+        and ln -v $MY_DIR/fish/fundle/$i/$f/* /etc/fish/$f/
+    end
   end
 end
 
