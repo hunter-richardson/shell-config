@@ -29,32 +29,25 @@ builtin test $uname = cygwin;
           and command git clone --verbose --depth 1 $i $(command dirname $repo)/$(builtin printf '%s' $i | command grep -oE [^//]+$ | command cut -d'.' -f1)
       end
 
-for i in fish
-         fish/conf.d
-         fish/conf.d/functions
-         fish/conf.d/completions
+for i in fish fish/conf.d fish/conf.d/functions fish/conf.d/completions
   builtin test -d $repo/$uname/$i;
     and command ln -v $repo/$uname/$i/*.fish $conf/$i/
 end
 if builtin test $uname == cygwin
-  for i in functions
-           completions
+  for i in functions completions
     command wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O $conf/fish/conf.d/$i/fundle.fish;
       and command chmod -c a+x $conf/fish/conf.d/$i/fundle.fish
   end
   fish --command="source $conf/fish/config.fish"
 else
-  for i in functions
-           completions
+  for i in functions completions
     sudo wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /root/.config/fish/conf.d/$i/fundle.fish;
       and sudo chmod -c a+x /root/.config/fish/conf.d/$i/fundle.fish
   end
   sudo fish --command="source /root/.config/fish/config.fish"
 end
 
-for i in bash
-         bash/conf.d
-         bash/conf.d/functions
+for i in bash bash/conf.d bash/conf.d/functions
   builtin test -d $repo/$uname/$i;
     and command ln -rv $repo/$uname/$i/*.sh $conf/$i/
 end
