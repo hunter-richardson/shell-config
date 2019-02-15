@@ -18,6 +18,8 @@ function update -d 'automate software updates from installed SPMs'
     for i in (sudo locate -eiq '/.git' | grep -v /.config/ | command shuf)
       builtin printf 'Updating %s ...\n' (command git -C $i config --get remote.origin.url);
         and sudo git -C (command dirname $i) pull --verbose
+        builtin test $i = hunter-richardson/shell-config;
+          and source ~/.config/fish/config.fish
     end
   end
 
