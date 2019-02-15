@@ -1,6 +1,6 @@
 #!/usr/bin/fish
 
-builtin test (command -v pip3) -a (command pip3 show thefuck);
+builtin test (builtin command -v pip3) -a (builtin command pip3 show thefuck);
   and function fuck -d 'integrate fish with https://github.com/nvbn/thefuck'
         set -l TF_PYTHONIOENCODING $PYTHONIOENCODING;
         set -x TF_ALIAS fuck
