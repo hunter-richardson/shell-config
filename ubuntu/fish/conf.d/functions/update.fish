@@ -9,6 +9,11 @@ function update -d 'automate software updates from installed SPMs'
     and sudo apt-fast clean -y
   end
 
+  function __update_brew
+    sudo brew -v update;
+      and sudo brew -v upgrade
+  end
+
   function __update_fundle
     sudo -u root fish -c "fundle self-update; and fundle clean; and fundle update"
   end
@@ -30,13 +35,6 @@ function update -d 'automate software updates from installed SPMs'
       sudo srm -lvz /usr/local/bin/$filename
       sudo curl -v -o /usr/local/bin/$filename $i
       sudo chmod +x /usr/local/bin/$filename
-    end
-  end
-
-  function __update_pip
-    for i in (sudo pip3 list --format=freeze | command cut -d= -f1 | command shuf)
-      builtin printf '%s\n' (command whereis $i | command cut -d' ' -f2);
-        and sudo pip3 install $i -U -vvv
     end
   end
 
@@ -66,25 +64,25 @@ function update -d 'automate software updates from installed SPMs'
         and __update_snap
       case apt
         __update_apt
+      case brew
+        __update_brew
       case fundle
         __update_fundle
       case git
         __update_git
       case raw
         __update_raw
-      case pip pip3 python python3
-        __update_pip
       case snap
         __update_snap
       case '*'
-        builtin printf '\a\tUsage:  update [apt | fundle | git | raw | pip pip3 python python3 | snap | all]\n\tupdate all =:= update apt fundle git pip snap\n\tDefault:  update apt git pip snap'
+        builtin printf '\a\tUsage:  update [apt | brew | fundle | git | raw | snap | all]\n\tupdate all =:= update apt fundle git pip snap\n\tDefault:  update apt brew git snap'
     end
   end
 
   functions -e __update_apt
+  functions -e __update_brew
   functions -e __update_fundle
   functions -e __update_git
   functions -e __update_raw
-  functions -e __update_pip
   functions -e __update_snap
 end
