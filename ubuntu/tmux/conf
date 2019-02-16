@@ -63,7 +63,7 @@ set -g history-limit 50000
 bind f command-prompt -p "(find-window)" "find-window -T '%%'"
 
 #reload tmux.conf with r instead of i
-bind r source-file /etc/tmux.conf \; display "/etc/tmux.conf reloaded."
+bind r source-file /etct/tmux/conf \; display "/etc/tmux/conf reloaded."
 
 # format messages
 set -g message-attr bold
@@ -114,8 +114,12 @@ set -g @plugins '\
   tmux-plugins/tmux-urlview \
   tmux-plugins/tmux-yank '
 
+# load environment
+set-environment -g TMUX_PLUGIN_MANAGER_PATH '/etc/tmux/'
+set-environment -g PATH "/usr/local/bin:/bin:/usr/bin"
+
 # run plugins
-run '/usr/share/git-repos/tpm/tpm'
+run '/etc/tmux/tpm/tpm'
 
 # set up panes layout
 #split-window -h
