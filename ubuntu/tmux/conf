@@ -110,6 +110,7 @@ set -g @custom_copy_command 'command xsel -bv --output'
 
 # pull down plugins
 set -g @plugins '\
+  tmux-plugins/tmux-logging \
   tmux-plugins/tmux-prefix-highlight \
   tmux-plugins/tmux-urlview \
   tmux-plugins/tmux-yank '
