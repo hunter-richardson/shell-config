@@ -7,7 +7,16 @@ repo=$(command find ~ -type d -name 'shell-config')
 -a ! -f $repo/$uname/fish/fish.lang ) ] && ( builtin printf 'Please run the %s script in the shell-config local repository directory.\n' $(command basename ${BASH_SOURCE[0]}); unset perms uname repo conf; builtin return 1 )
 
 command mkdir -p $conf/bash/conf.d/functions $conf/git
-command ln -v $repo/$uname/tmux.conf ~/.tmux.conf
+if [ $perms -eq 0 ]
+then
+  command mkdir -p /etc/tmux
+  command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux /etc/tmux/tpm
+  command ln -v $repo/$uname/tmux/conf /etc/tmux/
+else
+  command mkdir -p ~/tmux
+  command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux ~/tmux/tpm
+  command ln -v $repo/$uname/tmux/conf ~/tmux/
+fi
 
 if [ $uname == 'cygwin' ]
 then
@@ -55,6 +64,6 @@ then
   fi
 fi
 
-[ -z "$TMUX" -a -n "$(builtin command -v tmux)" ] && ( builtin printf 'exec tmux -2u -f %s/tmux.conf' $conf | tee -a ~/.profile ) || ( [ -n "$(builtin command -v fish)" ] && ( builtin printf 'exec %s' $(builtin command -v fish) | tee -a ~/.profile ) || ( builtin printf 'source "%s/bash/config.sh"' $conf | tee -a ~/.profile ) )
+[ -z "$TMUX" -a -n "$(builtin command -v tmux)" ] && ( [ $perms -eq 0 ] builtin printf 'exec tmux -2u -f %s/tmux/conf' ${HOME} | tee -a ~/.profile || builtin printf 'exec tmux -2u -f %s/tmux/conf' /etc | tee -a ~/.profile ) || ( [ -n "$(builtin command -v fish)" ] && ( builtin printf 'exec %s' $(builtin command -v fish) | tee -a ~/.profile ) || ( builtin printf 'source "%s/bash/config.sh"' $conf | tee -a ~/.profile ) )
 
 unset perms uname repo conf
