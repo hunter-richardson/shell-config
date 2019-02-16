@@ -10,8 +10,8 @@ function update -d 'automate software updates from installed SPMs'
   end
 
   function __update_brew
-    sudo brew -v update;
-      and sudo brew -v upgrade
+    sudo brew update -v;
+      and sudo brew upgrade -v
   end
 
   function __update_fundle
@@ -75,7 +75,7 @@ function update -d 'automate software updates from installed SPMs'
       case snap
         __update_snap
       case '*'
-        builtin printf '\a\tUsage:  update [apt | brew | fundle | git | raw | snap | all]\n\tupdate all =:= update apt fundle git pip snap\n\tDefault:  update apt brew git snap'
+        builtin printf '\a\tUsage:  update [apt | brew | fundle | git | raw | snap | all]\n\tupdate all =:= update apt brew fundle git snap\n\tDefault:  update apt brew git snap'
     end
   end
 
