@@ -9,13 +9,13 @@ repo=$(command find ~ -type d -name 'shell-config')
 command mkdir -p $conf/bash/conf.d/functions $conf/git
 if [ $perms -eq 0 ]
 then
-  command mkdir -p /etc/tmux
-  command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux /etc/tmux/tpm
-  command ln -v $repo/$uname/tmux/conf /etc/tmux/
-else
   command mkdir -p ~/tmux
   command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux ~/tmux/tpm
   command ln -v $repo/$uname/tmux/conf ~/tmux/
+else
+  command mkdir -p /etc/tmux
+  command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux /etc/tmux/tpm
+  command ln -v $repo/$uname/tmux/conf /etc/tmux/
 fi
 
 if [ $uname == 'cygwin' ]
