@@ -19,8 +19,9 @@ ubuntu -a ! -f $repo/$uname/fish/fish.lang );
   and set -e perms uname repo conf;
   and builtin return 1;
 
-command mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions $conf/bash/conf.d/functions ~/.tmux
-command ln -v $repo/$uname/tmux/tmux.conf ~/.tmux.conf
+command mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions $conf/bash/conf.d/functions ~/tmux
+command git clone --verbose --depth 1 https://github.com/tmux-plugins/tpm ~/tmux/tpm
+command ln -v $repo/$uname/tmux/conf ~/tmux/
 
 builtin test $uname = cygwin;
   and command ln -v $repo/cygwin/git/config $conf/git/config
