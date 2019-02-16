@@ -73,14 +73,26 @@ then
   fi
 fi
 ```
-- `tmux` is a terminal multiplexer that sets up a status bar and allows windows to split into panes. The [ubuntu:tmux.conf](ubuntu/tmux.conf) / [cygwin:tmux.conf](cygwin/tmux.conf) files contain my `tmux` configuration. See the [tmux
+- `tmux` is a terminal multiplexer that sets up a status bar and allows windows to split into panes. The [ubuntu:tmux/conf](ubuntu/tmux/conf) / [cygwin:tmux/conf](cygwin/tmux/conf) files contain my `tmux` configuration. See the [tmux
 manual](https://man.openbsd.org/OpenBSD-current/man1/tmux.1) for more information. To apply it:
 ```bash
 su - # if applicable
 [ $(uname -o) == 'Cygwin' ]
       && ( uname='cygwin' )
       && ( uname='ubuntu' )
-ln -v /path/to/repo/$uname/.tmux/tmux.conf ~/.tmux.conf
+  [ uname == 'cygwin' ]
+        && ( perms=$(id -G | grep -qE '\<554\>') )
+        && ( perms=$(sudo -nv ^/dev/null) )
+if [ $perms -eq 0 ]
+then
+  command mkdir -p ~/tmux
+  command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux ~/tmux/tpm
+  command ln -v $repo/$uname/tmux/conf ~/tmux/
+else
+  command mkdir -p /etc/tmux
+  command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux /etc/tmux/tpm
+  command ln -v $repo/$uname/tmux/conf /etc/tmux/
+fi
 ```
 - Some installations of [Cygwin](https://cygwin.com) (probably managed by snarky old-timers) don't include new-and-fancy custom shells like [Fish](https://fishshell.com) -- in which case I must resort to `bash` instead. To this end, I have
 translated my `fish` functions and aliases into `bash`. To apply them:
