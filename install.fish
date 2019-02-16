@@ -19,9 +19,15 @@ ubuntu -a ! -f $repo/$uname/fish/fish.lang );
   and set -e perms uname repo conf;
   and builtin return 1;
 
-command mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions $conf/bash/conf.d/functions ~/tmux
-command git clone --verbose --depth 1 https://github.com/tmux-plugins/tpm ~/tmux/tpm
-command ln -v $repo/$uname/tmux/conf ~/tmux/
+command mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions $conf/bash/conf.d/functions (builtin test $perms;
+                                                                                                          and builtin printf '${HOME}';
+                                                                                                          or  builtin printf '/etc')/tmux
+command git clone --verbose --depth 1 https://github.com/tmux-plugins/tpm (builtin test $perms;
+                                                                             and builtin printf '${HOME}';
+                                                                             or  builtin printf '/etc')/tmux/tpm
+command ln -v $repo/$uname/tmux/conf (builtin test $perms;
+                                        and builtin printf '${HOME}';
+                                        or  builtin printf '/etc')/tmux/
 
 builtin test $uname = cygwin;
   and command ln -v $repo/cygwin/git/config $conf/git/config
@@ -68,6 +74,8 @@ builtin -z "$TMUX" -a (builtin command -v tmux);
   and builtin printf 'exec tmux -2u -f %s/tmux.conf' $conf | tee -a ~/.profile
   or  builtin test (builtin command -v fish);
       and builtin printf 'exec %s' $(builtin command -v fish) | tee -a ~/.profile;
-      or  builtin printf 'source "%s/bash/config.sh"' $conf | tee -a ~/.profile
+      or  builtin printf 'source "%s/bash/config.sh"' (builtin test $perms;
+                                                         and builtin printf '${HOME}';
+                                                         or  builtin printf '/etc')/tmux/conf | tee -a ~/.profile
 
 set -e perms uname repo conf
