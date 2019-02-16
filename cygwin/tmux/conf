@@ -111,6 +111,8 @@ set -g @custom_copy_command 'command xsel -bv --output'
 # pull down plugins
 set -g @plugins ' \
   tmux-plugins/tpm \
+  tmux-plugins/tmux-open \
+  tmux-pkugins/tmux-online-status \
   tmux-plugins/tmux-prefix-highlight \
   tmux-plugins/tmux-urlview \
   tmux-plugins/tmux-yank '
