@@ -81,7 +81,7 @@ set -g status on
 # format status
 set -g status-justify centre
 set -g status-bg black
-set -g status-left "#[fg=brightmagenta,bold]🏐 #h #[fg=brightgreen,bold]#{online_status} #[fg=brightwhite,bold]#{prefix_highlight}"
+set -g status-left "#[fg=brightmagenta,bold]🏐 #h #{online_status} #[fg=brightwhite,bold]#{prefix_highlight}"
 set -g status-right "#[fg=brightyellow,bold]🕜 %A %e %B %Y, %H%M %Z"
 set -g status-style fg=brightwhite,bold,bg=black
 # position status
@@ -100,8 +100,8 @@ set -g visual-activity off
 
 # plugin variables
 set -g @custom_copy_command 'command xsel -bv --output'
-#set -g @online-icon ''
-#set -g @offline-icon ''
+set -g @online-icon '#[fg=brightgreen,bold]✔'
+set -g @offline-icon '#[fg=brightred,bold]X'
 set -g @open 'n'
 set -g @open-editor 'C-n'
 set -g @prefix_highlight_fg brightwhite
