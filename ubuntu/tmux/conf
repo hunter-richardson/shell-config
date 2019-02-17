@@ -77,7 +77,7 @@ set -g status on
 # format status
 set -g status-justify centre
 set -g status-bg black
-set -g status-left "#[fg=brightmagenta,bold]🏐 #h #[fg=brightcyan,bold]💻 #T #[fg=brightwhite,bold]#{prefix_highlight}"
+set -g status-left "#[fg=brightmagenta,bold]🏐 #h #[fg=brightcyan,bold]💻 #T #{online_status} #[fg=brightwhite,bold]#{prefix_highlight}"
 set -g status-right "#[fg=brightyellow,bold]🕜 %A %e %B %Y, %H%M %Z"
 set -g status-style fg=brightwhite,bold,bg=black
 
@@ -99,6 +99,13 @@ set -g visual-activity off
 set-option -g default-shell /usr/bin/fish
 
 # plugin variables
+set -g @custom_copy_command 'command xsel -bv --output'
+set -g @logging-filename '#{session_name} - #{window_index}-#{pane_index}.log'
+set -g @logging-path '/log/tmux/%Y%m%d'
+set -g @offline-icon '#[fg=brightred,bold]❮ ❔❯'
+set -g @online-icon '#[fg=brightgreen,bold]≪ ⏆ ≫'
+set -g @open 'n'
+set -g @open-editor 'C-n'
 set -g @prefix_highlight_fg brightwhite
 set -g @prefix_highlight_bg black
 set -g @prefix_highlight_output_prefix '< '
@@ -106,10 +113,9 @@ set -g @prefix_highlight_output_suffix ' >'
 set -g @prefix_highlight_show_copy_mode 'on'
 set -g @urlview-key 'x'
 set -g @yank-selection 'clipboard'
-set -g @custom_copy_command 'command xsel -bv --output'
 
 # pull down plugins
-set -g @plugins '\
+set -g @plugins ' \
   tmux-plugins/tpm \
   tmux-plugins/tmux-logging \
   tmux-plugins/tmux-open \
