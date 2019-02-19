@@ -11,8 +11,9 @@ function update -d 'automate software updates with git and fundle'
             or  builtin test $i = tmux-plugins/tpm/.git;
               and command tmux source ~/tmux/conf;
         end;
-        fundle self-update;
-          and fundle clean;
-          and fundle update
-     or  builtin printf 'Unable to open an Internet connection!\n';
+    and builtin source ~/.config/fish/plugins.fish;
+    and fundle self-update;
+    and fundle clean;
+    and fundle update
+    or  builtin printf 'Unable to open an Internet connection!\n';
 end

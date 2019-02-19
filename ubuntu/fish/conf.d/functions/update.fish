@@ -15,7 +15,7 @@ function update -d 'automate software updates from installed SPMs'
   end
 
   function __update_fundle
-    sudo --user=root fish --command='fundle self-update; and fundle clean; and fundle update'
+    sudo --user=root fish --command='builtin source /root/.config/fish/config.fish; and fundle self-update; and fundle clean; and fundle update'
   end
 
   function __update_git

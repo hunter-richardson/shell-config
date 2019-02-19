@@ -14,33 +14,12 @@
 #   ...
 # end
 
-set --local MY_DIR (command dirname (builtin status filename))
+builtin set --local MY_DIR (command dirname (builtin status filename))
 
-if builtin test -f $MY_DIR/conf.d/functions/fundle.fish
-  source $MY_DIR/conf.d/functions/fundle.fish
-  fundle plugin 'edc/bass'
-  fundle plugin 'decors/fish-colored-man'
-  fundle plugin 'decors/fish-source-highlight'
-  fundle plugin 'laughedelic/pisces'
-  fundle plugin 'oh-my-fish/plugin-await'
-  fundle plugin 'oh-my-fish/plugin-balias'
-  fundle plugin 'oh-my-fish/plugin-errno'
-#  fundle plugin 'oh-my-fish/plugin-xdg'
-  fundle plugin 'tuvistavie/oh-my-fish-core'
-  fundle init
-end
-
-if builtin test ! -d $MY_DIR/fundle
-  fundle install
-  for i in (fundle list | command grep -v https://github.com)
-    builtin printf 'load plugin %s\n' $i | builtin string replace / :
-    for f in functions completions
-      test -d $MY_DIR/fish/fundle/$i/$f;
-        and chmod a+x $MY_DIR/fish/fundle/$i/$f/*;
-        and ln -v $MY_DIR/fish/fundle/$i/$f/* /etc/fish/$f/
-    end
-  end
-end
+builtin test -f $MY_DIR/plugins.fish;
+  and builtin source $MY_DIR/plugins.fish;
+  and builtin printf 'source %s/plugins.fish\n' $MY_DIR;
+  or  true
 
 for i in conf.d/functions conf.d conf.d/completions
   builtin test (builtin count $MY_DIR/$i/*.fish);
