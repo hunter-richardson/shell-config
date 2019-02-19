@@ -8,6 +8,7 @@ function mv {
     builtin printf '.\n%sUsage%s:  %s [source-location] [destination-location]\n' $(format bold red) $(format normal) $(command basename $BASH_SOURCE | command cut -d'.' -f1)
     [ "$*" == *\** ] && builtin printf 'Note:\t  Wildcards (*) not implemented.' || builtin return 1
   elif [ ! -e $1 -o ! -r $1 -o -w $1 ]
+  then
     [ ! -e $1 ] && status='does not exist.' || [ ! -r $1 ] && status='is unreadable' || status='is readonly'
     builtin printf 'Source file %s%s%s %s' $(format bold red) $1 $(format normal) $status
     unset status

@@ -1,7 +1,7 @@
 #!/usr/bin/fish
 
 function gclone() {
-  if [ $(command members sudo | command grep $(command whoami)) -o $(command members root | command grep $(command whoami)) ]
+  if [ $(command members sudo | command grep $(command whoami)) ] || [ $(command members root | command grep $(command whoami)) ]
   then
     [ $# -eq 0 ] && builtin "No repository selected!" && return 2
     for i in $@
