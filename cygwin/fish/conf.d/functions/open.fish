@@ -1,6 +1,6 @@
 #!/bin/fish
 
-function open
+function open -d 'open inputs in default application'
   builtin test -z $argv[1];
     and builtin echo "Open what?";
     and builtin return 1;

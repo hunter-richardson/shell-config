@@ -5,6 +5,6 @@ function update() {
   for i in $(command find ~ -type d -name '.git' | grep -v '/.config/')
   do
     builtin printf 'Updating %s ...\n' $(command git -C $i config --get remote.origin.url) && command git -C (command dirname $i) pull -- verbose
-    [ $i == 'hunter-richardson/shell-config' ] && source ~/.config/bash/config.sh
+    [ $i == 'hunter-richardson/shell-config/.git' ] && builtin source ~/.config/bash/config.sh && command tmux source ~/tmux/conf || [ $i == 'tmux-plugins/tpm/.git' ] && command tmux source ~/tmux/conf
   done
 }

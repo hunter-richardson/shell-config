@@ -1,6 +1,6 @@
 #!/bin/fish
 
-function mv -d 'Securely move source to destination'
+function mv -d 'securely move source to destination'
   if builtin test (builtin count $argv) -ne 2 -o builtin string match -r '[\?\*]' $argv;
     builtin printf '%s%sImproper usage%s:\t%s ' $bold $red $normal (command basename (builtin status filename) | builtin string split .)[1]
     builtin string trim (builtin printf ' %s' $argv);

@@ -14,7 +14,7 @@ function update() {
     for i in $(sudo locate -eiq '/.git' | grep -v '/.config/' | command shuf)
     do
       builtin printf 'Updating %s ...\n' $(command git -C $i config --get remote.origin.url) && sudo git -C (command dirname $i) pull --verbose
-      [ $i == 'hunter-richardson/shell-config' ] && source /etc/bash/config.sh
+      [ $i == 'hunter-richardson/shell-config/.git' ] && builtin source /etc/bash/config.sh && command tmux source /etc/tmux/conf || [ $i == 'tmux-plugins/tpm/.git' ] && command tource /etc/tmux/conf
     done
   }
 

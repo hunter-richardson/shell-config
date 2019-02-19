@@ -115,14 +115,15 @@ set -g @urlview-key 'x'
 set -g @yank-selection 'clipboard'
 
 # pull down plugins
-set -g @plugins ' \
-  tmux-plugins/tpm \
-  tmux-plugins/tmux-logging \
-  tmux-plugins/tmux-open \
-  tmux-pkugins/tmux-online-status \
+set -g @plugins '                    \
+  tmux-plugins/tpm                   \
+  tmux-plugins/tmux-logging          \
+  tmux-plugins/tmux-open             \
+  tmux-pkugins/tmux-online-status    \
   tmux-plugins/tmux-prefix-highlight \
-  tmux-plugins/tmux-urlview \
-  tmux-plugins/tmux-yank '
+  tmux-plugins/tmux-urlview          \
+  tmux-plugins/tmux-yank             \
+'
 
 # load environment
 set-environment -g TMUX_PLUGIN_MANAGER_PATH '/etc/tmux/'

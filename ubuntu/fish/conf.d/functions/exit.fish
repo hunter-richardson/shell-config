@@ -1,6 +1,6 @@
 #!/bin/fish
 
-function exit
+function exit -d 'destroy tmux server on exit'
   if builtin set -q TMUX
     builtin exit
   else if builtin test "$argv[1]" = "all"

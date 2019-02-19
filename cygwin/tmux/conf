@@ -100,8 +100,8 @@ set -g visual-activity off
 
 # plugin variables
 set -g @custom_copy_command 'command xsel -bv --output'
-set -g @online-icon '#[fg=brightgreen,bold]✔'
-set -g @offline-icon '#[fg=brightred,bold]X'
+set -g @online-icon "#[fg=brightgreen,bold]✔"
+set -g @offline-icon "#[fg=brightred,bold]X"
 set -g @open 'n'
 set -g @open-editor 'C-n'
 set -g @prefix_highlight_fg brightwhite
@@ -113,20 +113,21 @@ set -g @urlview-key 'x'
 set -g @yank-selection 'clipboard'
 
 # pull down plugins
-set -g @plugins ' \
-  tmux-plugins/tpm \
-  tmux-plugins/tmux-open \
-  tmux-pkugins/tmux-online-status \
+set -g @plugins '                    \
+  tmux-plugins/tpm                   \
+  tmux-plugins/tmux-open             \
+  tmux-pkugins/tmux-online-status    \
   tmux-plugins/tmux-prefix-highlight \
-  tmux-plugins/tmux-urlview \
-  tmux-plugins/tmux-yank '
+  tmux-plugins/tmux-urlview          \
+  tmux-plugins/tmux-yank             \
+'
 
 # load environment
-set-environment -g TMUX_PLUGIN_MANAGER_PATH '~/.tmux
+set-environment -g TMUX_PLUGIN_MANAGER_PATH '~/tmux'
 set-environment -g PATH "/usr/local/sbin:/bin:/usr/bin"
 
 # run plugins
-run '~/.tmux/tpm/tpm'
+run '~/tmux/tpm/tpm'
 
 # set up panes layout
 #split-window -h
