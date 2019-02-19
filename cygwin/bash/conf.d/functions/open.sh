@@ -22,6 +22,6 @@ function open {
     -)
       command cygstart $1 && builtin unset type err && builtin return 0;;
   esac
-  builtin unset err type && builtin return 0
+  builtin unset err type && builtin return 1
 }
 
