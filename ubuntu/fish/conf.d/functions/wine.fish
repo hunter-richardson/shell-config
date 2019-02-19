@@ -11,7 +11,7 @@ function wine -d 'use multiuser wine installation'
     for i in $argv
       builtin set -l matched (builtin string match -r '^https?://' $i)
       builtin set -l param (builtin test $match;
-                              and builtin printf '-';
+                              and builtin printf '/dev/stdout';
                               or  builtin printf '%s' $i)
       sudo --user=wine --command=(builtin printf '%scommand wine start %s &; and builtin disown' (builtin test $matched;
                                                                                                     and builtin printf 'command wget %s | ' $i;
