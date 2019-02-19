@@ -1,4 +1,4 @@
-# shell-config
+# shell-config [![CodeFactor](https://www.codefactor.io/repository/github/hunter-richardson/shell-config/badge)](https://www.codefactor.io/repository/github/hunter-richardson/shell-config)
 This is the repository for my shell configuration. I use [Ubuntu](https://ubuntu.com) at home and [Cygwin](https://cygwin.com) at work.
 - Before configuring the shell in [Cygwin](https://cygwin.com), first pull down a few `git` repositories. [repos.git](cygwin/git/repos.git) lists the repos I use for [Cygwin](https://cygwin.com).
 ```bash
