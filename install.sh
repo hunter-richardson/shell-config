@@ -1,22 +1,19 @@
-[ -z "$1" ] || [ ! -d "$1" ] || [ ! -r "$1" ] || [ ! -w "$1" ] && ( builtin printf 'Please specify a read/writeable working directory.\n'; builtin return 1 ) || ( conf=$1 )
+[ -z "$1" ] || [ ! -d "$1" ] || [ ! -r "$1" ] || [ ! -w "$1" ] && ( builtin printf 'Please specify a read/writeable working directory.\n'; builtin exit 1 ) || ( conf=$1 )
 
 repo=$(command find ~ -type d -name 'shell-config')
 
-[ $(command uname -o) == 'Cygwin' ] && ( uname='cygwin'; perms=$(command id -G | command grep -qE '\<554\>') ) || ( uname='ubuntu'; perms=$(sudo -nv ^/dev/null) )
-[ ! -f $repo/cygwin/git/repos.git ] || [ ! -f $repo/cygwin/git/config ] || [ ! -f $repo/$uname/.tmux/tmux.conf ] || [ ! -d $repo/$uname/fish/conf.d/functions ] || [ ! -d $repo/$uname/bash/conf.d/functions ] || [ ! -f $repo/$uname/fish/fish.nanorc ] || 
-{ [ $uname == 'ubuntu' ] && [ ! -f $repo/$uname/fish/fish.lang ]; } && ( builtin printf 'Please run the %s script in the shell-config local repository directory.\n' $(command basename ${BASH_SOURCE[0]}); unset perms uname repo conf; builtin return 1 )
+[ $(command uname -o) == 'Cygwin' ] && ( uname='cygwin' && perms=$(command id -G | command grep -qE '\<554\>') ) || ( uname='ubuntu' && perms=$(sudo -nv ^/dev/null) )
+
+for i in "$repo/cygwin/git/repos.git" "$repo/cygwin/git/config" "$repo/$uname/tmux/tmux.conf" "$repo/$uname/fish/fish.nanorc" "$repo/$uname/fish/fish.lang"
+  [ ! -f $i ] && builtin printf 'Please run the %s script in the shell-config local repository directory.\n' $(builtin status filename) && builtin unset perms uname repo conf && builtin exit 1
+end
+for i in "$repo/$uname/fish/conf.d/functions" "$repo/$uname/bash/conf.d/functions"
+  [ ! -d $i ] && builtin printf 'Please run the %s script in the shell-config local repository directory.\n' $(builtin status filename) && builtin unset perms uname repo conf && builtin exit 1
+end
 
 command mkdir -p $conf/bash/conf.d/functions $conf/git
-if [ $perms -eq 0 ]
-then
-  command mkdir -p ~/tmux
-  command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux ~/tmux/tpm
-  command ln -v $repo/$uname/tmux/conf ~/tmux/
-else
-  command mkdir -p /etc/tmux
-  command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux /etc/tmux/tpm
-  command ln -v $repo/$uname/tmux/conf /etc/tmux/
-fi
+[ $perms -eq 0 ] && tmux='/etc/tmux' || tmux="${HOME}/tmux"
+command mkdir -p $tmux && command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux $tmux/tpm && command ln -v $repo/$uname/tmux/conf $tmux/
 
 if [ $uname == 'cygwin' ]
 then
@@ -74,4 +71,4 @@ else
   builtin printf 'builtin source %s/bash/config.sh' ${HOME} | command tee -a ~/.profile
 fi
 
-unset perms uname repo conf
+builtin unset perms uname repo conf tmux

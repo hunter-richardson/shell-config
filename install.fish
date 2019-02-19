@@ -1,6 +1,6 @@
 builtin test -z "$argv[1]" -o ! -d "$argv[1]" -o ! -r "$argv[1]" -o ! -w "$argv[1]";
   and builtin printf 'Please specify a read/writeable working directory.\n';
-  and builtin return 1;
+  and builtin exit 1;
   or  builtin set conf $argv[1]
 
 builtin set repo (command find ~ -type d -name shell-config)
@@ -13,21 +13,25 @@ else
     and builtin set perms (sudo -nv ^/dev/null)
 end
 
-builtin test ! -f $repo/cygwin/git/repos.git -o ! -f $repo/cygwin/git/config -o ! -f $repo/$uname/tmux/tmux.conf -o ! -d $repo/$uname/fish/conf.d/functions -o ! $repo/$uname/bash/conf.d/functions -o ! -f $repo/$uname/fish/fish.nanorc -o ( $uname = 
-ubuntu -a ! -f $repo/$uname/fish/fish.lang );
-  and builtin printf 'Please run the %s script in the shell-config local repository directory.\n' (builtin status filename);
-  and set -e perms uname repo conf;
-  and builtin return 1;
+for i in $repo/cygwin/git/repos.git $repo/cygwin/git/config $repo/$uname/tmux/tmux.conf $repo/$uname/fish/fish.nanorc $repo/$uname/fish/fish.lang
+  builtin test ! -f $i;
+    and builtin printf 'Please run the %s script in the shell-config local repository directory.\n' (builtin status filename);
+    and builtin set -e perms uname repo conf;
+    and exit 1
+end
+for i in $repo/$uname/fish/conf.d/functions $repo/$uname/bash/conf.d/functions
+  builtin test ! -d $i;
+    and builtin printf 'Please run the %s script in the shell-config local repository directory.\n' (builtin status filename);
+    and builtin set -e perms uname repo conf;
+    and exit 1
+end
 
-command mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions $conf/bash/conf.d/functions (builtin test $perms;
-                                                                                                          and builtin printf '${HOME}';
-                                                                                                          or  builtin printf '/etc')/tmux
-command git clone --verbose --depth 1 https://github.com/tmux-plugins/tpm (builtin test $perms;
-                                                                             and builtin printf '${HOME}';
-                                                                             or  builtin printf '/etc')/tmux/tpm
-command ln -v $repo/$uname/tmux/conf (builtin test $perms;
-                                        and builtin printf '${HOME}';
-                                        or  builtin printf '/etc')/tmux/
+builtin set tmux (builtin test $perms;
+                    and builtin printf '%s' ${HOME};
+                    or  builtin printf '/etc')/tmux
+command mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions $conf/bash/conf.d/functions $tmux;
+  and command git clone --verbose --depth 1 https://github.com/tmux-plugins/tpm $tmux/tmux/tpm;
+  and command ln -v $repo/$uname/tmux/conf $tmux/tmux/
 
 builtin test $uname = cygwin;
   and command ln -v $repo/cygwin/git/config $conf/git/config
@@ -78,4 +82,4 @@ builtin -z "$TMUX" -a (builtin command -v tmux);
                                                          and builtin printf '${HOME}';
                                                          or  builtin printf '/etc')/tmux/conf | tee -a ~/.profile
 
-set -e perms uname repo conf
+builtin set -e perms uname repo conf tmux
