@@ -4,11 +4,11 @@ repo=$(command find ~ -type d -name 'shell-config')
 
 [ $(command uname -o) == 'Cygwin' ] && ( uname='cygwin' && perms=$(command id -G | command grep -qE '\<554\>') ) || ( uname='ubuntu' && perms=$(sudo -nv ^/dev/null) )
 
-for i in "$repo/cygwin/git/repos.git" "$repo/cygwin/git/config" "$repo/$uname/tmux/tmux.conf" "$repo/$uname/fish/fish.nanorc" "$repo/$uname/fish/fish.lang"
-  [ ! -f $i ] && builtin printf 'Please run the %s script in the shell-config local repository directory.\n' $(builtin status filename) && builtin unset perms uname repo conf && builtin exit 1
+for i in "cygwin/git/repos.git" "cygwin/git/config" "$uname/tmux/tmux.conf" "$uname/fish/fish.nanorc" "ubuntu/fish/fish.lang"
+  [ ! -f $repo/$i ] && builtin printf 'Please run the %s script in the shell-config local repository directory.\n' $(builtin status filename) && builtin unset perms uname repo conf && builtin exit 1
 end
-for i in "$repo/$uname/fish/conf.d/functions" "$repo/$uname/bash/conf.d/functions"
-  [ ! -d $i ] && builtin printf 'Please run the %s script in the shell-config local repository directory.\n' $(builtin status filename) && builtin unset perms uname repo conf && builtin exit 1
+for i in "agnostic/$uname/fish/conf.d/functions" "agnostic/$uname/bash/conf.d/functions" "$uname/fish/conf.d/functions" "$uname/bash/conf.d/functions"
+  [ ! -d $repo/$i ] && builtin printf 'Please run the %s script in the shell-config local repository directory.\n' $(builtin status filename) && builtin unset perms uname repo conf && builtin exit 1
 end
 
 command mkdir -p $conf/bash/conf.d/functions $conf/git
@@ -24,19 +24,19 @@ then
   done
 fi
 
+command ln -v $repo/agnostic/bash/conf.d/functions/*.sh $conf/bash/conf.d/functions/
 for i in 'bash' 'bash/conf.d' 'bash/conf.d/functions'
 do
-  [ -d $repo/agnostic/$i ] && ( command ln -v $repo/agnostic/$i/*.sh $conf/$i/ )
   [ -d $repo/$uname/$i ] && ( command ln -v $repo/$uname/$i/*.sh $conf/$i/ )
 done
 
 if [ -n "$(builtin command -v fish)" ]
 then
   command mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions
+  command ln -v $repo/agnostic/fish/conf.d/functions/*.sh $conf/fish/conf.d/functions/
   for i in 'fish' 'fish/conf.d/functions' 'fish/conf.d/completions'
   do
-    [ -d $repo/agnostic/$i ] && ( command ln -v $repo/agnostic/$i.fish $conf/$i/ )
-    [ -d $repo/$uname/$i ] && ( command ln -v $repo/$uname/$i/*.fish $conf/$i/ )
+    [ -d $repo/$uname/$i ] && ( command ln -v $repo/$uname/$i/*.fish $conf/fish/$i/ )
   done
   if [ $uname == 'cygwin' ]
   then
