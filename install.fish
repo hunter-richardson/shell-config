@@ -76,13 +76,12 @@ else
     and command ln -v $repo/$uname/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang
 end
 
-if builtin -z "$TMUX" -a (builtin command -v tmux)
-  builtin printf 'exec tmux -2u -f %s/tmux/conf' $tmux | tee -a ~/.profile
-else if builtin test (builtin command -v fish)
-   builtin printf 'exec %s' $(builtin command -v fish) | tee -a ~/.profile
-else
-   builtin printf 'source "%s/bash/config.sh"' (builtin test $perms;
-                                                  and builtin printf '${HOME}';
-                                                  or  builtin printf '/etc')/bash/config.sh | tee -a ~/.profile
+builtin -z "$TMUX" -a (builtin command -v tmux);
+  and builtin printf 'exec tmux -2u -f %s/tmux/conf' $tmux | tee -a ~/.profile;
+  or  builtin test (builtin command -v fish);
+      and builtin printf 'exec %s' $(builtin command -v fish) | tee -a ~/.profile;
+      or  builtin printf 'source "%s/bash/config.sh"' (builtin test $perms;
+                                                         and builtin printf '${HOME}';
+                                                         or  builtin printf '/etc')/bash/config.sh | tee -a ~/.profile
 
 builtin set -e perms uname repo conf tmux
