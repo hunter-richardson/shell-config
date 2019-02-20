@@ -81,7 +81,7 @@ then
   fi
 fi
 ```
-- `tmux` is a terminal multiplexer that sets up a status bar and allows windows to split into panes. The [ubuntu:tmux/conf](ubuntu/tmux/conf) / [cygwin:tmux/conf](cygwin/tmux/conf) files contain my `tmux` configuration. See the [tmux manual](https://man.openbsd.org/OpenBSD-current/man1/tmux.1) for more information. To apply it:
+- `tmux` is a terminal multiplexer that sets up a status bar and allows windows to split into panes. The [global:tmux/conf](global/tmux/conf) / [user:tmux/conf](user/tmux/conf) files contain my global and user `tmux` configurations, respectively. See the [tmux manual](https://man.openbsd.org/OpenBSD-current/man1/tmux.1) for more information. To apply it:
 ```bash
 su - # if applicable
 [ $(uname -o) == 'Cygwin' ]
