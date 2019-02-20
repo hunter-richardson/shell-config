@@ -7,7 +7,7 @@ function wine() {
   then
     for i in $@
     do
-      [[ $i =~ ^https?:// ]] && command wget $i | sudo --user='wine' --command='command wget $i | command wine start /dev/stdout & builtin disown' || sudo --user='wine' --command='command wine start $i & builtin disown'
+      [[ $i =~ ^https?:// ]] && command wget $i | sudo --user=wine --command='command wget $i | command wine start /dev/stdout & builtin disown' || sudo --user=wine --command='command wine start $i & builtin disown'
     done
   else
     builtin printf "You aren't a wine drinker..." && builtin return 1
