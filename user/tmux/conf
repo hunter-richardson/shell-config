@@ -67,7 +67,7 @@ set -g history-limit 50000
 bind f command-prompt -p "(find-window)" "find-window -T '%%'"
 
 #reload tmux.conf with r instead of i
-bind r source-file ~/tmux/conf \; display "\~/tmux/conf reloaded."
+bind r source-file ~/tmux/conf \; display "#(echo ${HOME})/tmux/conf reloaded."
 
 # format messages
 set -g message-attr bold
@@ -81,7 +81,7 @@ set -g status on
 # format status
 set -g status-justify centre
 set -g status-bg black
-set -g status-left "#[fg=brightmagenta,bold]🏐 #h #{online_status} #[fg=brightwhite,bold]#{prefix_highlight}"
+set -g status-left "#[fg=brightmagenta,bold]🏐 #h #{online-status} #[fg=brightwhite,bold]#{prefix_highlight}"
 set -g status-right "#[fg=brightyellow,bold]🕜 %A %e %B %Y, %H%M %Z"
 set -g status-style fg=brightwhite,bold,bg=black
 # position status
