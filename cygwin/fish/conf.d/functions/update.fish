@@ -3,13 +3,16 @@
 function update -d 'automate software updates with git and fundle'
   if command ping -n 1 github.com >/dev/null
     for i in (command find ~ -type d -name .git | command grep -v /.config/ | command shuf)
+      builtin set --local current (command git -C $i rev-parse --short HEAD)
       builtin printf 'Updating %s ...\n' (command git -C $i config --get remote.origin.url);
         and command git -C (command dirname $i) pull --verbose
-      if builtin test $i = hunter-richardson/my-config/.git
-        builtin  source ~/.config/fish/config.fish;
-          and command tmux source ~/tmux/conf
-      else if builtin test $i = tmux-plugins/tpm/.git
-        command tmux source ~/tmux/conf
+      if builtin $current != (command git -C $i rev-parse --short HEAD)
+        if builtin string match '/hunter-richardson/my-config/.git' $i
+          builtin source ~/.config/fish/config.fish;
+            and command tmux source ~/tmux/conf
+        else if builtin string match '/tmux-plugins/tpm/.git' $i
+          command tmux source ~/tmux/conf
+        end
       end
     end
     builtin source ~/.config/fish/plugins.fish;

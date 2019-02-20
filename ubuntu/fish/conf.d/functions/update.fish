@@ -21,13 +21,16 @@ function update -d 'automate software updates from installed SPMs'
   function __update_git
     sudo updatedb
     for i in (sudo locate -eiq '/.git' | command grep -v /.config/ | command shuf)
+      builtin set --local current (command git -C $i rev-parse --short HEAD)
       builtin printf 'Updating %s ...\n' (command git -C $i config --get remote.origin.url);
         and sudo git -C (command dirname $i) pull --verbose
-      builtin test $i = hunter-richardson/shell-config/.git;
-        and builtin source /etc/fish/config.fish;
-        and command tmux source /etc/tmux/conf;
-        or  builtin test $i = tmux-plugins/tpm/.git;
-          and command tmux source /etc/tmux/conf
+      if builtin test $current != (command git -C $i rev-parse --short HEAD)
+        if builtin string match '/hunter-richardson/shell-config/.git' $i
+          builtin source /etc/fish/config.fish;
+            and command tmux source /etc/tmux/conf
+        else if builtin string match '/tmux-plugins/tpm/.git' $i
+          command tmux source /etc/tmux/conf
+      end
     end
   end
 
