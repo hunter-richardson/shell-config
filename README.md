@@ -13,7 +13,7 @@ if [ $(uname -o) == 'Cygwin' ]
 fi
 ```
 - [Ubuntu](https://ubuntu.com) and [Cygwin](https://cygwin.com) both ship with `bash` as the default shell. My favorite shell is [Fish](https://fishshell.com). I've written a few functions and aliases that are helpful for my shell in 
-[cygwin:fish](cygwin/fish)/[ubuntu:fish](ubuntu/fish) and their subdirectories. Additionally for [Cygwin](https://cygwin.com), I will use [`fundle`](https://github.com/danhper/fundle) to install several `fish` plugins, listed in 
+[cygwin:fish](cygwin/fish)/[ubuntu:fish](ubuntu/fish) and their subdirectories. [agnostic:fish](agnostic/fish/conf.d/functions) contains functions that work under either operating system. Additionally for [Cygwin](https://cygwin.com), I will use [`fundle`](https://github.com/danhper/fundle) to install several `fish` plugins, listed in 
 [cygwin:config.fish](cygwin/fish/config.fish). (For [Ubuntu](https://ubuntu.com), I use [system-wide `fundle` configuration](https://github.com/hunter-richardson/my-config/blob/master/root/.config/fish/config.fish) to accomplish this.) To apply them:
 ```bash
 if [ -n "$(command -v fish)" ]
