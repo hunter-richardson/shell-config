@@ -7,18 +7,22 @@ builtin set repo (command find ~ -type d -name shell-config)
 
 if builtin test (command uname -o) = Cygwin
   builtin set uname cygwin;
-    and builtin set perms (command id -G | command grep -qE '\<554\>')
+    and builtin set perms (builtin test (command id -G | command grep -qE '\<554\>');
+                             and builtin printf 'global';
+                             or  builtin printf 'user')
 else
   builtin set uname ubuntu;
-    and builtin set perms (sudo -nv ^/dev/null)
+    and builtin set perms (builtin test (sudo -nv ^/dev/null);
+                             and builtin printf 'global';
+                             or  builtin printf 'user')
 end
 
-builtin set tmux (builtin test $perms;
+builtin set tmux (builtin test $perms = 'global';
                     and builtin printf '%s' ${HOME};
                     or  builtin printf '/etc')/tmux
 command mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions $conf/bash/conf.d/functions $tmux;
   and command git clone --verbose --depth 1 https://github.com/tmux-plugins/tpm $tmux/tmux/tpm;
-  and command ln -v $repo/$uname/tmux/conf $tmux/tmux/
+  and command ln -v $repo/$perms/tmux/conf $tmux/tmux/
 
 builtin test $uname = cygwin;
   and command ln -v $repo/cygwin/git/config $conf/git/config
@@ -52,7 +56,7 @@ for i in bash bash/conf.d bash/conf.d/functions
     and command ln -v $repo/$uname/$i/*.sh $conf/$i/
 end
 
-if builtin test $perms -eq 0
+if builtin test $perms = 'global'
   sudo mkdir -p /usr/local/cellar/source-highlight/3.1.8/share/source-highlight
   sudo ln -v $repo/agnostic/fish/fish.nanorc /usr/share/nano/fish.nanorc
   sudo ln -v $repo/agnostic/fish/fish.lang /usr/local/cellar/source-highlight/3.1.8/share/source-highlight

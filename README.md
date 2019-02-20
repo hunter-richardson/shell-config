@@ -60,10 +60,11 @@ then
   [ $(uname -o) == 'Cygwin' ]
         && uname='cygwin'
         || uname='ubuntu'
-  [ uname == 'cygwin' ]
-        && perms=$(id -G | grep -qE '\<554\>')
-        || perms=$(sudo -nv ^/dev/null)
-  if [ $perms -eq 0 ]
+  [ uname == 'cygwin' ] && [ $(id -G | grep -qE '\<554\>') ]
+        && perms='global' || perms='user'
+  [ uname == 'ubuntu' ] && [ $(sudo -nv ^/dev/null) ]
+        && perms='global' || perms='user'
+  if [ $perms == 'global' ]
   then
     sudo mkdir -p /usr/local/cellar/source-highlight/3.1.8/share/source-highlight
     sudo ln -v /path/to/repo/agnostic/fish/fish.nanorc /usr/share/nano/fish.nanorc
@@ -87,14 +88,14 @@ su - # if applicable
       && uname='cygwin'
       || uname='ubuntu'
 [ uname == 'cygwin' ]
-      && perms=$(id -G | grep -qE '\<554\>')
-      || perms=$(sudo -nv ^/dev/null)
-[ $perms -eq 0 ]
+      && [ $(id -G | grep -qE '\<554\>') ] && perms='global' || perms='user'
+      || [ $(sudo -nv ^/dev/null) ] && perms='global' || perms='user'
+[ $perms == 'global' ]
       && tmux="/etc/tmux"
       || tmux="${HOME}/tmux"
 command mkdir -p $tmux
       && command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux $tmux/tpm
-      && command ln -v /path/to/repo/$uname/tmux/conf $tmux/
+      && command ln -v /path/to/repo/$perms/tmux/conf $tmux/
 ```
 - Some installations of [Cygwin](https://cygwin.com) (probably managed by snarky old-timers) don't include new-and-fancy custom shells like [Fish](https://fishshell.com) -- in which case I must resort to `bash` instead. To this end, I have translated my `fish` functions and aliases into `bash`. To apply them:
 ```bash
@@ -116,8 +117,8 @@ done
 ```bash
 su - # if applicable
 [ uname == 'cygwin' ]
-      && perms=$(id -G | grep -qE '\<554\>')
-      || perms=$(sudo -nv ^/dev/null)
+      && [ $(id -G | grep -qE '\<554\>') ] && perms='global' || perms='user'
+      || [ $(sudo -nv ^/dev/null) ] && perms='global' || perms='user'
 [ $perms -eq 0 ]
       && tmux="/etc/tmux"
       || tmux="${HOME}/tmux"

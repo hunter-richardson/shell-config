@@ -1,10 +1,12 @@
 [ -z "$1" ] || [ ! -d "$1" ] || [ ! -r "$1" ] || [ ! -w "$1" ] && builtin printf 'Please specify an existing read/writeable working directory.\n'; builtin exit 1 || conf=$1
-[ $(command uname -o) == 'Cygwin' ] && uname='cygwin' && perms=$(command id -G | command grep -qE '\<554\>') || uname='ubuntu' && perms=$(sudo -nv ^/dev/null)
-[ $perms -eq 0 ] && tmux='/etc/tmux' || tmux="${HOME}/tmux"
+[ $(command uname -o) == 'Cygwin' ] && uname='cygwin' || uname='ubuntu'
+[ $uname == 'cygwin' ] && [ $(command id -G | command grep -qE '\<554\>') ] && perms='global' || perms='user'
+[ $uname == 'ubuntu' ] && [ $(sudo -nv ^/dev/null) ] && perms='global' || perms='user'
+[ $perms == 'global' ] && tmux='/etc/tmux' || tmux="${HOME}/tmux"
 repo=$(command find ~ -type d -name 'shell-config')
 
 command mkdir -p $conf/bash/conf.d/functions $conf/git
-command mkdir -p $tmux && command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux $tmux/tpm && command ln -v $repo/$uname/tmux/conf $tmux/
+command mkdir -p $tmux && command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux $tmux/tpm && command ln -v $repo/$perms/tmux/conf $tmux/
 
 if [ $uname == 'cygwin' ]
 then
@@ -44,7 +46,7 @@ then
     sudo fish --command="source /root/.config/fish/config.fish"
   fi
 
-  if [ $perms -eq 0 ]
+  if [ $perms == 'global' ]
   then
     sudo mkdir -p /usr/local/cellar/source-highlight/3.1.8/share/source-highlight
     sudo ln -v $repo/agnostic/fish/fish.nanorc /usr/share/nano/fish.nanorc
