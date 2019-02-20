@@ -27,7 +27,8 @@ then
            'fish/conf.d/functions'
            'fish/conf.d/completions'
   do
-    ln -v /path/to/repo/$uname/fish/$i/*.fish /path/to/new/config/$i/
+    ln -v /path/to/repo/agnostic/$i/*.fish /path/to/new/config/$i/
+    ln -v /path/to/repo/$uname/$i/*.fish /path/to/new/config/$i/
   done
   if [ $uname == 'cygwin' ]
   then
@@ -106,6 +107,7 @@ for i in 'bash'
          'bash/conf.d'
          'bash/conf.d/functions'
 do
+  ln -v /path/to/repo/agnostic/$i/*.sh /path/to/new/config/$i/
   ln -v /path/to/repo/$uname/$i/*.sh /path/to/new/config/$i/
 done
 ```
