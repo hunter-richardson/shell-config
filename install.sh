@@ -53,11 +53,15 @@ then
 
   if [ $perms -eq 0 ]
   then
-    command ln -v $repo/$uname/fish/fish.nanorc /usr/share/nano/fish.nanorc
-    [ $uname == 'ubuntu' ] && ( command sudo ln -v $repo/$uname/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang )
+    sudo mkdir -p /usr/local/cellar/source-highlight/3.1.8/share/source-highlight
+    sudo ln -v $repo/agnostic/fish/fish.nanorc /usr/share/nano/fish.nanorc
+    sudo ln -v $repo/agnostic/fish/fish.lang /usr/local/cellar/source-highlight/3.1.8/share/source-highlight/
+    [ $uname == 'ubuntu' ] && sudo ln -v $repo/agnostic/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang
   else
-    command ln -v $repo/$uname/fish/fish.nanorc $conf/fish/fish.nanorc && builtin printf 'include %s/fish/fish.nanorc' $conf | command tee -a ~/.nanorc
-    [ $uname == 'ubuntu' ] && ( command ln -v $repo/$uname/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang )
+    command mkdir -p ${HOME}/.local/cellar/source-highlight/3.1.8/share/source-highlight
+    command ln -v $repo/agnostic/fish/fish.nanorc $conf/fish/fish.nanorc && builtin printf 'include %s/fish/fish.nanorc' $conf | command tee -a ~/.nanorc
+    command ln -v $repo/agnostic/fish/fish.lang ${HOME}/.local/cellar/source-highlight/3.1.8/share/source-highlight/
+    [ $uname == 'ubuntu' ] && command ln -v $repo/agnostic/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang
   fi
 fi
 

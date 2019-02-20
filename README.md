@@ -49,7 +49,7 @@ then
   fi
 fi
 ```
-- The [ubuntu:fish.lang](ubuntu/fish/fish.lang) and [ubuntu:fish.nanorc](ubuntu/fish/fish.nanorc) / [cygwin:fish.nanorc](cygwin/fish/fish.nanorc) files contain configuration for syntax-highlighting of Fish scripts, in `gedit` ([Ubuntu](https://ubuntu.com) only) and `nano`, respectively. To apply them:
+- The [agnostic:fish.lang](agnostic/fish/fish.lang) and [agnostic:fish.nanorc](agnostic/fish/fish.nanorc) files contain configuration for syntax-highlighting of Fish scripts, in `gedit` ([Ubuntu](https://ubuntu.com) only), [source-highlight](https://gnu.org/software/src-highlight) and `nano`, respectively. To apply them:
 ```bash
 if [ -n "$(command -v fish)" ]
 then
@@ -62,14 +62,18 @@ then
         && ( perms=$(sudo -nv ^/dev/null) )
   if [ $perms -eq 0 ]
   then
-    ln -v /path/to/repo/$uname/fish/fish.nanorc /usr/share/nano/fish.nanorc
+    sudo mkdir -p /usr/local/cellar/source-highlight/3.1.8/share/source-highlight
+    sudo ln -v /path/to/repo/agnostic/fish/fish.nanorc /usr/share/nano/fish.nanorc
+    sudo ln -v /path/to/repo/agnostic/fish/fish.lang /usr/local/cellar/source-highlight/3.1.8/share/source-highlight/
     [ $uname == 'ubuntu' ]
-          && ( sudo ln -v /path/to/repo/ubuntu/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang )
+          && sudo ln -v /path/to/repo/agnostic/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/
   else
-    ln -v /path/to/repo/$uname/fish/fish.nanorc /path/to/new/config/fish/fish.nanorc
+    mkdir -p ${HOME}/.local/cellar/source-highlight/3.1.8/share/source-highlight
+    ln -v /path/to/repo/agnostic/fish/fish.nanorc /path/to/new/config/fish/fish.nanorc
     printf 'include %s/fish/fish.nanorc' /path/to/new/config | tee -a ~/.nanorc
+    ln -v /path/to/repo/agnostic/fish/fish.lang ${HOME}/.local/cellar/source-highlight/3.1.8/share-highlight/
     [ $uname == 'ubuntu' ]
-          && ( ln -v /path/to/repo/ubuntu/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang )
+          && ln -v /path/to/repo/agnostic/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/
   fi
 fi
 ```
@@ -78,21 +82,17 @@ manual](https://man.openbsd.org/OpenBSD-current/man1/tmux.1) for more informatio
 ```bash
 su - # if applicable
 [ $(uname -o) == 'Cygwin' ]
-      && ( uname='cygwin' )
-      && ( uname='ubuntu' )
-  [ uname == 'cygwin' ]
-        && ( perms=$(id -G | grep -qE '\<554\>') )
-        && ( perms=$(sudo -nv ^/dev/null) )
-if [ $perms -eq 0 ]
-then
-  command mkdir -p ~/tmux
-  command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux ~/tmux/tpm
-  command ln -v /path/to/repo/$uname/tmux/conf ~/tmux/
-else
-  command mkdir -p /etc/tmux
-  command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux /etc/tmux/tpm
-  command ln -v /path/to/repo/$uname/tmux/conf /etc/tmux/
-fi
+      && uname='cygwin'
+      || uname='ubuntu'
+[ uname == 'cygwin' ]
+      && perms=$(id -G | grep -qE '\<554\>')
+      || perms=$(sudo -nv ^/dev/null)
+[ $perms -eq 0 ]
+      && tmux='/etc/tmux'
+      || tmux="${HOME}/tmux"
+command mkdir -p $tmux
+command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux $tmux/tpm
+command ln -v /path/to/repo/$uname/tmux/conf $tmux/
 ```
 - Some installations of [Cygwin](https://cygwin.com) (probably managed by snarky old-timers) don't include new-and-fancy custom shells like [Fish](https://fishshell.com) -- in which case I must resort to `bash` instead. To this end, I have
 translated my `fish` functions and aliases into `bash`. To apply them:
@@ -113,10 +113,10 @@ done
 ```bash
 su - # if applicable
 [ -z "$TMUX" -a -n "$(command -v tmux)" ]
-      && ( printf 'exec tmux -2u -f %s/tmux.conf' ${HOME} | tee -a ~/.profile )
-      || ( [ -n "$(command -v fish)" ]
-                && ( printf 'exec %s' $(command -v fish) | tee -a ~/.profile )
-                || ( printf 'source "%s/bash/config.sh"' /path/to/new/config | tee -a ~/.profile ) )
+      && printf 'exec tmux -2u -f %s/conf' $tmux | tee -a ~/.profile
+      || [ -n "$(command -v fish)" ]
+                && printf 'exec %s' $(command -v fish) | tee -a ~/.profile
+                || printf 'source "%s/bash/config.sh"' /path/to/new/config | tee -a ~/.profile
 ```
 - Quick application of this configuration can be attained by executing the [install.sh](install.sh) script. It assumes admin privileges are used if a system-wide configuration is desired, and the script has not been moved to another directory. (And,
 for the sake of completeness, I have translated the script into `fish` as well:  [install.fish](install.fish).)

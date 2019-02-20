@@ -6,7 +6,7 @@ if builtin test -f $MY_DIR/conf.d/functions/fundle.fish
   builtin source $MY_DIR/conf.d/functions/fundle.fish
   fundle plugin 'edc/bass'
   fundle plugin 'decors/fish-colored-man'
-  fundle plugin 'decors/fish-source-highlight'
+#  fundle plugin 'decors/fish-source-highlight'
   fundle plugin 'hunter-richardson/fish-humanize-duration'
   fundle plugin 'laughedelic/pisces'
   fundle plugin 'oh-my-fish/plugin-await'
