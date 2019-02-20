@@ -6,7 +6,7 @@ function update -d 'automate software updates with git and fundle'
       builtin set --local current (command git -C $i rev-parse --short HEAD)
       builtin printf 'Updating %s ...\n' (command git -C $i config --get remote.origin.url);
         and command git -C (command dirname $i) pull --verbose
-      if builtin $current != (command git -C $i rev-parse --short HEAD)
+      if builtin test $current != (command git -C $i rev-parse --short HEAD)
         if builtin string match '/hunter-richardson/my-config/.git' $i
           builtin source ~/.config/fish/config.fish;
             and command tmux source ~/tmux/conf
