@@ -28,7 +28,7 @@ then
            'fish/conf.d/completions'
   do
     ln -v /path/to/repo/agnostic/$i/*.fish /path/to/new/config/$i/
-    ln -v /path/to/repo/$uname/$i/*.fish /path/to/new/config/$i/
+        && ln -v /path/to/repo/$uname/$i/*.fish /path/to/new/config/$i/
   done
   if [ $uname == 'cygwin' ]
   then
@@ -108,7 +108,7 @@ for i in 'bash'
          'bash/conf.d/functions'
 do
   ln -v /path/to/repo/agnostic/$i/*.sh /path/to/new/config/$i/
-  ln -v /path/to/repo/$uname/$i/*.sh /path/to/new/config/$i/
+      && ln -v /path/to/repo/$uname/$i/*.sh /path/to/new/config/$i/
 done
 ```
 - To use [Fish](https://fishshell.com) and its configuration described here by default without going through the whole `cshs` trouble, or to use the `bash` functions described, run a command at the bottom of the `~/.profile` file to open a `tmux` session into `fish`. (Make sure both `tmux` and `fish` work before using this!) To apply it:
