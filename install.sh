@@ -63,14 +63,6 @@ then
   fi
 fi
 
-if [ -z "$TMUX" ] && [ -n "$(builtin command -v tmux)" ]
-then
-  [ $perms -eq 0 ] && builtin printf 'exec tmux -2u -f /etc/tmux/conf' | command tee -a ~/.profile || builtin printf 'exec tmux -2u -f %s/tmux/conf' ${HOME} | command tee -a ~/.profile
-elif [ -n "$(builtin command -v fish)" ]
-then
-  builtin printf 'builtin exec %s' $(builtin command -v fish) | command tee -a ~/.profile
-else
-  builtin printf 'builtin source %s/bash/config.sh' ${HOME} | command tee -a ~/.profile
-fi
+[ -z "$TMUX" ] && [ -n "$(builtin command -v tmux)" ] && builtin printf 'exec tmux -2u -f %/conf' $tmux | command tee -a ~/.profile || [ -n "$(builtin command -v fish)" ] && builtin printf 'builtin exec %s' $(builtin command -v fish) | command tee -a ~/.profile || builtin printf 'builtin source %s/bash/config.sh' ${HOME} | command tee -a ~/.profile
 
 builtin unset perms uname repo conf tmux
