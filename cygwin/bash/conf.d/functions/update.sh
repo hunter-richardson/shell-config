@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function update() {
-  if [ $(command ping -n 1 github.com >/dev/null) ]
+  if [ $(command ping -n 1 -w 1 github.com >/dev/null) ]
   then
     for i in $(command find ~ -type d -name '.git' | grep -v '/.config/')
     do
