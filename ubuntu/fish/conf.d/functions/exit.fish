@@ -17,8 +17,9 @@ function exit -d 'destroy tmux server on exit'
       case 1
         command tmux clear-history 2>/dev/null
         command tmux kill-server 2>/dev/null
-	    case '*'
-	      command tmux kill-window 2>/dev/null
-	  end
+      case '*'
+        command tmux kill-window 2>/dev/null
+    end
   end
+  builtin exit
 end
