@@ -19,7 +19,7 @@ for i in $repo/cygwin/git/repos.git $repo/cygwin/git/config $repo/$uname/tmux/tm
     and builtin set -e perms uname repo conf;
     and exit 1
 end
-for i in $repo/$uname/fish/conf.d/functions $repo/$uname/bash/conf.d/functions
+for i in $repo/agnostic/fish/conf.d/functions $repo/agnostic/bash/conf.d/functions $repo/$uname/fish/conf.d/functions $repo/$uname/bash/conf.d/functions
   builtin test ! -d $i;
     and builtin printf 'Please run the %s script in the shell-config local repository directory.\n' (builtin status filename);
     and builtin set -e perms uname repo conf;
@@ -41,6 +41,8 @@ builtin test $uname = cygwin;
       end
 
 for i in fish fish/conf.d fish/conf.d/functions fish/conf.d/completions
+  builtin test -d $repo/agnostic/$i;
+    and command ln -v $repo/agnostic/$i/*.fish $conf/$i/
   builtin test -d $repo/$uname/$i;
     and command ln -v $repo/$uname/$i/*.fish $conf/$i/
 end
@@ -59,8 +61,10 @@ else
 end
 
 for i in bash bash/conf.d bash/conf.d/functions
+  builtin test -d $repo/agnostic/$i;
+    and command ln -v $repo/agnostic/$i/*.sh $conf/$i
   builtin test -d $repo/$uname/$i;
-    and command ln -rv $repo/$uname/$i/*.sh $conf/$i/
+    and command ln -v $repo/$uname/$i/*.sh $conf/$i/
 end
 
 if builtin test $perms -eq 0
