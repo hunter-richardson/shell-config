@@ -51,7 +51,8 @@ then
   fi
 fi
 ```
-- The [agnostic:fish.lang](agnostic/fish/fish.lang) and [agnostic:fish.nanorc](agnostic/fish/fish.nanorc) files contain configuration for syntax-highlighting of Fish scripts, in [`gedit`](https://wiki.gnome.org/Apps/Gedit), [source-highlight](https://gnu.org/software/src-highlight) and [`nano`](https://nano-editor.org). To apply them:
+- The [agnostic:fish.lang](agnostic/fish/fish.lang) and [agnostic:fish.nanorc](agnostic/fish/fish.nanorc) files contain configuration for syntax-highlighting of Fish scripts, in [source-highlight](https://gnu.org/software/src-highlight), 
+[`gedit`](https://wiki.gnome.org/Apps/Gedit), and [`nano`](https://nano-editor.org). To apply them:
 ```bash
 if [ -n "$(command -v fish)" ]
 then
