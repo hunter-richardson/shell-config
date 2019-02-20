@@ -7,7 +7,8 @@ if [ $(uname -o) == 'Cygwin' ]
   ln -v /path/to/repo/cygwin/git/config /path/to/new/config/git/
   for i in $(cat /path/to/repo/cygwin/git/repos.git)
   do
-    echo $i && git clone --verbose --depth 1 $i $(dirname /path/to/repo)/$(echo $i | grep -oE '[^//]+$' | cut -d'.' -f1)
+    printf '%s -> %s' $i $(dirname /path/to/repo)/$(echo $i | grep -oE '[^//]+$' | cut -d'.' -f1)
+        && git clone --verbose --depth 1 $i $(dirname /path/to/repo)/$(echo $i | grep -oE '[^//]+$' | cut -d'.' -f1)
   done
 fi
 ```
@@ -19,15 +20,16 @@ if [ -n "$(command -v fish)" ]
 then
   su - # if applicable
   [ $(uname -o) == 'Cygwin' ]
-        && ( uname='cygwin' )
-        && ( uname='ubuntu' )
+        && uname='cygwin'
+        || uname='ubuntu'
   mkdir -p /path/to/new/config/fish/conf.d/functions /path/to/new/config/fish/conf.d/completions
+  ln -v /path/to/repo/agnostic/fish/conf.d/functions/*.fish /path/to/new/config/fish/conf.d/functions/
   for i in 'fish'
            'fish/conf.d'
            'fish/conf.d/functions'
            'fish/conf.d/completions'
   do
-    ln -v /path/to/repo/agnostic/$i/*.fish /path/to/new/config/$i/
+    [ -d /path/to/repo/$uname/$i ]
         && ln -v /path/to/repo/$uname/$i/*.fish /path/to/new/config/$i/
   done
   if [ $uname == 'cygwin' ]
@@ -56,21 +58,21 @@ if [ -n "$(command -v fish)" ]
 then
   su - # if applicable
   [ $(uname -o) == 'Cygwin' ]
-        && ( uname='cygwin' )
-        && ( uname='ubuntu' )
+        && uname='cygwin'
+        || uname='ubuntu'
   [ uname == 'cygwin' ]
-        && ( perms=$(id -G | grep -qE '\<554\>') )
-        && ( perms=$(sudo -nv ^/dev/null) )
+        && perms=$(id -G | grep -qE '\<554\>')
+        || perms=$(sudo -nv ^/dev/null)
   if [ $perms -eq 0 ]
   then
     ln -v /path/to/repo/$uname/fish/fish.nanorc /usr/share/nano/fish.nanorc
     [ $uname == 'ubuntu' ]
-          && ( sudo ln -v /path/to/repo/ubuntu/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang )
+          && sudo ln -v /path/to/repo/ubuntu/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang
   else
     ln -v /path/to/repo/$uname/fish/fish.nanorc /path/to/new/config/fish/fish.nanorc
     printf 'include %s/fish/fish.nanorc' /path/to/new/config | tee -a ~/.nanorc
     [ $uname == 'ubuntu' ]
-          && ( ln -v /path/to/repo/ubuntu/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang )
+          && ln -v /path/to/repo/ubuntu/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang
   fi
 fi
 ```
@@ -79,46 +81,43 @@ manual](https://man.openbsd.org/OpenBSD-current/man1/tmux.1) for more informatio
 ```bash
 su - # if applicable
 [ $(uname -o) == 'Cygwin' ]
-      && ( uname='cygwin' )
-      && ( uname='ubuntu' )
-  [ uname == 'cygwin' ]
-        && ( perms=$(id -G | grep -qE '\<554\>') )
-        && ( perms=$(sudo -nv ^/dev/null) )
-if [ $perms -eq 0 ]
-then
-  command mkdir -p ~/tmux
-  command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux ~/tmux/tpm
-  command ln -v /path/to/repo/$uname/tmux/conf ~/tmux/
-else
-  command mkdir -p /etc/tmux
-  command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux /etc/tmux/tpm
-  command ln -v /path/to/repo/$uname/tmux/conf /etc/tmux/
-fi
+      && uname='cygwin'
+      || uname='ubuntu'
+[ uname == 'cygwin' ]
+      && perms=$(id -G | grep -qE '\<554\>')
+      || perms=$(sudo -nv ^/dev/null)
+[ $perms -eq 0 ]
+      && tmux="/etc/tmux"
+      || tmux="${HOME}/tmux"
+command mkdir -p $tmux
+command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux $tmux/tpm
+command ln -v /path/to/repo/$uname/tmux/conf $tmux/
 ```
 - Some installations of [Cygwin](https://cygwin.com) (probably managed by snarky old-timers) don't include new-and-fancy custom shells like [Fish](https://fishshell.com) -- in which case I must resort to `bash` instead. To this end, I have
 translated my `fish` functions and aliases into `bash`. To apply them:
 ```bash
 su - # if applicable
 [ $(uname -o) == 'Cygwin' ]
-      && ( uname='cygwin' )
-      && ( uname='ubuntu' )
+      && uname='cygwin'
+      || uname='ubuntu'
 mkdir -p /path/to/new/config/bash/conf.d/functions
+ln -v /path/to/repo/agnostic/bash/conf.d/functions/*.sh /path/to/new/config/bash/conf.d/functions/
 for i in 'bash'
          'bash/conf.d'
          'bash/conf.d/functions'
 do
-  ln -v /path/to/repo/agnostic/$i/*.sh /path/to/new/config/$i/
-      && ln -v /path/to/repo/$uname/$i/*.sh /path/to/new/config/$i/
+  [ -d /path/to/repo/$uname/$i ]
+        && ln -v /path/to/repo/$uname/$i/*.sh /path/to/new/config/$i/
 done
 ```
 - To use [Fish](https://fishshell.com) and its configuration described here by default without going through the whole `cshs` trouble, or to use the `bash` functions described, run a command at the bottom of the `~/.profile` file to open a `tmux` session into `fish`. (Make sure both `tmux` and `fish` work before using this!) To apply it:
 ```bash
 su - # if applicable
-[ -z "$TMUX" -a -n "$(command -v tmux)" ]
-      && ( printf 'exec tmux -2u -f %s/tmux.conf' ${HOME} | tee -a ~/.profile )
-      || ( [ -n "$(command -v fish)" ]
-                && ( printf 'exec %s' $(command -v fish) | tee -a ~/.profile )
-                || ( printf 'source "%s/bash/config.sh"' /path/to/new/config | tee -a ~/.profile ) )
+[ -z "$TMUX" ] && [ -n "$(builtin command -v tmux)" ]
+    && builtin printf 'exec tmux -2u -f %/conf' $tmux | command tee -a ~/.profile
+    || [ -n "$(builtin command -v fish)" ]
+           && builtin printf 'builtin exec %s' $(builtin command -v fish) | command tee -a ~/.profile
+           || builtin printf 'builtin source %s/bash/config.sh' ${HOME} | command tee -a ~/.profile
 ```
 - Quick application of this configuration can be attained by executing the [install.sh](install.sh) script. It assumes admin privileges are used if a system-wide configuration is desired, and the script has not been moved to another directory. (And,
 for the sake of completeness, I have translated the script into `fish` as well:  [install.fish](install.fish).)
