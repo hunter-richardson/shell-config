@@ -1,18 +1,9 @@
-[ -z "$1" ] || [ ! -d "$1" ] || [ ! -r "$1" ] || [ ! -w "$1" ] && ( builtin printf 'Please specify a read/writeable working directory.\n'; builtin exit 1 ) || ( conf=$1 )
-
+[ -z "$1" ] || [ ! -d "$1" ] || [ ! -r "$1" ] || [ ! -w "$1" ] && builtin printf 'Please specify an existing read/writeable working directory.\n'; builtin exit 1 || conf=$1
+[ $(command uname -o) == 'Cygwin' ] && uname='cygwin' && perms=$(command id -G | command grep -qE '\<554\>') || uname='ubuntu' && perms=$(sudo -nv ^/dev/null)
+[ $perms -eq 0 ] && tmux='/etc/tmux' || tmux="${HOME}/tmux"
 repo=$(command find ~ -type d -name 'shell-config')
 
-[ $(command uname -o) == 'Cygwin' ] && ( uname='cygwin' && perms=$(command id -G | command grep -qE '\<554\>') ) || ( uname='ubuntu' && perms=$(sudo -nv ^/dev/null) )
-
-for i in "$repo/cygwin/git/repos.git" "$repo/cygwin/git/config" "$repo/$uname/tmux/tmux.conf" "$repo/$uname/fish/fish.nanorc" "$repo/$uname/fish/fish.lang"
-  [ ! -f $i ] && builtin printf 'Please run the %s script in the shell-config local repository directory.\n' $(builtin status filename) && builtin unset perms uname repo conf && builtin exit 1
-end
-for i in "$repo/$uname/fish/conf.d/functions" "$repo/$uname/bash/conf.d/functions"
-  [ ! -d $i ] && builtin printf 'Please run the %s script in the shell-config local repository directory.\n' $(builtin status filename) && builtin unset perms uname repo conf && builtin exit 1
-end
-
 command mkdir -p $conf/bash/conf.d/functions $conf/git
-[ $perms -eq 0 ] && tmux='/etc/tmux' || tmux="${HOME}/tmux"
 command mkdir -p $tmux && command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux $tmux/tpm && command ln -v $repo/$uname/tmux/conf $tmux/
 
 if [ $uname == 'cygwin' ]
@@ -24,17 +15,19 @@ then
   done
 fi
 
+command ln -v $repo/agnostic/bash/conf.d/functions/*.sh $conf/bash/conf.d/functions/
 for i in 'bash' 'bash/conf.d' 'bash/conf.d/functions'
 do
-  [ -d $repo/$uname/$i ] && ( command ln -v $repo/$uname/$i/*.sh $conf/$i/ )
+  [ -d $repo/$uname/$i ] && command ln -v $repo/$uname/$i/*.sh $conf/$i/
 done
 
 if [ -n "$(builtin command -v fish)" ]
 then
   command mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions
+  command ln -v $repo/agnostic/fish/conf.d/functions/*.sh $conf/fish/conf.d/functions/
   for i in 'fish' 'fish/conf.d/functions' 'fish/conf.d/completions'
   do
-    [ -d $repo/$uname/$i ] && ( command ln -v $repo/$uname/$i/*.fish $conf/$i/ )
+    [ -d $repo/$uname/$i ] && command ln -v $repo/$uname/$i/*.fish $conf/fish/$i/
   done
   if [ $uname == 'cygwin' ]
   then
@@ -65,14 +58,6 @@ then
   fi
 fi
 
-if [ -z "$TMUX" ] && [ -n "$(builtin command -v tmux)" ]
-then
-  [ $perms -eq 0 ] && builtin printf 'exec tmux -2u -f /etc/tmux/conf' | command tee -a ~/.profile || builtin printf 'exec tmux -2u -f %s/tmux/conf' ${HOME} | command tee -a ~/.profile
-elif [ -n "$(builtin command -v fish)" ]
-then
-  builtin printf 'builtin exec %s' $(builtin command -v fish) | command tee -a ~/.profile
-else
-  builtin printf 'builtin source %s/bash/config.sh' ${HOME} | command tee -a ~/.profile
-fi
+[ -z "$TMUX" ] && [ -n "$(builtin command -v tmux)" ] && builtin printf 'exec tmux -2u -f %/conf' $tmux | command tee -a ~/.profile || [ -n "$(builtin command -v fish)" ] && builtin printf 'builtin exec %s' $(builtin command -v fish) | command tee -a ~/.profile || builtin printf 'builtin source %s/bash/config.sh' ${HOME} | command tee -a ~/.profile
 
 builtin unset perms uname repo conf tmux

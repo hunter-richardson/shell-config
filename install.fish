@@ -1,5 +1,5 @@
 builtin test -z "$argv[1]" -o ! -d "$argv[1]" -o ! -r "$argv[1]" -o ! -w "$argv[1]";
-  and builtin printf 'Please specify a read/writeable working directory.\n';
+  and builtin printf 'Please specify an existing read/writeable working directory.\n';
   and builtin exit 1;
   or  builtin set conf $argv[1]
 
@@ -11,19 +11,6 @@ if builtin test (command uname -o) = Cygwin
 else
   builtin set uname ubuntu;
     and builtin set perms (sudo -nv ^/dev/null)
-end
-
-for i in $repo/cygwin/git/repos.git $repo/cygwin/git/config $repo/$uname/tmux/tmux.conf $repo/$uname/fish/fish.nanorc $repo/$uname/fish/fish.lang
-  builtin test ! -f $i;
-    and builtin printf 'Please run the %s script in the shell-config local repository directory.\n' (builtin status filename);
-    and builtin set -e perms uname repo conf;
-    and exit 1
-end
-for i in $repo/$uname/fish/conf.d/functions $repo/$uname/bash/conf.d/functions
-  builtin test ! -d $i;
-    and builtin printf 'Please run the %s script in the shell-config local repository directory.\n' (builtin status filename);
-    and builtin set -e perms uname repo conf;
-    and exit 1
 end
 
 builtin set tmux (builtin test $perms;
@@ -40,9 +27,10 @@ builtin test $uname = cygwin;
           and command git clone --verbose --depth 1 $i $(command dirname $repo)/$(builtin printf '%s' $i | command grep -oE [^//]+$ | command cut -d'.' -f1)
       end
 
+command ln -v $repo/agnostic/fish/conf.d/functions/*.fish $conf/fish/conf.d/functions/
 for i in fish fish/conf.d fish/conf.d/functions fish/conf.d/completions
   builtin test -d $repo/$uname/$i;
-    and command ln -v $repo/$uname/$i/*.fish $conf/$i/
+    and command ln -v $repo/$uname/$i/*.fish $conf/fish/$i/
 end
 if builtin test $uname == cygwin
   for i in functions completions
@@ -58,9 +46,10 @@ else
   sudo fish --command="source /root/.config/fish/config.fish"
 end
 
+command ln -v $repo/agnostic/bash/conf.d/functions/*.sh $conf/bash/conf.d/functions/
 for i in bash bash/conf.d bash/conf.d/functions
   builtin test -d $repo/$uname/$i;
-    and command ln -rv $repo/$uname/$i/*.sh $conf/$i/
+    and command ln -v $repo/$uname/$i/*.sh $conf/$i/
 end
 
 if builtin test $perms -eq 0
@@ -79,11 +68,11 @@ else
 end
 
 builtin -z "$TMUX" -a (builtin command -v tmux);
-  and builtin printf 'exec tmux -2u -f %s/tmux.conf' $conf | tee -a ~/.profile
+  and builtin printf 'exec tmux -2u -f %s/tmux/conf' $tmux | tee -a ~/.profile;
   or  builtin test (builtin command -v fish);
       and builtin printf 'exec %s' $(builtin command -v fish) | tee -a ~/.profile;
       or  builtin printf 'source "%s/bash/config.sh"' (builtin test $perms;
                                                          and builtin printf '${HOME}';
-                                                         or  builtin printf '/etc')/tmux/conf | tee -a ~/.profile
+                                                         or  builtin printf '/etc')/bash/config.sh | tee -a ~/.profile
 
 builtin set -e perms uname repo conf tmux
