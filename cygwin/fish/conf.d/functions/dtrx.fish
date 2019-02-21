@@ -12,5 +12,6 @@ function dtrx --description 'alias to GITHUB/moonpyk:dtrx'
     command python $dtrx $argv
   else
     builtin printf '%s not installed!' https://github.com/moonpyk/dtrx
+  end
   builtin set -e dtrx
 end
