@@ -5,13 +5,9 @@ function update() {
     sudo apt-fast update && sudo apt-fast autoremove -y && sudo apt-fast upgrade -y && sudo apt-fast install -fy && sudo apt-fast clean -y
   }
 
-  function __update_brew() {
-    sudo brew update -v && sudo brew upgrade -v
-  }
-
   function __update_git() {
     sudo updatedb
-    for i in $(sudo locate -eiq '/.git' | grep -v '/.config/' | command shuf)
+    for i in $(sudo locate -eiqr '\/.git$' | grep -v '/.config/' | command shuf)
     do
       current=$(command git -C $i rev-parse --short HEAD)
       builtin printf 'Updating %s ...\n' $(command git -C $i config --get remote.origin.url) && sudo git -C (command dirname $i) pull --verbose
@@ -39,7 +35,7 @@ function update() {
 
   [ ! $(command members sudo | command grep $(command whoami)) -a ! $(command members root | command grep $(command whoami)) ] && builtin printf "You are not a sudoer!" && return 121
   [ ! $(command iwgetid) ] && builtin printf 'Unable to open an Internet connection' && return 0
-  [ $# -eq 0 ] && SPMs="apt git pip raw snap" || SPMs=$(builtin printf "%s\n" $@ | command sort -diu)
+  [ $# -eq 0 ] && SPMs="apt git raw snap" || SPMs=$(builtin printf "%s\n" $@ | command sort -diu)
   for s in $SPMs
   do
     case "$s" in
@@ -49,14 +45,12 @@ function update() {
          __update_apt;;
        git)
          __update_git;;
-      brew)
-         __update_brew;;
        raw)
          __update_raw;;
       snap)
          __update_snap;;
          *)
-         builtin printf "\a\tUsage:  update [apt | brew | | git | raw | snap | all]\n\tupdate all =:= update apt brew fundle git raw snap\n\tDefault:  update apt brew git raw snap"
+         builtin printf "\a\tUsage:  update [apt | git | raw | snap | all]\n\tupdate all =:= update apt fundle git raw snap\n\tDefault:  update apt git raw snap"
   done
 
   unset -f __update_apt

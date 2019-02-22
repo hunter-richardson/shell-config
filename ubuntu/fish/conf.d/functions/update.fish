@@ -9,18 +9,13 @@ function update -d 'automate software updates from installed SPMs'
     and sudo apt-fast clean -y
   end
 
-  function __update_brew
-    sudo brew update -v;
-      and sudo brew upgrade -v
-  end
-
   function __update_fundle
     sudo --user=root fish --command='builtin source /root/.config/fish/config.fish; and fundle self-update; and fundle clean; and fundle update'
   end
 
   function __update_git
     sudo updatedb
-    for i in (sudo locate -eiq '/.git' | command grep -v /.config/ | command shuf)
+    for i in (sudo locate -eiqr '\/.git$' | command grep -v /.config/ | command shuf)
       builtin set --local current (command git -C $i rev-parse --short HEAD)
       builtin printf 'Updating %s ...\n' (command git -C $i config --get remote.origin.url);
         and sudo git -C (command dirname $i) pull --verbose
@@ -59,7 +54,7 @@ function update -d 'automate software updates from installed SPMs'
     and builtin printf 'Unable to establish Internet connection!';
     and return 0
   builtin test (builtin count $argv) = 0;
-    and builtin set -l SPMs apt git pip snap;
+    and builtin set -l SPMs apt git raw snap;
     or  builtin set -l SPMs (builtin printf '%s\n' $argv | command sort -diu)
   for s in $SPMs
     switch $s
@@ -71,8 +66,6 @@ function update -d 'automate software updates from installed SPMs'
         and __update_snap
       case apt
         __update_apt
-      case brew
-        __update_brew
       case fundle
         __update_fundle
       case git
@@ -82,7 +75,7 @@ function update -d 'automate software updates from installed SPMs'
       case snap
         __update_snap
       case '*'
-        builtin printf '\a\tUsage:  update [apt | brew | fundle | git | raw | snap | all]\n\tupdate all =:= update apt brew fundle git snap\n\tDefault:  update apt brew git snap'
+        builtin printf '\a\tUsage:  update [apt | fundle | git | raw | snap | all]\n\tupdate all =:= update apt fundle git snap\n\tDefault:  update apt git raw snap'
     end
   end
 
