@@ -63,7 +63,7 @@ set -g history-limit 50000
 bind f command-prompt -p "(find-window)" "find-window -T '%%'"
 
 #reload tmux.conf with r instead of i
-bind r source-file /etct/tmux/conf \; display "/etc/tmux/conf reloaded."
+bind r source-file /etc/tmux/conf \; display "/etc/tmux/conf reloaded."
 
 # format messages
 set -g message-attr bold
@@ -103,7 +103,7 @@ set -g @custom_copy_command 'command xsel -bv --output'
 set -g @logging-filename '#{session_name} - #{window_index}-#{pane_index}.log'
 set -g @logging-path '/log/tmux/%Y%m%d'
 set -g @offline-icon '#[fg=brightred,bold]❮ ❔❯'
-set -g @online-icon '#[fg=brightgreen,bold]≪ ⏆ ≫'
+set -g @online-icon '#[fg=brightgreen,bold]≪ ⏆ #(command iwgetid --raw) ≫'
 set -g @open 'n'
 set -g @open-editor 'C-n'
 set -g @prefix_highlight_fg brightwhite

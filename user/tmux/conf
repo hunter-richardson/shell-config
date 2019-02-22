@@ -100,7 +100,7 @@ set -g visual-activity off
 
 # plugin variables
 set -g @custom_copy_command 'command xsel -bv --output'
-set -g @online-icon "#[fg=brightgreen,bold]✔"
+set -g @online-icon "#[fg=brightgreen,bold]✔ #(iwgetid)"
 set -g @offline-icon "#[fg=brightred,bold]X"
 set -g @open 'n'
 set -g @open-editor 'C-n'
