@@ -1,7 +1,6 @@
 #!/bin/fish
 
-builtin set -e fish_bind_mode
-builtin set fish_greeting ''
+builtin set -e fish_bind_mode fish_greeting
 builtin set -g backred (builtin set_color -b red)
 builtin set -g backmagenta (builtin set_color -b magenta)
 builtin set -g backgreen (builtin set_color -b green)
