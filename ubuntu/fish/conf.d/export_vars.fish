@@ -40,4 +40,5 @@ builtin set -g nocmdhist commands directories bookmarks cat less ll ls
 builtin set -g grc_plugin_execs cat cvs df diff dig gcc g++ ifconfig make mount mtr netstat ping ps tail traceroute wdiff
 builtin set -g LANG en_US.UTF-8
 builtin set -g LC_CTYPE en_US.UTF-8
+builtin set -g BAT_CONFIG_DIR /etc/bat/conf
 

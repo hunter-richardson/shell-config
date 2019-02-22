@@ -1,5 +1,5 @@
 [alias]      status = 'status --porcelain'
-             add = 'add -a --renormalize'
+             add = 'add -uv --renormalize'
 [apply]      ignorewhitespace = change
 [blame]      coloring = highlightrecent
              date = format-local:%A %d %B %Y, %H%M %Z

@@ -9,6 +9,10 @@ function update -d 'automate software updates from installed SPMs'
     and sudo apt-fast clean -y
   end
 
+  function __update_brew
+    command brew update -v
+  end
+
   function __update_fundle
     sudo --user=root fish --command='builtin source /root/.config/fish/config.fish; and fundle self-update; and fundle clean; and fundle update'
   end
@@ -27,16 +31,6 @@ function update -d 'automate software updates from installed SPMs'
           command tmux source /etc/tmux/conf
         end
       end
-    end
-  end
-
-  function __update_raw
-    sudo updatedb
-    for i in (command cat (sudo locate -eiq --limit 1 '/my-config/dpkg.raw') | command shuf)
-      builtin set -l filename (builtin printf '%s' $i | command grep -oE '[^//]+$')
-      sudo srm -lvz /usr/local/bin/$filename
-      sudo curl -v -o /usr/local/bin/$filename $i
-      sudo chmod +x /usr/local/bin/$filename
     end
   end
 
@@ -60,22 +54,22 @@ function update -d 'automate software updates from installed SPMs'
     switch $s
       case all
             __update_apt;
+        and __update_brew;
         and __update_fundle;
         and __update_git;
-        and __update_pip;
         and __update_snap
       case apt
         __update_apt
+      case brew
+        __update_brew
       case fundle
         __update_fundle
       case git
         __update_git
-      case raw
-        __update_raw
       case snap
         __update_snap
       case '*'
-        builtin printf '\a\tUsage:  update [apt | fundle | git | raw | snap | all]\n\tupdate all =:= update apt fundle git snap\n\tDefault:  update apt git raw snap'
+        builtin printf '\a\tUsage:  update [apt | brew | fundle | git | snap | all]\n\tupdate all =:= update apt brew fundle git snap\n\tDefault:  update apt brew git snap'
     end
   end
 

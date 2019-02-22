@@ -5,6 +5,10 @@ function update() {
     sudo apt-fast update && sudo apt-fast autoremove -y && sudo apt-fast upgrade -y && sudo apt-fast install -fy && sudo apt-fast clean -y
   }
 
+  function __update_brew() {
+    command brew update -v
+  }
+
   function __update_git() {
     sudo updatedb
     for i in $(sudo locate -eiqr '\/.git$' | grep -v '/.config/' | command shuf)
@@ -18,14 +22,6 @@ function update() {
     done
   }
 
-  function __update_raw() {
-    sudo updatedb
-    for i in $(command cat $(sudo locate -eiq '/my-config/dpkg.raw') | command shuf)
-    do
-      filename=$(buildin printf '%s' $i | command grep -oE '[^//]+$') && sudo srm -lvz /usr/local/bin/$filename && sudo curl -v -o /usr/local/bin/$filename $i && sudo chmod +x /usr/local/bin/$filename
-    done
-  }
-
   function __update_snap() {
     for i in $(sudo snap list | command sed -n '1!p' | command cut -d' ' -f1 | command shuf)
     do
@@ -35,14 +31,16 @@ function update() {
 
   [ ! $(command members sudo | command grep $(command whoami)) -a ! $(command members root | command grep $(command whoami)) ] && builtin printf "You are not a sudoer!" && return 121
   [ ! $(command iwgetid) ] && builtin printf 'Unable to open an Internet connection' && return 0
-  [ $# -eq 0 ] && SPMs="apt git raw snap" || SPMs=$(builtin printf "%s\n" $@ | command sort -diu)
+  [ $# -eq 0 ] && SPMs="apt brew git snap" || SPMs=$(builtin printf "%s\n" $@ | command sort -diu)
   for s in $SPMs
   do
     case "$s" in
        all)
-         __update_apt && __update_git && __update_pip && __update_raw && __update_snap;;
+         __update_apt && __update_brew && __update_git && __update_snap;;
        apt)
          __update_apt;;
+       brew)
+         __update_brew;;
        git)
          __update_git;;
        raw)
@@ -50,12 +48,8 @@ function update() {
       snap)
          __update_snap;;
          *)
-         builtin printf "\a\tUsage:  update [apt | git | raw | snap | all]\n\tupdate all =:= update apt fundle git raw snap\n\tDefault:  update apt git raw snap"
+         builtin printf "\a\tUsage:  update [apt | brew | git | snap | all]\n\tupdate all =:= update apt brew git snap\n\tDefault:  update apt git snap"
   done
 
-  unset -f __update_apt
-  unset -f __update_git
-  unset -f __update_pip
-  unset -f __update_raw
-  unset -f __update_snap
+  builtin unset -f __update_apt __update_git __update_pip __update_raw __update_snap
 }
