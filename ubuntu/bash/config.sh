@@ -7,3 +7,4 @@ done
 unset MY_DIR
 
 [ -n "$(command -v pip)" ] && [ -n "$(command pip show thefuck)" ] && builtin eval "$(thefuck --alias --enable-experimental-instant-mode)" && builtin printf 'eval $(thefuck --alias --enable-experimental-instant-mode)'
+[ -z "$(command -v brew)" ] && [ -d "/home/linuxbrew" ] && builtin eval $(/home/linuxbrew/bin/brew shellenv) && builtin printf 'eval linuxbrew shellenv'
