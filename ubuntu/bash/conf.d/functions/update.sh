@@ -11,7 +11,7 @@ function update() {
 
   function __update_git() {
     sudo updatedb
-    for i in $(sudo locate -eiqr '\/.git$' | grep -v '/.config/' | command shuf)
+    for i in $(sudo locate -eiqr '\/.git$' | grep -v '/(\.config|linuxbrew)/' | command shuf)
     do
       current=$(command git -C $i rev-parse --short HEAD)
       builtin printf 'Updating %s ...\n' $(command git -C $i config --get remote.origin.url) && sudo git -C (command dirname $i) pull --verbose

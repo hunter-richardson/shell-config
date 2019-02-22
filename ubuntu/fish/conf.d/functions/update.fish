@@ -19,7 +19,7 @@ function update -d 'automate software updates from installed SPMs'
 
   function __update_git
     sudo updatedb
-    for i in (sudo locate -eiqr '\/.git$' | command grep -v /.config/ | command shuf)
+    for i in (sudo locate -eiqr '\/.git$' | command grep -v '/(\.config|linuxbrew)/' | command shuf)
       builtin set --local current (command git -C $i rev-parse --short HEAD)
       builtin printf 'Updating %s ...\n' (command git -C $i config --get remote.origin.url);
         and sudo git -C (command dirname $i) pull --verbose
