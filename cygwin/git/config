@@ -26,8 +26,8 @@
              pager = less
              untrackedcache = keep
              whitespace = trailing-space,space-before-tab,cr-at-eol,tabwidth=2
-[diff]       colormoved = true
-             colormovedws = true
+[diff]       colormoved = zebra
+             colormovedws = ignore-space-at-eol
 [grep]       linenumber = true
              patterntype = extended
 [gui]        spellingdictionary = none
