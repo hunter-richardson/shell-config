@@ -78,4 +78,8 @@ builtin -z "$TMUX" -a (builtin command -v tmux);
                                                          and builtin printf '${HOME}';
                                                          or  builtin printf '/etc')/bash/config.sh | tee -a ~/.profile
 
-builtin set -e perms uname repo conf tmux
+builtin set -e perms
+builtin set -e uname
+builtin set -e repo
+builtin set -e conf
+builtin set -e tmux

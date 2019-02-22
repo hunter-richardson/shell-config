@@ -7,7 +7,8 @@
 # This file is run by all fish instances.
 # end
 
-builtin set -e fish_bind_mode fish_greeting
+builtin set -e fish_bind_mode
+builtin set -e fish_greeting
 builtin set -g backred (builtin set_color -b red)
 builtin set -g backmagenta (builtin set_color -b magenta)
 builtin set -g backgreen (builtin set_color -b green)
@@ -37,4 +38,6 @@ builtin set -g LESS ' -R '
 builtin set -g bookmarks ''
 builtin set -g nocmdhist commands directories bookmarks cat less ll ls
 builtin set -g grc_plugin_execs cat cvs df diff dig gcc g++ ifconfig make mount mtr netstat ping ps tail traceroute wdiff
+builtin set -g LANG en_US.UTF-8
+builtin set -g LC_CTYPE en_US.UTF-8
 
