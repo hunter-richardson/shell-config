@@ -30,6 +30,7 @@ function update -d 'automate software updates from installed SPMs'
             and command tmux source /etc/tmux/conf
         else if builtin string match '/tmux-plugins/tpm/.git' $i
           command tmux source /etc/tmux/conf
+        end
       end
     end
   end

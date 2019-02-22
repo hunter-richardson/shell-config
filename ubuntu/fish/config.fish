@@ -16,8 +16,14 @@
 
 set --local MY_DIR (command dirname (builtin status filename))
 
+for i in functions/count_files.fish export_vars.fish
+  builtin test -f $MY_DIR/conf.d/$i;
+    and builtin source $MY_DIR/conf.d/$i;
+    and builtin printf 'source %s/conf.d/%s\n' $MY_DIR $i
+end
+
 for i in conf.d/functions conf.d conf.d/completions
-  builtin test (builtin count $MY_DIR/$i/*.fish)
+  builtin test (builtin count (command ls $MY_DIR/$i/*.fish))
     and for f in $MY_DIR/$i/*.fish
           builtin source $f;
             and builtin printf 'source %s\n' $f
@@ -25,14 +31,15 @@ for i in conf.d/functions conf.d conf.d/completions
 end
 
 builtin test -f $MY_DIR/alias.fish;
-  and source $MY_DIR/alias.fish;
-  and builtin printf 'source %s/alias.fish' $MY_DIR;
+  and builtin source $MY_DIR/alias.fish;
+  and builtin printf 'source %s/alias.fish\n' $MY_DIR;
   or  true
 
 builtin test (builtin command -v pip3) -a (builtin command pip3 show thefuck) -a (builtin functions -q thefuck-command-line);
-  and bind \e\e 'thefuck-command-line';
+  and builtin bind \e\e 'thefuck-command-line';
+  and builtin printf 'bind ESC-ESC thefuck';
   or  true
 
-builtin test (builtin count "~/Downloads/*");
-  and command srm -lrvz ~/Downloads/*
-  or  true
+#builtin test (builtin count (command ls {$HOME}/Downloads/*));
+#  and command srm -lrvz {$HOME}/Downloads/*
+#  or  true

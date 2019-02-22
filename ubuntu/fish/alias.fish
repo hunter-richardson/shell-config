@@ -15,7 +15,7 @@ balias ls 'command ls -AhHl --file-type --time-style="+%a %e %b %Y, %H%M %Z" --c
 balias mkdir 'command mkdir -pv'
 balias nano 'command nano -AEiSU --tabsize=2 --softwrap'
 balias now 'command date "+%H%M %Z" -d now'
-balias opsystem "builtin printf '%s ' (command cat /etc/os-release | command head -2 | builtin string split '\"')[2]"
+balias opsystem "command grep -i pretty /etc/os-release | command cut -d= -f2 | command xargs"
 balias paste 'command xset -b --output'
 balias parent 'test -z $argv[1]; and dirname (pwd); or dirname $argv[1]'
 balias rm 'command srm -v'

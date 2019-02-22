@@ -57,16 +57,15 @@ for i in bash bash/conf.d bash/conf.d/functions
 end
 
 if builtin test $perms = 'global'
-  sudo mkdir -p /usr/local/cellar/source-highlight/3.1.8/share/source-highlight
   sudo ln -v $repo/agnostic/fish/fish.nanorc /usr/share/nano/fish.nanorc
-  sudo ln -v $repo/agnostic/fish/fish.lang /usr/local/cellar/source-highlight/3.1.8/share/source-highlight
+  sudo ln -v $repo/agnostic/fish/fish.lang /usr/local/share/source-highlight
   builtin test $uname = ubuntu;
     and sudo ln -v $repo/agnostic/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang
 else
-  command mkdir -p ${HOME}/.local/cellar/source-highlight/3.1.8/share/source-highlight
+  command mkdir -p ${HOME}/.local/cellar/share/source-highlight
   command ln -v $repo/agnostic/fish/fish.nanorc $conf/fish/fish.nanorc
   builtin printf 'include %s/fish/fish.nanorc' $conf | command tee -a ~/.nanorc
-  command ln -v $repo/agnostic/fish/fish.lang ${HOME}/.local/cellar/source-highlight/3.1.8/share/source-highlight
+  command ln -v $repo/agnostic/fish/fish.lang ${HOME}/.local/share/source-highlight
   builtin test $uname = ubuntu;
     and command ln -v $repo/agnostic/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang
 end

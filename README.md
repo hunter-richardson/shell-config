@@ -66,16 +66,15 @@ then
         && perms='global' || perms='user'
   if [ $perms == 'global' ]
   then
-    sudo mkdir -p /usr/local/cellar/source-highlight/3.1.8/share/source-highlight
     sudo ln -v /path/to/repo/agnostic/fish/fish.nanorc /usr/share/nano/fish.nanorc
-    sudo ln -v /path/to/repo/agnostic/fish/fish.lang /usr/local/cellar/source-highlight/3.1.8/share/source-highlight/
+    sudo ln -v /path/to/repo/agnostic/fish/fish.lang /usr/share/source-highlight/
     [ $uname == 'ubuntu' ]
           && sudo ln -v /path/to/repo/agnostic/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/
   else
-    mkdir -p ${HOME}/.local/cellar/source-highlight/3.1.8/share/source-highlight
+    mkdir -p ${HOME}/.local/share/source-highlight
     ln -v /path/to/repo/agnostic/fish/fish.nanorc /path/to/new/config/fish/fish.nanorc
     printf 'include %s/fish/fish.nanorc' /path/to/new/config | tee -a ~/.nanorc
-    ln -v /path/to/repo/agnostic/fish/fish.lang ${HOME}/.local/cellar/source-highlight/3.1.8/share-highlight/
+    ln -v /path/to/repo/agnostic/fish/fish.lang ${HOME}/.local/share-highlight/
     [ $uname == 'ubuntu' ]
           && ln -v /path/to/repo/agnostic/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/
   fi
@@ -94,7 +93,7 @@ su - # if applicable
       && tmux="/etc/tmux"
       || tmux="${HOME}/tmux"
 command mkdir -p $tmux
-      && command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux $tmux/tpm
+      && command git clone --verbose --depth 1 https://github.com/tmux-plugins/tpm $tmux/tpm
       && command ln -v /path/to/repo/$perms/tmux/conf $tmux/
 ```
 - Some installations of [Cygwin](https://cygwin.com) (probably managed by snarky old-timers) don't include new-and-fancy custom shells like [Fish](https://fishshell.com) -- in which case I must resort to `bash` instead. To this end, I have translated my `fish` functions and aliases into `bash`. To apply them:

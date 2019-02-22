@@ -15,8 +15,8 @@ function wine -d 'use multiuser wine installation'
                               or  builtin printf '%s' $i)
       sudo --user=wine --command=(builtin printf '%scommand wine start %s &; and builtin disown' (builtin test $matched;
                                                                                                     and builtin printf 'command wget %s | ' $i;
-                                                                                                    or  builtin printf '') $param
-      builtin unset matched param
+                                                                                                    or  builtin printf '') $param)
+      builtin set -e matched param
     end
   else
     builtin printf "You aren't a wine drinker...";

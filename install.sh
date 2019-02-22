@@ -6,7 +6,7 @@
 repo=$(command find ~ -type d -name 'shell-config')
 
 command mkdir -p $conf/bash/conf.d/functions $conf/git
-command mkdir -p $tmux && command git clone --verbose --depth 1 https://github.com/tmux-plugins/tmux $tmux/tpm && command ln -v $repo/$perms/tmux/conf $tmux/
+command mkdir -p $tmux && command git clone --verbose --depth 1 https://github.com/tmux-plugins/tpm $tmux/tpm && command ln -v $repo/$perms/tmux/conf $tmux/
 
 if [ $uname == 'cygwin' ]
 then
@@ -48,14 +48,13 @@ then
 
   if [ $perms == 'global' ]
   then
-    sudo mkdir -p /usr/local/cellar/source-highlight/3.1.8/share/source-highlight
     sudo ln -v $repo/agnostic/fish/fish.nanorc /usr/share/nano/fish.nanorc
-    sudo ln -v $repo/agnostic/fish/fish.lang /usr/local/cellar/source-highlight/3.1.8/share/source-highlight/
+    sudo ln -v $repo/agnostic/fish/fish.lang /usr/share/source-highlight/
     [ $uname == 'ubuntu' ] && sudo ln -v $repo/agnostic/fish/fish.lang /usr/share/gtksourceview-3.0/language-specs/fish.lang
   else
-    command mkdir -p ${HOME}/.local/cellar/source-highlight/3.1.8/share/source-highlight
+    command mkdir -p ${HOME}/.local/share/source-highlight
     command ln -v $repo/agnostic/fish/fish.nanorc $conf/fish/fish.nanorc && builtin printf 'include %s/fish/fish.nanorc' $conf | command tee -a ~/.nanorc
-    command ln -v $repo/agnostic/fish/fish.lang ${HOME}/.local/cellar/source-highlight/3.1.8/share/source-highlight/
+    command ln -v $repo/agnostic/fish/fish.lang ${HOME}/.local/share/source-highlight/
     [ $uname == 'ubuntu' ] && command ln -v $repo/agnostic/fish/fish.lang ${HOME}/.local/share/gtksourceview-3.0/language-specs/fish.lang
   fi
 fi
