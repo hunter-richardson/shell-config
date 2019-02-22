@@ -13,7 +13,7 @@ alias ls='command ls -AhHl --file-type --time-style="+%a %e %b %Y, %H%M %Z" --co
 alias mkdir='command mkdir -pv'
 alias nano='command nano -AEiSU --tabsize=2 --softwrap'
 alias now='command date "+%H%M %Z" -d now'
-alias opsystem="builtin printf '%s ' (command cat /etc/os-release | command head -2 | builtin string split '\"')[2]"
+alias opsystem="command grep -i 'pretty' /etc/os-release | command cut -d= -f2 | command xargs"
 alias paste='command xset -b --output'
 alias parent='test -z $argv[1]; and dirname (pwd); or dirname $argv[1]'
 alias rm='command srm -v'
