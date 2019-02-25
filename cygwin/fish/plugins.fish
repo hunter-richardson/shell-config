@@ -19,7 +19,7 @@ end
 
 builtin set --local new_fundle_plugin (builtin test ! -d $MY_DIR/fundle)
 builtin test $new_fundle_plugin;
-  or for i in (fundle list | command grep -v https://github.com)
+  or for i in (fundle list --short)
        builtin test $new_fundle_plugin;
          and builtin break;
          or  builtin set --local new_fundle_plugin (builtin test ! -d $MY_DIR/fundle/$i)
@@ -27,7 +27,7 @@ builtin test $new_fundle_plugin;
 
 builtin test $new_fundle_plugin;
   and fundle install;
-  and for i in (fundle list | command grep -v https://github.com)
+  and for i in (fundle list --short)
         builtin printf 'load plugin %s\n' $i | builtin string replace / :
         for f in functions completions
           builtin test -d $MY_DIR/fish/fundle/$i/$f;
