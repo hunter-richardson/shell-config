@@ -44,6 +44,6 @@ builtin test (builtin command -v pip3) -a (builtin command pip3 show thefuck) -a
 #  and command srm -lrvz {$HOME}/Downloads/*
 #  or  true
 
-builtin test ! (command -v brew) -a -d /home/linuxbrew;
-  and builtin eval (/home/linuxbrew/bin/brew shellenv);
+builtin test ! (command -v brew);
+  and eval ((command brew --prefix)/bin/brew shellenv);
   and builtin printf 'eval linuxbrew shellenv'

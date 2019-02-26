@@ -10,7 +10,11 @@ function update -d 'automate software updates from installed SPMs'
   end
 
   function __update_brew
-    command brew update -v
+    command brew update -v;
+      and command brew cleanup
+    builtin test -z (command brew outdated);
+      and command brew upgrade -v;
+      or  true
   end
 
   function __update_fundle
@@ -19,7 +23,7 @@ function update -d 'automate software updates from installed SPMs'
 
   function __update_git
     sudo updatedb
-    for i in (sudo locate -eiqr '\/.git$' | command grep -v '/(\.config|linuxbrew)/' | command shuf)
+    for i in (sudo locate -eiqr '\/.git$' | command grep -Ev '/\.(config|linuxbrew)/' | command shuf)
       builtin set --local current (command git -C $i rev-parse --short HEAD)
       builtin printf 'Updating %s ...\n' (command git -C $i config --get remote.origin.url);
         and sudo git -C (command dirname $i) pull --verbose
