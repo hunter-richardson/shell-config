@@ -6,5 +6,5 @@ do
 done
 unset MY_DIR
 
-[ -n "$(command -v pip)" ] && [ -n "$(command pip show thefuck)" ] && builtin eval "$(thefuck --alias --enable-experimental-instant-mode)" && builtin printf 'eval $(thefuck --alias --enable-experimental-instant-mode)'
-[ -z "$(command -v brew)" ] && builtin eval $($(command brew --prefix)/bin/brew shellenv) && builtin printf 'eval linuxbrew shellenv'
+[ -n "$(command -v thefuck)" ] && builtin eval "$(thefuck --alias --enable-experimental-instant-mode)" && builtin printf 'eval $(thefuck --alias --enable-experimental-instant-mode)'
+builtin eval $($(command brew --prefix)/bin/brew shellenv) && builtin printf 'eval linuxbrew shellenv'

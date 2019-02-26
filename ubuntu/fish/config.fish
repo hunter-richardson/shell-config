@@ -35,15 +35,11 @@ builtin test -f $MY_DIR/alias.fish;
   and builtin printf 'source %s/alias.fish\n' $MY_DIR;
   or  true
 
-builtin test (builtin command -v pip3) -a (builtin command pip3 show thefuck) -a (builtin functions -q thefuck-command-line);
+builtin test (builtin command -v thefuck);
+  and builtin functions -q thefuck-command-line;
   and builtin bind \e\e 'thefuck-command-line';
-  and builtin printf 'bind ESC-ESC thefuck';
+  and builtin printf 'bind ESC-ESC thefuck\n';
   or  true
 
-#builtin test (builtin count (command ls {$HOME}/Downloads/*));
-#  and command srm -lrvz {$HOME}/Downloads/*
-#  or  true
+eval (command brew --prefix)/bin/brew shellenv;
 
-builtin test ! (command -v brew);
-  and eval ((command brew --prefix)/bin/brew shellenv);
-  and builtin printf 'eval linuxbrew shellenv'
