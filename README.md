@@ -39,7 +39,7 @@ then
       wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /path/to/new/config/conf.d/$i/fundle.fish
           && chmod -c a+x /path/to/new/config/fish/conf.d/$i/fundle.fish
     done
-    fish --command="source /path/to/new/config/fish/config.fish"
+    fish --command="source /path/to/new/config/fish/plugins.fish"
   else
     for i in 'functions'
              'completions'
@@ -47,7 +47,7 @@ then
       sudo wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /root/.config/conf.d/$i/fundle.fish
           && chmod -c o+x /root/.config/fish/conf.d/$i/fundle.fish
     done
-    sudo fish --command="source /root/.config/config.fish"
+    sudo fish --command="source /root/.config/plugins.fish"
   fi
 fi
 ```
