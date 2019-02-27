@@ -15,7 +15,7 @@ function update -d 'automate software updates with git and fundle'
         end
       end
     end
-    builtin source ~/.config/fish/plugins.fish;
+    builtin source (command find ~ -type f -name plugins.fish | command -v /shell-config/);
       and fundle self-update;
       and fundle clean;
       and for i in (fundle list --short | command shuf)

@@ -1,8 +1,5 @@
 #!/usr/bin/fish
 
-builtin functions -q balias;
-  and alias alias 'balias'
-
 alias albert 'command albert show'
 alias copy 'command xset -b --input'
 alias cp 'command scp -v'

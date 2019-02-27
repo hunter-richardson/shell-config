@@ -1,8 +1,5 @@
 #!/bin/fish
 
-builtin functions -q balias;
-  alias alias 'balias'
-
 alias cp 'command scp -v'
 alias cpdir 'command scp -rv'
 alias datetime 'builtin test -n $argv[1]; and builtin set -l format $argv[1]; and builtin set -e argv[1]; or builtin set -l format "now"; command date "+%a %e %b %Y, %H%M %Z" -d $format'
