@@ -18,7 +18,9 @@ function update -d 'automate software updates with git and fundle'
     builtin source ~/.config/fish/plugins.fish;
       and fundle self-update;
       and fundle clean;
-      and fundle update
+      and for i in (fundle list --short | command shuf)
+            fundle update $i
+          end
   else
     builtin printf 'Unable to open an Internet connection!\n';
     builtin return 0
