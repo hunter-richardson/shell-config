@@ -37,13 +37,13 @@ then
     do
       command wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O $conf/fish/conf.d/$i/fundle.fish && command chmod -c a+x $conf/fish/conf.d/$i/fundle.fish
     done
-    fish --command="source $conf/fish/config.fish"
+    fish --command="source $conf/fish/plugins.fish"
   else
     for i in 'functions' 'completions'
     do
       sudo wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /root/.config/fish/conf.d/$i/fundle.fish && sudo chmod -c o+x /root/.config/fish/conf.d/$i/fundle.fish
     done
-    sudo fish --command="source /root/.config/fish/config.fish"
+    sudo fish --command="source /root/.config/fish/plugins.fish"
   fi
 
   if [ $perms == 'global' ]
