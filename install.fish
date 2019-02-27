@@ -39,7 +39,7 @@ end
 if builtin test $uname == cygwin
   for i in functions completions
     command wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O $conf/fish/conf.d/$i/fundle.fish;
-      and command chmod -c a+x $conf/fish/conf.d/$i/fundle.fish
+      and command chmod -c a+x $conf/fish/conf.d/$i/plugins.fish
   end
   fish --command="source $conf/fish/config.fish"
 else
@@ -47,7 +47,7 @@ else
     sudo wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /root/.config/fish/conf.d/$i/fundle.fish;
       and sudo chmod -c o+x /root/.config/fish/conf.d/$i/fundle.fish
   end
-  sudo fish --command="source /root/.config/fish/config.fish"
+  sudo fish --command="source /root/.config/fish/plugins.fish"
 end
 
 command ln -v $repo/agnostic/bash/conf.d/functions/*.sh $conf/bash/conf.d/functions/
