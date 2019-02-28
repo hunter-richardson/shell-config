@@ -22,12 +22,12 @@ if builtin test -f $MY_DIR/conf.d/functions/fundle.fish
   fundle plugin 'tuvistavie/oh-my-fish-core'
   fundle init
 
-  builtin set --local new_fundle_plugin (builtin test ! -d $MY_DIR/fundle)
+  builtin set --local new_fundle_plugin (builtin test ! -d (__fundle_plugins_dir))
   builtin test $new_fundle_plugin;
     or for i in (fundle list --short)
          builtin test $new_fundle_plugin;
            and builtin break;
-           or  builtin set --local new_fundle_plugin (builtin test ! -d $MY_DIR/fundle/$i)
+           or  builtin set --local new_fundle_plugin (builtin test ! -d (__fundle_plugins_dir)/$i)
        end
 
   builtin test $new_fundle_plugin;
