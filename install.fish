@@ -26,7 +26,7 @@ command mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions $conf
 
 builtin test $uname = cygwin;
   and command ln -v $repo/cygwin/git/config $conf/git/config
-  and for i in (command cat $repo/cygwin/git/repos.git | command shuf)
+  and for i in (command grep -Ev '^#' $repo/cygwin/git/repos.git | command shuf)
         builtin printf '%s\n' $i;
           and command git clone --verbose --depth 1 $i $(command dirname $repo)/$(builtin printf '%s' $i | command grep -oE [^//]+$ | command cut -d'.' -f1)
       end

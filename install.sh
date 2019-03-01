@@ -11,7 +11,7 @@ command mkdir -p $tmux && command git clone --verbose --depth 1 https://github.c
 if [ $uname == 'cygwin' ]
 then
   command ln -v $repo/cygwin/git/config $conf/git/
-  for i in $(command cat $repo/cygwin/git/repos.git | command shuf)
+  for i in $(command grep -Ev '^#' $repo/cygwin/git/repos.git | command shuf)
   do
     builtin printf '%s\n' $i && command git clone --verbose --depth 1 $i $(command dirname $repo)/$(builtin printf '%s' $i | command grep -oE '[^//}+$' | command cut -d'.' -f1)
   done

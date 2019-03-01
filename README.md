@@ -5,7 +5,7 @@ This is the repository for my shell configuration. I use [Ubuntu](https://ubuntu
 su - # if applicable
 if [ $(uname -o) == 'Cygwin' ]
   ln -v /path/to/repo/cygwin/git/config /path/to/new/config/git/
-  for i in $(cat /path/to/repo/cygwin/git/repos.git)
+  for i in $(grep -Ev '^#' /path/to/repo/cygwin/git/repos.git)
   do
     printf '%s -> %s' $i $(dirname /path/to/repo)/$(echo $i | grep -oE '[^//]+$' | cut -d'.' -f1)
         && git clone --verbose --depth 1 $i $(dirname /path/to/repo)/$(echo $i | grep -oE '[^//]+$' | cut -d'.' -f1)
