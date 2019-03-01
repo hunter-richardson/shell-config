@@ -42,3 +42,4 @@ builtin set -g LANG en_US.UTF-8
 builtin set -g LC_CTYPE en_US.UTF-8
 builtin set -g BAT_CONFIG_DIR /etc/bat/conf
 
+

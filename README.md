@@ -47,6 +47,7 @@ then
       sudo wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /root/.config/conf.d/$i/fundle.fish
           && chmod -c o+x /root/.config/fish/conf.d/$i/fundle.fish
     done
+    sudo ln -v /path/to/repo/ubuntu/fish/fundle.plugins /root/.config/
     sudo fish --command="source /root/.config/plugins.fish"
   fi
 fi

@@ -35,11 +35,15 @@ builtin test -f $MY_DIR/alias.fish;
   and builtin printf 'source %s/alias.fish\n' $MY_DIR;
   or  true
 
-builtin test (builtin command -v thefuck);
+builtin command -v thefuck;
   and builtin functions -q thefuck-command-line;
   and builtin bind \e\e 'thefuck-command-line';
   and builtin printf 'bind ESC-ESC thefuck\n';
   or  true
 
-eval (command brew --prefix)/bin/brew shellenv;
+builtin command -v brew;
+  and builtin functions -q bax;
+  and builtin set -l brew_prefix (command brew --prefix);
+  and bax ($brew_prefix/bin/brew shellenv);
+  and builtin printf '%s/bin/brew shellenv'
 

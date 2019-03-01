@@ -6,20 +6,15 @@ if builtin test -f $MY_DIR/conf.d/functions/fundle.fish
   builtin source $MY_DIR/conf.d/functions/fundle.fish
   builtin test -f $MY_DIR/conf.d/completions/fundle.fish;
     and builtin source $MY_DIR/conf.d/completions/fundle.fish
-  for i in (builtin set -g | command cut -d' ' -f1 | command grep -E '^__fundle.*_plugin$')
+  for i in (builtin set -g | command cut -d' ' -f1 | command grep -E '^__fundle.*_plugin')
     set -e $i
   end
 
-  fundle plugin 'edc/bass'
-  fundle plugin 'decors/fish-colored-man'
+  for i in decors/fish-colored-man hunter-richardson/fish-bax hunter-richardson/fish-getopts hunter-richardson/fish-humanize-duration laughedelic/pisces oh-my-fish/plugin-await oh-my-fish/plugin-errno tuvistavie/fish-completion-helpers tuvistavie/oh-my-fish-core
+    fundle plugin $i
+  end
 #  fundle plugin 'decors/fish-source-highlight'
-  fundle plugin 'hunter-richardson/fish-humanize-duration'
-  fundle plugin 'laughedelic/pisces'
-  fundle plugin 'oh-my-fish/plugin-await'
-  fundle plugin 'oh-my-fish/plugin-errno'
 #  fundle plugin 'oh-my-fish/plugin-xdg'
-  fundle plugin 'tuvistavie/fish-completion-helpers'
-  fundle plugin 'tuvistavie/oh-my-fish-core'
   fundle init
 
   builtin set --local new_fundle_plugin (builtin test ! -d (__fundle_plugins_dir))
