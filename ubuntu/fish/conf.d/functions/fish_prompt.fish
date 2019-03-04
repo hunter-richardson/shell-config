@@ -57,7 +57,7 @@ function fish_prompt -d 'the left prompt'
   end
   if builtin test ! (builtin string trim $SSH_CONNECTION)
     builtin test (command iwgetid);
-      and builtin printf ' %s%s≪ ⏆ ≫ ' $bold $green;
+      and builtin printf ' %s%s≪  %s ≫ ' $bold $green (command iwgetid --raw);
       or  builtin printf '%s❮ ❔❯ ' $red
   end
   builtin test $SHLVL -gt 1;
