@@ -19,31 +19,38 @@ set --local MY_DIR (command dirname (builtin status filename))
 for i in functions/count_files.fish export_vars.fish
   builtin test -f $MY_DIR/conf.d/$i;
     and builtin source $MY_DIR/conf.d/$i;
-    and builtin printf 'source %s/conf.d/%s\n' $MY_DIR $i
+    and builtin test (whoami) != root;
+    and builtin printf 'source %s/conf.d/%s\n' $MY_DIR $i;
+    or  true
 end
 
 for i in conf.d/functions conf.d conf.d/completions
   builtin test (builtin count (command ls $MY_DIR/$i/*.fish))
     and for f in $MY_DIR/$i/*.fish
           builtin source $f;
-            and builtin printf 'source %s\n' $f
+            and builtin test (whoami) != root;
+            and builtin printf 'source %s\n' $f;
+            or  true
         end
 end
 
 builtin test -f $MY_DIR/alias.fish;
   and builtin source $MY_DIR/alias.fish;
+  and builtin test (whoami) != root;
   and builtin printf 'source %s/alias.fish\n' $MY_DIR;
   or  true
 
-builtin command -v thefuck;
-  and builtin functions -q thefuck-command-line;
-  and builtin bind \e\e 'thefuck-command-line';
-  and builtin printf 'bind ESC-ESC thefuck\n';
+builtin command -v albert >/dev/null;
+  and builtin bind \e\e 'command albert show 1>/dev/null 2>/dev/null';
+  and builtin test (whoami) != root;
+  and builtin printf 'bind ESC-ESC albert\n';
   or  true
 
-builtin command -v brew;
+builtin command -v brew >/dev/null;
   and builtin functions -q bax;
   and builtin set -l brew_prefix (command brew --prefix);
   and bax ($brew_prefix/bin/brew shellenv);
-  and builtin printf '%s/bin/brew shellenv'
+  and builtin test (whoami) != root;
+  and builtin printf '%s/bin/brew shellenv';
+  or  true
 

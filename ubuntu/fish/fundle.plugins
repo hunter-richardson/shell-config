@@ -10,7 +10,6 @@ oh-my-fish/plugin-await
 oh-my-fish/plugin-errno
 oh-my-fish/plugin-grc
 oh-my-fish/plugin-sublime
-oh-my-fish/plugin-thefuck
 oh-my-fish/plugin-xdg
 tuvistavie/fish-completion-helpers
 tuvistavie/oh-my-fish-core
