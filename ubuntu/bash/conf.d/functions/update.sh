@@ -31,7 +31,7 @@ function update() {
   }
 
   [ ! $(command members sudo | command grep $(command whoami)) -a ! $(command members root | command grep $(command whoami)) ] && builtin printf "You are not a sudoer!" && return 121
-  [ ! $(command iwgetid) ] && builtin printf 'Unable to open an Internet connection' && return 0
+  [ $(command nmcli networking connectivity check) != 'full' ] && builtin printf 'Unable to open an Internet connection' && return 0
   [ $# -eq 0 ] && SPMs="apt brew git snap" || SPMs=$(builtin printf "%s\n" $@ | command sort -diu)
   for s in $SPMs
   do

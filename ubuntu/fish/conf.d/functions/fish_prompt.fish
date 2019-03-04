@@ -56,7 +56,7 @@ function fish_prompt -d 'the left prompt'
       end)
   end
   if builtin test ! (builtin string trim $SSH_CONNECTION)
-    builtin test (command iwgetid);
+    builtin test (command nmcli networking connectivity check) = full;
       and builtin printf ' %s%s≪  %s ≫ ' $bold $green (command iwgetid --raw);
       or  builtin printf '%s❮ ❔❯ ' $red
   end

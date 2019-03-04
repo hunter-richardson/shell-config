@@ -48,7 +48,7 @@ function update -d 'automate software updates from installed SPMs'
   builtin test ! (command members sudo | command grep (command whoami)) -a ! (command members root | command grep (command whoami));
     and builtin printf 'You are not a sudoer!'
     and return 121
-  builtin test ! (command iwgetid);
+  builtin test (command nmcli networking connectivity check) != full;
     and builtin printf 'Unable to establish Internet connection!';
     and return 0
   builtin test (builtin count $argv) = 0;
