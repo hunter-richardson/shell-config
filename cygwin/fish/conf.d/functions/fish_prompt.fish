@@ -25,11 +25,14 @@ function fish_prompt -d 'the left prompt'
     builtin printf '%s%u : %s%s] %s<*)))><' $red $last_status (strerror $last_status) $white $red
   else
     builtin printf '%s%s :D' $cyan (
-      if builtin test (date '+%p' -d "now - 6 hour") = AM
-        builtin printf '><(((*>'
-      else
-        builtin printf '<*)))><'
-      end)
+      builtin test (date '+%p' -d "now - 6 hour") = AM;
+        and builtin printf '><(((*>';
+        or  builtin printf '<*)))><')
+  end
+  if builtin functions -q iwgetid
+    builtin test -n (iwgetid);
+      and builtin printf ' %s%s' $green (iwgetid);
+      or  builtin printf ' %s ????' $red
   end
   builtin test $SHLVL -gt 1;
     and builtin printf ' %s%s◈ %u' $yellow (math -- $SHLVL - 1)
