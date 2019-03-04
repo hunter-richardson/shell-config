@@ -4,10 +4,17 @@ function update -d 'automate software updates with git and fundle'
   if command ping -n 1 -w 1 github.com >/dev/null
     for i in (command find ~ -type d -name .git | command grep -v /.config/ | command shuf)
       builtin set --local current (command git -C $i rev-parse --short HEAD)
-      builtin printf 'Updating %s ...\n' (command git -C $i config --get remote.origin.url);
-        and command git -C (command dirname $i) pull --verbose
+      builtin set --local url (command git -C $i config --get remote.origin.url)
+      builtin printf 'Updating %s ...\n' $url;
+      if builtin string match -eq '/hunter-richardson/' $url
+        if builtin test ! (command git -C (command dirname $i) diff-index --quiet HEAD)
+           builtin printf '%sLocal Changes:%s\n' $red $normal;
+             and builtin printf '\t%s\n' (command git -C (command dirname $i) status --porcelain)
+        end
+      end
+      command git -C (command dirname $i) pull --verbose
       if builtin test $current != (command git -C $i rev-parse --short HEAD)
-        if builtin string match '/hunter-richardson/my-config/.git' $i
+        if builtin string match -eq '/hunter-richardson/shell-config/.git' $i
           builtin source ~/.config/fish/config.fish;
             and command tmux source ~/tmux/conf
         else if builtin string match '/tmux-plugins/tpm/.git' $i

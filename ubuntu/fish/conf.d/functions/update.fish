@@ -25,8 +25,15 @@ function update -d 'automate software updates from installed SPMs'
     sudo updatedb
     for i in (sudo locate -eiqr '\/.git$' | command grep -Ev '/\.(config|linuxbrew)/' | command shuf)
       builtin set --local current (command git -C $i rev-parse --short HEAD)
-      builtin printf 'Updating %s ...\n' (command git -C $i config --get remote.origin.url);
-        and sudo git -C (command dirname $i) pull --verbose
+      builtin set --local url (command -C $i config --get remote.origin.url)
+      builtin printf 'Updating %s ...\n' $url;
+      if builtin string match -eq '/hunter-richardson/' $url
+        if builtin test ! (command git -C (command dirname $i) diff-index --quiet HEAD)
+          builtin printf '%sLocal Changes:%s\n' $red $normal;
+            and builtin printf '\t%s\n' (command git -C (command dirname $i) status --porcelain)
+        end
+      end
+      sudo git -C (command dirname $i) pull --verbose
       if builtin test $current != (command git -C $i rev-parse --short HEAD)
         if builtin string match '/hunter-richardson/shell-config/.git' $i
           builtin source /etc/fish/config.fish;

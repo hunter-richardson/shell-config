@@ -15,11 +15,15 @@ function update() {
     for i in $(sudo locate -eiqr '\/.git$' | command grep -Ev '/\.(config|linuxbrew)/' | command shuf)
     do
       current=$(command git -C $i rev-parse --short HEAD)
-      builtin printf 'Updating %s ...\n' $(command git -C $i config --get remote.origin.url) && sudo git -C (command dirname $i) pull --verbose
+      url=$(command git -C $i config --get remote.origin.url)
+      builtin printf 'Updating %s ...\n' $url
+      [[ $url =~ */hunter-richardson/* ]] && [ ! $(command git -C $(command dirname $i) diff-index --quiet HEAD) ] && builtin printf '%sLocal Changes:%s\n' $(format red) $(format normal) && builtin printf '\t%s\n' (command git -C (command dirname $i) status --porcelain)
+      sudo git -C (command dirname $i) pull --verbose
       if [ $current != $(command git -C $i rev-parse --short HEAD) ]
       then
         [[ $i =~ */hunter-richardson/shell-config/.git ] && builtin source /etc/bash/config.sh && command tmux source /etc/tmux/conf || [[ $i =~ */tmux-plugins/tpm/.git ]] && command tmux source /etc/tmux/conf
       fi
+      builtin unset current url
     done
   }
 
