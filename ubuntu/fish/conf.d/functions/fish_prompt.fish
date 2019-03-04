@@ -3,12 +3,12 @@
 function fish_prompt -d 'the left prompt'
   builtin set -l last_status $status
   builtin printf '%s%s┌[' $bold $white
-  if test (command git rev-parse --is-inside-work-tree ^/dev/null)
+  if builtin test (command git rev-parse --is-inside-work-tree ^/dev/null)
     builtin set -l cdup (builtin count (command git rev-parse --show-cdup | builtin string split '../'))
     builtin test $cdup -gt 1;
       and builtin printf ' 📂 %s' (math -- $cdup - 1)
     builtin set -l branch (command git symbolic-ref --short HEAD)
-    builtin test -n $branch;
+    builtin test -n "$branch";
       and builtin printf ' %s⎇  %s' $cyan $branch
     builtin test (command git diff-index --cached --quiet HEAD);
       and builtin printf ' %s⏩' $magenta
@@ -35,7 +35,7 @@ function fish_prompt -d 'the left prompt'
             builtin set -l upstr (builtin printf '▲ %s ▼ %s' $ahead $behind)
         end
         builtin printf ' %s⊷ %s' $magenta $commit
-        builtin test -n $upstr;
+        builtin test -n "$upstr";
           and builtin printf ' %s%s' $yellow $upstr
       else
         builtin printf ' %s⊷ %s' $magenta $commit
