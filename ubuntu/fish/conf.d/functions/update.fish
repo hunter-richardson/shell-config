@@ -2,18 +2,22 @@
 
 function update -d 'automate software updates from installed SPMs'
   function __update_apt
-        sudo apt-fast update;
-    and sudo apt-fast autoremove -y;
-    and sudo apt-fast upgrade -y;
-    and sudo apt-fast install -fy;
-    and sudo apt-fast clean -y
+    builtin string match -iqr -- '--quiet' $argv;
+      and builtin set -l verbosity '-qq';
+      or  builtin set -l verbosity '';
+    for 'update' 'autoremove -y' 'upgrade -y' 'install -fy' 'clean -y'
+      sudo apt-fast $verbosity $i
+    end
   end
 
   function __update_brew
-    command brew update -v;
+    builtin string match -iqr -- '--quiet' $argv;
+      and builtin set -l verbosity '-q';
+      or  builtin set -l verbosity '-v';
+    command brew update $verbosity;
       and command brew cleanup
-    builtin test -z (command brew outdated);
-      and command brew upgrade -v;
+    builtin test -n (command brew outdated);
+      and command brew upgrade $verbosity;
       or  true
   end
 
@@ -22,15 +26,19 @@ function update -d 'automate software updates from installed SPMs'
   end
 
   function __update_git
+    builtin string match -iqr -- '--quiet' $argv;
+      and builtin set -l verbosity '--quiet';
+      or  builtin set -l verbosity '--verbose';
     sudo updatedb
     for i in (sudo locate -eiqr '\/.git$' | command grep -Ev '/\.(config|linuxbrew)/' | command shuf)
       builtin set --local current (command git -C $i rev-parse --short HEAD)
       builtin set --local url (command -C $i config --get remote.origin.url)
-      builtin printf 'Updating %s ...\n' $url;
-      command git -C (command dirname $i) status --porcelain >/dev/null | builtin string trim -q;
+      builtin printf 'Updating %s ...\n' $url
+      builtin test $verbosity = '--verbose';
+        and command git -C (command dirname $i) status --porcelain >/dev/null | builtin string trim -q;
         and builtin printf '%sLocal Changes:%s\n' $red $normal;
         and builtin printf '\t%s\n' (command git -C (command dirname $i) status --porcelain)
-      sudo git -C (command dirname $i) pull --verbose
+      sudo git -C (command dirname $i) pull $verbosity
       if builtin test $current != (command git -C $i rev-parse --short HEAD)
         if builtin string match '/hunter-richardson/shell-config/.git' $i
           builtin source /etc/fish/config.fish;
@@ -43,8 +51,11 @@ function update -d 'automate software updates from installed SPMs'
   end
 
   function __update_snap
+    bulitin set -l quiet (builtin string match -iqr -- '--quiet' $argv);
     for i in (sudo snap list | command sed -n '1!p' | command cut -d' ' -f1 | command shuf)
-      builtin printf '%s\n' (command whereis $i | command cut -d' ' -f2);
+      builtin printf '%s\n' (buitlin test $quiet;
+                               and command snap info --verbose $i
+                               or  command whereis $i | command cut -d' ' -f2);
         and sudo snap refresh $i
     end
   end
@@ -55,36 +66,27 @@ function update -d 'automate software updates from installed SPMs'
   builtin test (command nmcli networking connectivity check) != full;
     and builtin printf 'Unable to establish Internet connection!';
     and return 0
-  builtin test (builtin count $argv) = 0;
-    and builtin set -l SPMs apt git raw snap;
-    or  builtin set -l SPMs (builtin printf '%s\n' $argv | command sort -diu)
-  for s in $SPMs
-    switch $s
-      case all
-            __update_apt;
-        and __update_brew;
-        and __update_fundle;
-        and __update_git;
-        and __update_snap
-      case apt
-        __update_apt
-      case brew
-        __update_brew
-      case fundle
-        __update_fundle
-      case git
-        __update_git
-      case snap
-        __update_snap
-      case '*'
-        builtin printf '\a\tUsage:  update [apt | brew | fundle | git | snap | all]\n\tupdate all =:= update apt brew fundle git snap\n\tDefault:  update apt brew git snap'
+  builtin string match -iqr -- '--?q(uiet)?' $argv;
+    and builtin set -l quiet -- '--quiet';
+    or  builtin set -l quiet '';
+  builtin set -l SPMs (builtin printf '%s\n' $argv | command grep -E '^all|apt|brew|fundle|git|snap$');
+    or builtin set -l SPMs apt brew git snap
+  if builtin contains $SPMs all;
+    for i in apt brew fundle git snap
+        builtin test $i = fundle;
+          and __update_$i;
+          and __update_$i $quiet
+    end
+  else
+    for i in apt brew fundle git snap
+      builtin contains $SPMs $i;
+        and __update_$i (builtin test $quiet -a $i != fundle;
+                           and builtin printf -- '--quiet';
+                           or  builtin printf '')
     end
   end
 
-  functions -e __update_apt
-  functions -e __update_brew
-  functions -e __update_fundle
-  functions -e __update_git
-  functions -e __update_raw
-  functions -e __update_snap
+  for i in apt brew fundle git snap
+    functions -e __update_$i
+  end
 end
