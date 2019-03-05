@@ -71,18 +71,23 @@ function update -d 'automate software updates from installed SPMs'
     or  builtin set -l quiet '';
   builtin set -l SPMs (builtin printf '%s\n' $argv | command grep -E '^all|apt|brew|fundle|git|snap$');
     or builtin set -l SPMs apt brew git snap
-  if builtin contains $SPMs all;
+  if builtin test -z "$SPMs"
     for i in apt brew fundle git snap
-        builtin test $i = fundle;
-          and __update_$i;
-          and __update_$i $quiet
+      __update_$i $quiet
+    end
+  else if builtin contains all $SPMs;
+    for i in apt brew fundle git snap
+      builtin test $i = fundle;
+        and __update_$i;
+        and __update_$i $quiet
     end
   else
     for i in apt brew fundle git snap
-      builtin contains $SPMs $i;
-        and __update_$i (builtin test $quiet -a $i != fundle;
-                           and builtin printf -- '--quiet';
-                           or  builtin printf '')
+      if builtin contains $i $SPMs
+        builtin test $i = fundle;
+          and __update_$i;
+          or  __update_$i $quiet
+      end
     end
   end
 

@@ -39,11 +39,15 @@ function update -d 'automate software updates with git and fundle'
       and builtin set -l quiet '--quiet';
       or  builtin set -l quiet '';
     builtin set -l SPMs (builtin printf '%s\n' $argv | command grep -E '^git|fundle$');
-      or builtin set -l SPMs git fundle
-    builtin contains $SPMs git
-      and __update_git $quiet;
-    builtin contains $SPMs fundle;
-      and __update_fundle
+    if builtin test -n "$SPMs"
+      builtin contains git $SPMs;
+        and eval __update_git $quiet
+      builtin contains fundle $SPMs;
+        and eval __update_fundle
+    else
+      eval __update_git $quiet
+      eval __update_fundle
+    end
   else
     builtin printf 'Unable to open an Internet connection!\n';
     builtin return 0
