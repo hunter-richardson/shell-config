@@ -2,13 +2,19 @@
 
 function update() {
   function __update_apt() {
-    for 'update' 'autoremove -y' 'upgrade -y' 'install -fy' 'clean -y'
-      [[ $@ != *"--quiet"* ]] && sudo apt-fast '-qq' $i || sudo apt-fast $i
-    end
+    if [[ $@ =` *--quiet* ]]
+    then
+         sudo apt-fast -qq update
+      && sudo apt-fast -qq autoremove -y
+      && sudo apt-fast -qq upgrade -y
+      && sudo apt-fast -qq install -fy
+      && sudo apt-fast -qq clean -y
+    else
+    fi
   }
 
   function __update_brew() {
-    if [[ $@ != *"--quiet"* ]]
+    if [[ $@ =~ *"--quiet"* ]]
     then
       command brew update -q && command brew cleanup -q
       [ -n $(command brew outdated -v) ] && command brew upgrade -q
@@ -37,25 +43,25 @@ function update() {
   function __update_snap() {
     for i in $(sudo snap list | command sed -n '1!p' | command cut -d' ' -f1 | command shuf)
     do
-      [[ $@ != *"--quiet"* ]] && builtin printf '%s\n' (command whereis $i | command cut -d' ' -f2) || command snap info --verbose $i
+      [[ $@ =~ *"--quiet"* ]] && command snap info --verbose $i || builtin printf '%s\n' (command whereis $i | command cut -d' ' -f2)
       sudo snap refresh $i
     done
   }
 
   [ ! $(command members sudo | command grep $(command whoami)) -a ! $(command members root | command grep $(command whoami)) ] && builtin printf "You are not a sudoer!" && return 121
   [ $(command nmcli networking connectivity check) != 'full' ] && builtin printf 'Unable to open an Internet connection' && return 0
-  [[ $@ != *"--quiet"* ]] && quiet='--quiet' || quiet=''
+  [[ $@ =~ *"--quiet"* ]] && quiet='--quiet' || quiet=''
   [ $# -eq 0 ] && SPMs='all' || SPMs=$(builtin printf "%s\n" $@ | command grep -E '^all|apt|brew|git|snap$')
   if [[ $SPMs =~ all ]]
   then
     for i in 'apt' 'brew' 'git' 'snap'
     do
-      __update_$i $quiet
+      builtin eval __update_$i $quiet
     done
   else
     for i in 'apt' 'brew' 'git' 'snap'
     do
-      [[ $SPMs =~ $i ]] && __update_$i $quiet
+      [[ $SPMs =~ $i ]] && builtin eval __update_$i $quiet
     done
   fi
 
