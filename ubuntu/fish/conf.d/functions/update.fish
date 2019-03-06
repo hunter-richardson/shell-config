@@ -2,11 +2,18 @@
 
 function update -d 'automate software updates from installed SPMs'
   function __update_apt
-    builtin string match -iqr -- '--quiet' $argv;
-      and builtin set -l verbosity '-qq';
-      or  builtin set -l verbosity '';
-    for 'update' 'autoremove -y' 'upgrade -y' 'install -fy' 'clean -y'
-      sudo apt-fast $verbosity $i
+    if builtin string match -iqr -- '--quiet' $argv;
+          sudo apt-fast -qq update;
+      and sudo apt-fast -qq autoremove -y;
+      and sudo apt-fast -qq upgrade -y;
+      and sudo apt-fast -qq install -fy;
+      and sudo apt-fast -qq clean -y
+    else
+          sudo apt-fast update;
+      and sudo apt-fast autoremove -y;
+      and sudo apt-fast upgrade -y;
+      and sudo apt-fast install -fy;
+      and sudo apt-fast clean -y
     end
   end
 
@@ -32,7 +39,7 @@ function update -d 'automate software updates from installed SPMs'
     sudo updatedb
     for i in (sudo locate -eiqr '\/.git$' | command grep -Ev '/\.(config|linuxbrew)/' | command shuf)
       builtin set --local current (command git -C $i rev-parse --short HEAD)
-      builtin set --local url (command -C $i config --get remote.origin.url)
+      builtin set --local url (command git -C $i config --get remote.origin.url)
       builtin printf 'Updating %s ...\n' $url
       builtin test $verbosity = '--verbose';
         and command git -C (command dirname $i) status --porcelain >/dev/null | builtin string trim -q;
@@ -51,11 +58,10 @@ function update -d 'automate software updates from installed SPMs'
   end
 
   function __update_snap
-    bulitin set -l quiet (builtin string match -iqr -- '--quiet' $argv);
     for i in (sudo snap list | command sed -n '1!p' | command cut -d' ' -f1 | command shuf)
-      builtin printf '%s\n' (buitlin test $quiet;
-                               and command snap info --verbose $i
-                               or  command whereis $i | command cut -d' ' -f2);
+      builtin printf '%s\n' (builtin string match -iqr -- '--quiet' $argv;
+                               and command whereis $i | command cut -d' ' -f2;
+                               or  command snap info --verbose $i);
         and sudo snap refresh $i
     end
   end
@@ -73,20 +79,20 @@ function update -d 'automate software updates from installed SPMs'
     or builtin set -l SPMs apt brew git snap
   if builtin test -z "$SPMs"
     for i in apt brew fundle git snap
-      __update_$i $quiet
+      eval __update_$i $quiet
     end
   else if builtin contains all $SPMs;
     for i in apt brew fundle git snap
       builtin test $i = fundle;
-        and __update_$i;
-        and __update_$i $quiet
+        and eval __update_$i;
+        or  eval __update_$i $quiet
     end
   else
     for i in apt brew fundle git snap
       if builtin contains $i $SPMs
         builtin test $i = fundle;
-          and __update_$i;
-          or  __update_$i $quiet
+          and eval __update_$i;
+          or  eval __update_$i $quiet
       end
     end
   end
