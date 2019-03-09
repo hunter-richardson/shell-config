@@ -39,6 +39,7 @@ then
     done
     fish --command="source $conf/fish/plugins.fish"
   else
+    command wget -v https://raw.githubusercontent.com/cheat/cheat/master/cheat/autocompletion/cheat.fish -O $conf/fish/conf.d/completions/cheat.fish
     for i in 'functions' 'completions'
     do
       sudo wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /root/.config/fish/conf.d/$i/fundle.fish && sudo chmod -c o+x /root/.config/fish/conf.d/$i/fundle.fish
