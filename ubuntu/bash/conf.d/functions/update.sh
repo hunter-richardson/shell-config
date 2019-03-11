@@ -1,20 +1,16 @@
 #!/bin/bash
 
-function update() {
-  function __update_apt() {
-    if [[ $@ =` *--quiet* ]]
+function update {
+  function __update_apt {
+    if [[ $@ =~ *--quiet* ]]
     then
-         sudo apt-fast -qq update
-      && sudo apt-fast -qq autoremove -y
-      && sudo apt-fast -qq upgrade -y
-      && sudo apt-fast -qq install -fy
-      && sudo apt-fast -qq clean -y
+         sudo apt-fast -qq update && sudo apt-fast -qq autoremove -y && sudo apt-fast -qq upgrade -y && sudo apt-fast -qq install -fy && sudo apt-fast -qq clean -y
     else
     fi
   }
 
-  function __update_brew() {
-    if [[ $@ =~ *"--quiet"* ]]
+  function __update_brew {
+    if [[ $@ =~ *--quiet* ]]
     then
       command brew update -q && command brew cleanup -q
       [ -n $(command brew outdated -v) ] && command brew upgrade -q
@@ -24,7 +20,25 @@ function update() {
     fi
   }
 
-  function __update_git() {
+  function __update_bundle {
+    if [[ $@ =~ *--quiet* ]]
+    then
+      command bundle clean
+      for i in (command bundle outdated)
+      do
+        command bundle update $i --quiet
+      end
+    else
+      command bundle clean --verbose
+      for i in (command bundle outdated)
+      do
+        command bundle info $i -ev;
+          and command bundle update $i --verbose
+      done
+    fi
+  }
+
+  function __update_git {
     sudo updatedb
     for i in $(sudo locate -eiqr '\/.git$' | command grep -Ev '/\.(config|linuxbrew)/' | command shuf)
     do
@@ -40,26 +54,26 @@ function update() {
     done
   }
 
-  function __update_snap() {
+  function __update_snap {
     for i in $(sudo snap list | command sed -n '1!p' | command cut -d' ' -f1 | command shuf)
     do
-      [[ $@ =~ *"--quiet"* ]] && command snap info --verbose $i || builtin printf '%s\n' (command whereis $i | command cut -d' ' -f2)
+      [[ $@ =~ *--quiet* ]] && command snap info --verbose $i || builtin printf '%s\n' (command whereis $i | command cut -d' ' -f2)
       sudo snap refresh $i
     done
   }
 
   [ ! $(command members sudo | command grep $(command whoami)) -a ! $(command members root | command grep $(command whoami)) ] && builtin printf "You are not a sudoer!" && return 121
   [ $(command nmcli networking connectivity check) != 'full' ] && builtin printf 'Unable to open an Internet connection' && return 0
-  [[ $@ =~ *"--quiet"* ]] && quiet='--quiet' || quiet=''
-  [ $# -eq 0 ] && SPMs='all' || SPMs=$(builtin printf "%s\n" $@ | command grep -E '^all|apt|brew|git|snap$')
+  [[ $@ =~ *--quiet* ]] && quiet='--quiet' || quiet=''
+  [ $# -eq 0 ] && SPMs='all' || SPMs=$(builtin printf "%s\n" $@ | command grep -E '^all|apt|brew|bundle|git|snap$')
   if [[ $SPMs =~ all ]]
   then
-    for i in 'apt' 'brew' 'git' 'snap'
+    for i in 'apt' 'brew' 'bundle' 'git' 'snap'
     do
       builtin eval __update_$i $quiet
     done
   else
-    for i in 'apt' 'brew' 'git' 'snap'
+    for i in 'apt' 'brew' 'bundle' 'git' 'snap'
     do
       [[ $SPMs =~ $i ]] && builtin eval __update_$i $quiet
     done

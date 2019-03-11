@@ -28,6 +28,21 @@ function update -d 'automate software updates from installed SPMs'
       or  true
   end
 
+  function __update_bundle
+    if builtin string match -iqr -- '--quiet' $argv
+      command bundle clean;
+        and for i in (command bundle outdated)
+              command bundle update $i --quiet
+            end
+    else
+      command bundle clean --verbose;
+        and for i in (command bundle outdated)
+              command bundle info $i -ev;
+                and command bundle update $i --verbose
+            end
+    end
+  end
+
   function __update_fundle
     sudo --user=root fish --command='builtin source /root/.config/fish/plugins.fish; and fundle self-update; and fundle clean; and for i in (fundle list --short | command shuf); fundle update $i; end'
   end
@@ -75,14 +90,16 @@ function update -d 'automate software updates from installed SPMs'
   builtin string match -iqr -- '--?q(uiet)?' $argv;
     and builtin set -l quiet -- '--quiet';
     or  builtin set -l quiet '';
-  builtin set -l SPMs (builtin printf '%s\n' $argv | command grep -E '^all|apt|brew|fundle|git|snap$');
-    or builtin set -l SPMs apt brew git snap
+  builtin set -l SPMs (builtin printf '%s\n' $argv | command grep -E '^all|apt|brew|bundle|fundle|git|snap$');
+    or builtin set -l SPMs all
   if builtin test -z "$SPMs"
-    for i in apt brew fundle git snap
-      eval __update_$i $quiet
+    for i in apt brew bundle fundle git snap
+      builtin test $i = fundle;
+        and eval __update_$i;
+        or  eval __update_$i $quiet
     end
   else if builtin contains all $SPMs;
-    for i in apt brew fundle git snap
+    for i in apt brew bundle fundle git snap
       builtin test $i = fundle;
         and eval __update_$i;
         or  eval __update_$i $quiet
