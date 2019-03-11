@@ -100,7 +100,7 @@ command mkdir -p $tmux
 - [`cheat`](https://github.com/cheat/cheat) is a utility that generates common usages of well-known but confusing Unix commands (e.g. `tar`). I installed this onto [Ubuntu](https://ubuntu.com); unfortunately for [Cygwin](https://cygwin.com), I cannot install it due to dependencies. A `fish` completions file is available in the git repo, but not in the [`Snap`](https://snapcraft.io) store. To apply it:
 ```bash
 su - # if applicable
-[ $(uname -o) == 'Cygwin' ] || command wget -v https://raw.githubusercontent.com/cheat/cheat/master/cheat/autocompletion/cheat/fish -O /path/to/new/config/fish/conf.d/completions/cheat.fish
+[ -n "$(command -v cheat)" ] || command wget -v https://raw.githubusercontent.com/cheat/cheat/master/cheat/autocompletion/cheat/fish -O /path/to/new/config/fish/conf.d/completions/cheat.fish
 ```
 - Some installations of [Cygwin](https://cygwin.com) (probably managed by snarky old-timers) don't include new-and-fancy custom shells like [Fish](https://fishshell.com) -- in which case I must resort to `bash` instead. To this end, I have translated my `fish` functions and aliases into `bash`. To apply them:
 ```bash

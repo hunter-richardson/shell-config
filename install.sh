@@ -27,6 +27,7 @@ if [ -n "$(builtin command -v fish)" ]
 then
   command mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions
   command ln -v $repo/agnostic/fish/conf.d/functions/*.sh $conf/fish/conf.d/functions/
+  [ -n "$(command -v cheat)" ] && command wget -v https://raw.githubusercontent.com/cheat/cheat/master/cheat/autocompletion/cheat.fish -O $conf/fish/conf.d/completions/cheat.fish
   for i in 'fish' 'fish/conf.d/functions' 'fish/conf.d/completions'
   do
     [ -d $repo/$uname/$i ] && command ln -v $repo/$uname/$i/*.fish $conf/fish/$i/
@@ -39,7 +40,6 @@ then
     done
     fish --command="source $conf/fish/plugins.fish"
   else
-    command wget -v https://raw.githubusercontent.com/cheat/cheat/master/cheat/autocompletion/cheat.fish -O $conf/fish/conf.d/completions/cheat.fish
     for i in 'functions' 'completions'
     do
       sudo wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /root/.config/fish/conf.d/$i/fundle.fish && sudo chmod -c o+x /root/.config/fish/conf.d/$i/fundle.fish

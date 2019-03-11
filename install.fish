@@ -24,6 +24,9 @@ command mkdir -p $conf/fish/conf.d/functions $conf/fish/conf.d/completions $conf
   and command git clone --verbose --depth 1 https://github.com/tmux-plugins/tpm $tmux/tmux/tpm;
   and command ln -v $repo/$perms/tmux/conf $tmux/tmux/
 
+builtin command -v cheat;
+  and command wget -v https://raw.githubusercontent.com/cheat/cheat/master/cheat/autocompletions/cheat.fish -O $conf/fish/conf.d/completions/cheat.fish
+
 builtin test $uname = cygwin;
   and command ln -v $repo/cygwin/git/config $conf/git/config;
   and for i in (command grep -Ev '^#' $repo/cygwin/git/repos.git | command shuf)
@@ -43,7 +46,6 @@ if builtin test $uname == cygwin
   end
   fish --command="source $conf/fish/config.fish"
 else
-  command wget -v https://raw.githubusercontent.com/cheat/cheat/master/cheat/autocompletions/cheat.fish -O $conf/fish/conf.d/completions/cheat.fish
   for i in functions completions
     sudo wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /root/.config/fish/conf.d/$i/fundle.fish;
       and sudo chmod -c o+x /root/.config/fish/conf.d/$i/fundle.fish
