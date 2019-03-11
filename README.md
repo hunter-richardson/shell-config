@@ -93,14 +93,14 @@ su - # if applicable
 [ $perms == 'global' ]
       && tmux="/etc/tmux"
       || tmux="${HOME}/tmux"
-command mkdir -p $tmux
-      && command git clone --verbose --depth 1 https://github.com/tmux-plugins/tpm $tmux/tpm
-      && command ln -v /path/to/repo/$perms/tmux/conf $tmux/
+mkdir -p $tmux
+    && git clone --verbose --depth 1 https://github.com/tmux-plugins/tpm $tmux/tpm
+    && ln -v /path/to/repo/$perms/tmux/conf $tmux/
 ```
 - [`cheat`](https://github.com/cheat/cheat) is a utility that generates common usages of well-known but confusing Unix commands (e.g. `tar`). I installed this onto [Ubuntu](https://ubuntu.com); unfortunately for [Cygwin](https://cygwin.com), I cannot install it due to dependencies. A `fish` completions file is available in the git repo, but not in the [`Snap`](https://snapcraft.io) store. To apply it:
 ```bash
 su - # if applicable
-[ -n "$(command -v cheat)" ] || command wget -v https://raw.githubusercontent.com/cheat/cheat/master/cheat/autocompletion/cheat/fish -O /path/to/new/config/fish/conf.d/completions/cheat.fish
+[ -n "$(command -v cheat)" ] || wget -v https://raw.githubusercontent.com/cheat/cheat/master/cheat/autocompletion/cheat/fish -O /path/to/new/config/fish/conf.d/completions/cheat.fish
 ```
 - Some installations of [Cygwin](https://cygwin.com) (probably managed by snarky old-timers) don't include new-and-fancy custom shells like [Fish](https://fishshell.com) -- in which case I must resort to `bash` instead. To this end, I have translated my `fish` functions and aliases into `bash`. To apply them:
 ```bash
@@ -127,11 +127,11 @@ su - # if applicable
 [ $perms -eq 0 ]
       && tmux="/etc/tmux"
       || tmux="${HOME}/tmux"
-[ -z "$TMUX" ] && [ -n "$(builtin command -v tmux)" ]
-    && printf 'exec tmux -2u -f %/conf' $tmux | command tee -a ~/.profile
+[ -z "$TMUX" ] && [ -n "$(command -v tmux)" ]
+    && printf 'exec tmux -2u -f %/conf' $tmux | tee -a ~/.profile
     || [ -n "$(command -v fish)" ]
-           && printf 'builtin exec %s' $(builtin command -v fish) | command tee -a ~/.profile
-           || printf 'builtin source %s/bash/config.sh' ${HOME} | command tee -a ~/.profile
+           && printf 'exec %s' $(command -v fish) | tee -a ~/.profile
+           || printf 'source %s/bash/config.sh' ${HOME} | tee -a ~/.profile
 ```
 - Quick application of this configuration can be attained by executing the [install.sh](install.sh) script. It assumes admin privileges are used if a system-wide configuration is desired, and the script has not been moved to another directory. (And, for the sake of completeness, I have translated the script into `fish` as well:  [install.fish](install.fish).)
 ```bash
