@@ -33,22 +33,19 @@ function update -d 'automate software updates from installed SPMs'
   end
 
   function __update_gem
-    if builtin string match -iqr -- '--quiet' $argv
-      sudo gem update;
-        and sudo gem cleanup;
-        and sudo gem update (command gem outdated | command cut -d' ' -f1 | command xargs) --quiet
-      command gem list | grep rubygems-update;
-        and sudo update_rubygems --quiet
-    else
-      sudo gem update --verbose
-        and sudo gem cleanup --verbose;
-        and for i in (command gem outdated | command cut -d' ' -f1)
-              command gem info $i -ev;
-                and sudo gem update $i --verbose
-            end
-      command gem list | grep rubygems-update;
-        and sudo update_rubygems --verbose
-    end
+    builtin string match -iqr -- '--quiet' $argv;
+      and builtin set -l verbosity '--quiet';
+      or  builtin set -l verbosity '--verbose';
+    sudo gem update --system $verbosity;
+      and sudo gem cleanup $verbosity;
+    builtin test $verbosity = '--quiet';
+      and sudo gem update (command gem outdated | command cut -d' ' -f1 | command xargs) --quiet;
+      or  for i in (command gem outdated | command cut -d' ' -f1)
+            command gem info $i -ev;
+              and sudo gem update $i --verbose
+          end
+    command gem list | grep rubygems-update;
+      and sudo update_rubygems $verbosity
   end
 
   function __update_git
