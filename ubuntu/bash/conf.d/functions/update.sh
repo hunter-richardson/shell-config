@@ -24,10 +24,10 @@ function update {
     if [[ $@ =~ *--quiet* ]]
     then
       sudo gem cleanup
-      sudo gem update (command gem outdated | command cut -d' ' -f1) --quiet
+      sudo gem update $(command gem outdated | command cut -d' ' -f1 | command xargs) --quiet
     else
       sudo gem cleanup --verbose
-      for i in (command gem outdated | command cut -d' ' -f1)
+      for i in $(command gem outdated | command cut -d' ' -f1)
       do
         sudo gem update $i --quiet
       end
