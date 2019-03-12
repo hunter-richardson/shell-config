@@ -31,7 +31,7 @@ function update {
       sudo gem cleanup --verbose
       for i in $(command gem outdated | command cut -d' ' -f1)
       do
-        sudo gem update $i --verbose
+        command gem info $i -ae && sudo gem update $i --verbose
       end
       [ -n "$(command gem list | grep rubygems-update)" ] && sudo update_rubygems --verbose
     fi
