@@ -41,7 +41,7 @@ function update -d 'automate software updates from installed SPMs'
     builtin test $verbosity = '--quiet';
       and sudo gem update (command gem outdated | command cut -d' ' -f1 | command xargs) --quiet;
       or  for i in (command gem outdated | command cut -d' ' -f1)
-            command gem info $i -ev;
+            command gem info $i -ae;
               and sudo gem update $i --verbose
           end
     command gem list | grep rubygems-update;
