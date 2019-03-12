@@ -4,8 +4,9 @@ function update {
   function __update_apt {
     if [[ $@ =~ *--quiet* ]]
     then
-         sudo apt-fast -qq update && sudo apt-fast -qq autoremove -y && sudo apt-fast -qq upgrade -y && sudo apt-fast -qq install -fy && sudo apt-fast -qq clean -y
+      sudo apt-fast -qq update && sudo apt-fast -qq autoremove -y && sudo apt-fast -qq upgrade -y && sudo apt-fast -qq install -fy && sudo apt-fast -qq clean -y
     else
+      sudo apt-fast update && sudo apt-fast autoremove -y && sudo apt-fast upgrade -y && sudo apt-fast install -fy && sudo apt-fast -y
     fi
   }
 
@@ -23,14 +24,16 @@ function update {
   function __update_gem {
     if [[ $@ =~ *--quiet* ]]
     then
-      sudo gem cleanup
+      sudo gem cleanup --quiet
       sudo gem update $(command gem outdated | command cut -d' ' -f1 | command xargs) --quiet
+      [ -n "$(command gem list | grep rubygems-update)" ] && sudo update_rubygems --quiet
     else
       sudo gem cleanup --verbose
       for i in $(command gem outdated | command cut -d' ' -f1)
       do
-        sudo gem update $i --quiet
+        sudo gem update $i --verbose
       end
+      [ -n "$(command gem list | grep rubygems-update)" ] && sudo update_rubygems --verbose
     fi
   }
 
