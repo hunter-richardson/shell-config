@@ -37,6 +37,8 @@ function update -d 'automate software updates from installed SPMs'
       sudo gem update;
         and sudo gem cleanup;
         and sudo gem update (command gem outdated | command cut -d' ' -f1 | command xargs) --quiet
+      command gem list | grep rubygems-update;
+        and sudo update_rubygems --quiet
     else
       sudo gem update --verbose
         and sudo gem cleanup --verbose;
@@ -44,6 +46,8 @@ function update -d 'automate software updates from installed SPMs'
               command gem info $i -ev;
                 and sudo gem update $i --verbose
             end
+      command gem list | grep rubygems-update;
+        and sudo update_rubygems --verbose
     end
   end
 
