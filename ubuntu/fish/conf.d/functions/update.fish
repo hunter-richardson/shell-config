@@ -32,6 +32,21 @@ function update -d 'automate software updates from installed SPMs'
     sudo --user=root fish --command='builtin source /root/.config/fish/plugins.fish; and fundle self-update; and fundle clean; and for i in (fundle list --short | command shuf); fundle update $i; end'
   end
 
+  function __update_gem
+    if builtin string match -iqr -- '--quiet' $argv
+      sudo gem update;
+        and sudo gem cleanup;
+        and sudo gem update (command gem outdated | command cut -d' ' -f1 | command xargs) --quiet
+    else
+      sudo gem update --verbose
+        and sudo gem cleanup --verbose;
+        and for i in (command gem outdated | command cut -d' ' -f1)
+              command gem info $i -ev;
+                and sudo gem update $i --verbose
+            end
+    end
+  end
+
   function __update_git
     builtin string match -iqr -- '--quiet' $argv;
       and builtin set -l verbosity '--quiet';
@@ -54,21 +69,6 @@ function update -d 'automate software updates from installed SPMs'
           command tmux source /etc/tmux/conf
         end
       end
-    end
-  end
-
-  function __update_gem
-    if builtin string match -iqr -- '--quiet' $argv
-      sudo gem update;
-        and sudo gem cleanup;
-        and sudo gem update (command gem outdated | command cut -d' ' -f1) --quiet
-    else
-      sudo gem update --verbose
-        and sudo gem cleanup --verbose;
-        and for i in (command gem outdated | command cut -d' ' -f1)
-              command gem info $i -ev;
-                and sudo gem update $i --verbose
-            end
     end
   end
 
