@@ -25,11 +25,11 @@ function update {
     if [[ $@ =~ *--quiet* ]]
     then
       sudo gem cleanup --quiet
-      sudo gem update $(command gem outdated | command cut -d' ' -f1 | command xargs) --quiet
+      sudo gem update $(command gem outdated | command cut -d' ' -f1 | command shuf | command xargs) --quiet
       [ -n "$(command gem list | grep rubygems-update)" ] && sudo update_rubygems --quiet
     else
       sudo gem cleanup --verbose
-      for i in $(command gem outdated | command cut -d' ' -f1)
+      for i in $(command gem outdated | command cut -d' ' -f1 | command shuf)
       do
         command gem info $i -ae && sudo gem update $i --verbose
       end

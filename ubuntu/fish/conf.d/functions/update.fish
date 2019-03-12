@@ -39,8 +39,8 @@ function update -d 'automate software updates from installed SPMs'
     sudo gem update --system $verbosity;
       and sudo gem cleanup $verbosity;
     builtin test $verbosity = '--quiet';
-      and sudo gem update (command gem outdated | command cut -d' ' -f1 | command xargs) --quiet;
-      or  for i in (command gem outdated | command cut -d' ' -f1)
+      and sudo gem update (command gem outdated | command cut -d' ' -f1 | command shuf | command xargs) --quiet;
+      or  for i in (command gem outdated | command cut -d' ' -f1 | command shuf)
             command gem info $i -ae;
               and sudo gem update $i --verbose
           end
