@@ -67,12 +67,12 @@ function update {
   [ $# -eq 0 ] && SPMs='all' || SPMs=$(builtin printf "%s\n" $@ | command grep -E '^all|apt|brew|bundle|git|snap$')
   if [[ $SPMs =~ all ]]
   then
-    for i in 'apt' 'brew' 'bundle' 'git' 'snap'
+    for i in 'apt' 'brew' 'git' 'gem' 'snap'
     do
       builtin eval __update_$i $quiet
     done
   else
-    for i in 'apt' 'brew' 'bundle' 'git' 'snap'
+    for i in 'apt' 'brew' 'git' 'gem' 'snap'
     do
       [[ $SPMs =~ $i ]] && builtin eval __update_$i $quiet
     done

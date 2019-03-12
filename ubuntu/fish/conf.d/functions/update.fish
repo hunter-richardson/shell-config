@@ -44,7 +44,7 @@ function update -d 'automate software updates from installed SPMs'
             command gem info $i -ae;
               and sudo gem update $i --verbose
           end
-    command gem list | grep rubygems-update;
+    command gem list | command grep -q rubygems-update;
       and sudo update_rubygems $verbosity
   end
 
@@ -91,29 +91,21 @@ function update -d 'automate software updates from installed SPMs'
   builtin string match -iqr -- '--?q(uiet)?' $argv;
     and builtin set -l quiet -- '--quiet';
     or  builtin set -l quiet '';
-  builtin set -l SPMs (builtin printf '%s\n' $argv | command grep -E '^all|apt|brew|bundle|fundle|git|snap$');
+  builtin set -l SPMs (builtin printf '%s\n' $argv | command grep -E '^all|apt|brew|fundle|git|gem|snap$');
     or builtin set -l SPMs all
-  if builtin test -z "$SPMs"
-    for i in apt brew bundle fundle git snap
-      builtin test $i = fundle;
-        and eval __update_$i;
-        or  eval __update_$i $quiet
-    end
-  else if builtin contains all $SPMs;
-    for i in apt brew bundle fundle git snap
-      builtin test $i = fundle;
-        and eval __update_$i;
-        or  eval __update_$i $quiet
-    end
-  else
-    for i in apt brew fundle git snap
-      if builtin contains $i $SPMs
+  builtin contains all $SPMs;
+    and for i in apt brew fundle git gem snap
         builtin test $i = fundle;
           and eval __update_$i;
           or  eval __update_$i $quiet
-      end
-    end
-  end
+      end;
+    or  for i in apt brew fundle git gem snap
+          if builtin contains $i $SPMs
+            builtin test $i = fundle;
+              and eval __update_$i;
+              or  eval __update_$i $quiet
+          end
+        end
 
   for i in apt brew fundle git snap
     functions -e __update_$i
