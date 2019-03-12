@@ -20,21 +20,17 @@ function update {
     fi
   }
 
-  function __update_bundle {
+  function __update_gem {
     if [[ $@ =~ *--quiet* ]]
     then
-      command bundle clean
-      for i in (command bundle outdated)
-      do
-        command bundle update $i --quiet
-      end
+      sudo gem cleanup
+      sudo gem update (command gem outdated | command cut -d' ' -f1) --quiet
     else
-      command bundle clean --verbose
-      for i in (command bundle outdated)
+      sudo gem cleanup --verbose
+      for i in (command gem outdated | command cut -d' ' -f1)
       do
-        command bundle info $i -ev;
-          and command bundle update $i --verbose
-      done
+        sudo gem update $i --quiet
+      end
     fi
   }
 
