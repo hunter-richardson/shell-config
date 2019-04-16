@@ -13,7 +13,7 @@ function die {
     then
       builtin return 1
     fi
-    let result=0
+    builtin let result=0
     for d in $(command seq $number)
     do
       roll=$(builtin printf '%s' $((10#$((1 + $RANDOM % $level)))))
