@@ -39,7 +39,7 @@ function dice
     builtin set -l total 0
     for i in $argv
       if builtin string match -eiqr -- '^\+?[0-9]*(d[0-9]+)?$' $i > /dev/null
-        builtin set -l input (builtin string replace -ar -- '\+' '' $i)
+        builtin set -l input (builtin string replace -a \+ '' $i)
         builtin set -l temp (builtin string match -eiqr '^[0-9]*d[0-9]+$' $input > /dev/null;
                                and builtin printf '%u' (die $input --quiet);
                                or  builtin printf '%u' $input)

@@ -40,7 +40,7 @@ function dice {
     do
       if [[ $i =~ ^\+?[0-9]*(d[0-9]+)?$ ]]
       then
-        input=$(builtin printf '%s' $i | command sed 's/^0+//g;s/\+//g' )
+        input=$(builtin printf '%s' $i | command sed 's/\+//g' )
         if [[ $input =~ ^[0-9]*d[0-9]+$ ]]
         then
           temp=$(die $input --quiet)
