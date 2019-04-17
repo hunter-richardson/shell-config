@@ -19,7 +19,7 @@ function die {
       roll=$(builtin printf '%s' $((10#$((1 + $RANDOM % $level)))))
       if [ "$2" != "--quiet" ]
       then
-        builtin printf '\t  d%s %s\n' $level $roll
+        builtin printf '\td%s\t%s\t%s\n' $level $roll $total
       fi
       builtin let result+=$roll
       unset roll
@@ -38,33 +38,23 @@ function dice {
     builtin let total=0
     for i in $*
     do
-      if [[ $i =~ (\+|-)?[0-9]*(d[0-9]+)?$ ]]
+      if [[ $i =~ ^\+?[0-9]*(d[0-9]+)?$ ]]
       then
-        if [[ $i =~ ^- ]]
-        then
-          operator='-'
-        else
-          operator='+'
-        fi
-        input=$(builtin printf '%s' $i | command sed 's/^0+//g;s/[+-]//g' )
+        input=$(builtin printf '%s' $i | command sed 's/^0+//g;s/\+//g' )
         if [[ $input =~ ^[0-9]*d[0-9]+$ ]]
         then
-          temp=$((10#$(die $input --quiet)))
+          temp=$(die $input --quiet)
         else
-          temp=$((10#$(builtin printf '%s' $input)))
+          temp=$(builtin printf '%s' $input)
         fi
+        temp=$((10#$temp))
+        builtin let total+=$temp
+        builtin printf '\t'
         if [[ $input =~ ^[0-9]*d[0-9]+$ ]]
         then
-          builtin printf '\t%s %s %s\n' $operator $input $temp
-        else
-          builtin printf '\t%s %s\n' $operator $input
+          builtin printf '%s' $input | command sed 's/1d/d/g'
         fi
-        if [[ $i =~ ^- ]]
-        then
-          builtin let total-=$temp
-        else
-          builtin let total+=$temp
-        fi
+        builtin printf '\t%s\t%s\n' $temp $total;
         builtin unset operator input temp
       else
         continue

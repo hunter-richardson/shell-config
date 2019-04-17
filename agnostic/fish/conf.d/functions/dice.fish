@@ -21,9 +21,9 @@ function die
       builtin set -l result 0
       for d in (command seq $number)
         builtin set roll (builtin random 1 $level | builtin string replace -ar '^0+' '')
-        builtin test "$argv[2]" != '--quiet';
-          and builtin printf '\t  %s %u\n' (builtin printf 'd%u' $level) $roll
         builtin set result (math -- $result + $roll)
+        builtin test "$argv[2]" != '--quiet';
+          and builtin printf '\t%s\t%u\t%u\n' (builtin printf 'd%u' $level) $roll $total
         builtin set -e roll
       end
       builtin printf '%u\n' $result
@@ -38,18 +38,16 @@ function dice
   if builtin test (count $argv) -gt 0
     builtin set -l total 0
     for i in $argv
-      if builtin string match -eiqr -- '^(\+|-)?[0-9]*(d[0-9]+)?$' $i > /dev/null
-        builtin set -l operator (builtin string match -eiqr -- '^-' $i;
-                                   and builtin printf -- '-';
-                                   or  builtin printf -- '+');
-        builtin set -l input (builtin string replace -ar -- '\+|-' '' $i)
+      if builtin string match -eiqr -- '^\+?[0-9]*(d[0-9]+)?$' $i > /dev/null
+        builtin set -l input (builtin string replace -ar -- '\+' '' $i)
         builtin set -l temp (builtin string match -eiqr '^[0-9]*d[0-9]+$' $input > /dev/null;
                                and builtin printf '%u' (die $input --quiet);
                                or  builtin printf '%u' $input)
+        builtin set total (math $total + $temp)
+        builtin printf '\t';
         builtin string match -eiqr '^[0-9]*d[0-9]+$' $input > /dev/null;
-          and builtin printf '\t%s %s %u\n' $operator $input $temp;
-          or  builtin printf '\t%s %u\n' $operator $input;
-        builtin set total (math $total $operator $temp)
+          and builtin printf '%s' (builtin string replace -ar '^1d' d $input)
+        builtin printf '\t%u\t%u\n' $temp $total;
       else
         continue
       end
