@@ -4,13 +4,15 @@ function update -d 'automate software updates from installed SPMs'
   function __update_apt
     if builtin string match -iqr -- '--quiet' $argv;
           sudo apt-fast -qq update;
-      and sudo apt-fast -qq autoremove -y;
+      and sudo apt-fast -qq autoclean --purge -y;
+      and sudo apt-fast -qq autoremove --purge -y;
       and sudo apt-fast -qq install (command apt-fast list --upgradable | command cut -d/ -f1 | command shuf) --only-upgrade -y;
       and sudo apt-fast -qq install -fy;
       and sudo apt-fast -qq clean -y
     else
           sudo apt-fast update;
-      and sudo apt-fast autoremove -y;
+      and sudo apt-fast autoclean --purge -y;
+      and sudo apt-fast autoremove --purge -y;
       and sudo apt-fast install (command apt-fast list --upgradable | command cut -d/ -f1 | command shuf) --only-upgrade -y;
       and sudo apt-fast install -fy;
       and sudo apt-fast clean -y
