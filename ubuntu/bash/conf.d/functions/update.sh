@@ -4,9 +4,9 @@ function update {
   function __update_apt {
     if [[ $@ =~ *--quiet* ]]
     then
-      sudo apt-fast -qq update && sudo apt-fast -qq autoremove -y && sudo apt-fast -qq install $(command apt-fast list --upgradable | command cut -d/ -f1 | command shuf) --only-upgrade -y && sudo apt-fast -qq install -fy && sudo apt-fast -qq clean -y
+      sudo apt-fast -qq update && sudo apt-fast autoclean -qq --purge -y && sudo apt-fast -qq autoremove --purge -y && sudo apt-fast -qq install $(command apt-fast list --upgradable | command cut -d/ -f1 | command shuf) --only-upgrade -y && sudo apt-fast -qq install -fy && sudo apt-fast -qq clean -y
     else
-      sudo apt-fast update && sudo apt-fast autoremove -y && sudo apt-fast install $(command apt-fast list --upgradable | command cut -d/ -f1 | command shuf) --only-upgrade -y && sudo apt-fast install -fy && sudo apt-fast -y
+      sudo apt-fast update && sudo apt-fast autoclean --purge -y && sudo apt-fast autoremove --purge -y && sudo apt-fast install $(command apt-fast list --upgradable | command cut -d/ -f1 | command shuf) --only-upgrade -y && sudo apt-fast install -fy && sudo apt-fast -y
     fi
   }
 
