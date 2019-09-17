@@ -7,7 +7,14 @@ function fish_right_prompt -d 'the right prompt'
       and builtin printf '%s%s⏲  %s' $bold $blue (builtin printf '%u' $cmd_performance | humanize_duration);
       or  builtin printf '%s%s⏲  %u ms' $bold $blue $cmd_performance
   end
-  builtin test (command cat /proc/asound/card{0,1}/pcm*/sub0/status | command grep -v 'closed')
+  builtin printf ' %s%s[%s]' $bold (
+    builtin set -q fish_private_mode;
+      and builtin printf $red;
+      or  builtin printf $green) (
+    builtin set -q fish_private_mode;
+      and builtin printf '📕';
+      or  builtin printf '🕮')
+  builtin test (command grep -v closed /proc/asound/card{0,1}/pcm*/sub0/status)
     and builtin printf ' %s%s🕪 ' $bold $white
   builtin test (command xsel -ko ^/dev/null);
     and builtin printf ' %s%s📋' $bold $yellow

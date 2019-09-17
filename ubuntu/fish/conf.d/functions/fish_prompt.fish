@@ -6,7 +6,7 @@ function fish_prompt -d 'the left prompt'
   if builtin test (command git rev-parse --is-inside-work-tree ^/dev/null)
     builtin set -l cdup (builtin count (command git rev-parse --show-cdup | builtin string split '../'))
     builtin test $cdup -gt 1;
-      and builtin printf ' 📂 %s' (math -- $cdup - 1)
+      and builtin printf ' 📂 %s' (builtin math -- $cdup - 1)
     builtin set -l branch (command git symbolic-ref --short HEAD)
     builtin test -n "$branch";
       and builtin printf ' %s⎇  %s' $cyan $branch
@@ -61,6 +61,6 @@ function fish_prompt -d 'the left prompt'
       or  builtin printf '%s❮ ❔❯ ' $red
   end
   builtin test $SHLVL -gt 1;
-    and builtin printf ' %s%s◈ %u' $yellow (math -- $SHLVL - 1)
+    and builtin printf ' %s%s◈ %u' $yellow (builtin math -- $SHLVL - 1)
   builtin printf '%s\n└> 💲%s ' $white $normal
 end
