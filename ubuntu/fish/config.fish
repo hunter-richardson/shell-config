@@ -48,10 +48,5 @@ builtin command -v albert >/dev/null;
 
 builtin command -v brew >/dev/null;
   and builtin functions -q bax;
-  and for i in (builtin printf '%s\n' (command brew shellenv) | builtin string replace export 'set -g' | builtin string replace -ar '=|:' ' ' | builtin string replace -a \" '');
-        eval $i
-      end;
-  and builtin test (command whoami) != root
-  and builtin printf '%s/bin/brew shellenv\n';
-  or  true
+  command brew shellenv
 

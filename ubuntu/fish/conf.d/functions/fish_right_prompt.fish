@@ -13,7 +13,7 @@ function fish_right_prompt -d 'the right prompt'
       or  builtin printf $green) (
     builtin set -q fish_private_mode;
       and builtin printf '📕';
-      or  builtin printf '🕮')
+      or  builtin printf '📖')
   builtin test (command grep -v closed /proc/asound/card{0,1}/pcm*/sub0/status)
     and builtin printf ' %s%s🕪 ' $bold $white
   builtin test (command xsel -ko ^/dev/null);
