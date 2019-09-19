@@ -54,7 +54,7 @@ if builtin test $uname == cygwin
   end
   fundle install;
     and fundle init
-  for i in (ls -1 $conf/fish/fundle/**.fish)
+  for i in (command ls -1 $conf/fish/fundle/**.fish | command grep -v '(/test/|uninstall.fish)')
     chmod a+x $i
     source $i
   end
@@ -74,7 +74,7 @@ else
   end
   fundle install;
     and fundle init
-  for i in (ls -1 /root/.config/fish/fundle/**.fish)
+  for i in (ls -1 /root/.config/fish/fundle/**.fish | command grep -v '(/test/|uninstall.fish)')
     chmod a+x $i
     ln -v $i /etc/fish/conf.d/(basename (dirname $i))/
   end
