@@ -54,9 +54,7 @@ if builtin test $uname == cygwin
   end
   fundle install;
     and fundle init
-  for i in (command ls -1 $conf/fish/fundle/**/{completions,functions}/*.fish)
-    command chmod a+x $i
-    builtin source $i
+  command chmod a+x (command ls -1 $conf/fish/fundle/**/{completions,functions}/*.fish)
   end
 else
   for i in functions completions
