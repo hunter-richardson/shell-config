@@ -12,7 +12,7 @@ if [ $(uname -o) == 'Cygwin' ]
   done
 fi
 ```
-- [Ubuntu](https://ubuntu.com) and [Cygwin](https://cygwin.com) both ship with `bash` as the default shell. My favorite shell is [Fish](https://fishshell.com). I've written a few functions and aliases that are helpful for my shell in [cygwin:fish](cygwin/fish)/[ubuntu:fish](ubuntu/fish) and their subdirectories. [agnostic:fish](agnostic/fish/conf.d/functions) contains functions that work under either Linux system. Additionally for [Cygwin](https://cygwin.com), I will use [`fundle`](https://github.com/danhper/fundle) to install several `fish` plugins, listed in [cygwin:config.fish](cygwin/fish/plugins.fish). (For [Ubuntu](https://ubuntu.com), I use [system-wide `fundle` configuration](https://github.com/hunter-richardson/my-config/blob/master/root/.config/fish/plugins.fish) to accomplish this.) To apply them:
+- [Ubuntu](https://ubuntu.com) and [Cygwin](https://cygwin.com) both ship with `bash` as the default shell. My favorite shell is [Fish](https://fishshell.com). I've written a few functions and aliases that are helpful for my shell in [cygwin:fish](cygwin/fish)/[ubuntu:fish](ubuntu/fish) and their subdirectories. [agnostic:fish](agnostic/fish/conf.d/functions) contains functions that work under either Linux system. To apply them:
 ```bash
 if [ -n "$(command -v fish)" ]
 then
@@ -31,7 +31,14 @@ then
     [ -d /path/to/repo/$uname/$i ]
         && ln -v /path/to/repo/$uname/$i/*.fish /path/to/new/config/$i/
   done
-  if [ $uname == 'cygwin' ]
+fi
+```
+- I will use [`fundle`](https://github.com/danhper/fundle) to install several `fish` plugins, listed in [cygwin:plugins.fish](cygwin/fish/plugins.fish) / [ubuntu:plugins.fish](ubuntu/fish/plugins.fish). To apply them:
+```bash
+if [ -n "$(command -v fish)" ]
+then
+  su - # if applicable
+  if [ $(uname -o) == 'Cygwin' ]
   then
     for i in 'functions'
              'completions'
@@ -39,17 +46,50 @@ then
       wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /path/to/new/config/conf.d/$i/fundle.fish
           && chmod -c a+x /path/to/new/config/fish/conf.d/$i/fundle.fish
     done
-    fish --command="source /path/to/new/config/fish/plugins.fish"
+    fish --command="source /path/to/new/config/fish/conf.d/*/fundle.fish
+                    for i in (set -g | cut -d' ' -f1 | grep -E '^__fundle.*_plugin')
+                      set -e $i
+                    end
+                    for i in (grep -Ev '^#' /path/to/repo/cygwin/fish/fundle.plugins)
+                      fundle plugin $i
+                    end
+                    fundle install;
+                      and fundle init
+                    for i in (fundle list --short)
+                      printf 'load plugin %s\n' $i | string replace / :
+                      for f in (ls -1 ~/.config/fish/fundle/**.fish)
+                        chmod a+x $i
+                        source $i
+                      end
+                    end
+                    exit"
   else
     for i in 'functions'
              'completions'
     do
-      sudo wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /root/.config/conf.d/$i/fundle.fish
+      wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /root/.config/conf.d/$i/fundle.fish
           && chmod -c o+x /root/.config/fish/conf.d/$i/fundle.fish
     done
-    sudo ln -v /path/to/repo/ubuntu/fish/fundle.plugins /root/.config/
-    sudo fish --command="source /root/.config/plugins.fish"
-  fi
+    ln -v /path/to/repo/ubuntu/fish/fundle.plugins /root/.config/
+    fish --command="source /path/to/new/config/fish/conf.d/*/fundle.fish
+                    for i in (set -g | cut -d' ' -f1 | grep -E '^__fundle.*_plugin')
+                      set -e $i
+                    end
+                    for i in (grep -Ev '^#' /root/.config/fish/fundle.plugins)
+                      fundle plugin $i
+                    end
+                    fundle install;
+                      and fundle init
+                    for i in (fundle list --short)
+                      printf 'load plugin %s\n' $i | string replace / :
+                      for f in (ls -1 /root/.config/fish/fundle/**.fish)
+                        chmod a+x $i
+                        ln -v $i /etc/fish/conf.d/(basename (dirname $i))/
+                      end
+                    end
+                    exit"
+fi
+ 
 fi
 ```
 - The [agnostic:fish.lang](agnostic/fish/fish.lang) and [agnostic:fish.nanorc](agnostic/fish/fish.nanorc) files contain configuration for syntax-highlighting of Fish scripts, in [source-highlight](https://gnu.org/software/src-highlight), 
@@ -133,7 +173,7 @@ su - # if applicable
            && printf 'exec %s' $(command -v fish) | tee -a ~/.profile
            || printf 'source %s/bash/config.sh' ${HOME} | tee -a ~/.profile
 ```
-- Quick application of this configuration can be attained by executing the [install.sh](install.sh) script. It assumes admin privileges are used if a system-wide configuration is desired, and the script has not been moved to another directory. (And, for the sake of completeness, I have translated the script into `fish` as well:  [install.fish](install.fish).)
+- Except for the fundle configuration, quick application of this shell can be attained by executing the [install.sh](install.sh) script. It assumes admin privileges are used if a system-wide configuration is desired, and the script has not been moved to another directory. (And, for the sake of completeness, I have translated the script into `fish` as well:  [install.fish](install.fish).)
 ```bash
 su - # if applicable
 source /path/to/repo/install.sh /path/to/new/config
