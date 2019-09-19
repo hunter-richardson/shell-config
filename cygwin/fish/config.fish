@@ -16,17 +16,9 @@
 
 builtin set --local MY_DIR (command dirname (builtin status filename))
 
-builtin test -f $MY_DIR/plugins.fish;
-  and builtin source $MY_DIR/plugins.fish;
-  and builtin printf 'source %s/plugins.fish\n' $MY_DIR;
-  or  true
-
-for i in conf.d/functions conf.d conf.d/completions
-  builtin test (builtin count $MY_DIR/$i/*.fish);
-    and for f in $MY_DIR/$i/*.fish
-          builtin source $f;
-            and builtin printf 'source %s\n' $f
-        end
+for i in (command ls -1 $MY_DIR/conf.d/**.fish)
+  builtin source $i;
+    and builtin printf 'source %s\n' $i
 end
 
 builtin test -f $MY_DIR/alias.fish;
