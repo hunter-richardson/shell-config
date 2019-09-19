@@ -32,7 +32,7 @@ function update -d 'automate software updates with git and fundle'
       and for i in (fundle list --short | command shuf)
             fundle update $i
           end;
-      and refish
+      and source ~/.config/fish/fundle/**/{completions,functions}/*.fish
   end
 
   if command ping -n 1 -w 1 github.com >/dev/null
