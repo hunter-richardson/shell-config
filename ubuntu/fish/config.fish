@@ -16,14 +16,6 @@
 
 set --local MY_DIR (command dirname (builtin status filename))
 
-for i in functions/count_files.fish export_vars.fish
-  builtin test -f $MY_DIR/conf.d/$i;
-    and builtin source $MY_DIR/conf.d/$i;
-    and builtin test (command whoami) != root
-    and builtin printf 'source %s/conf.d/%s\n' $MY_DIR $i;
-    or  true
-end
-
 for i in (command ls -1 $MY_DIR/conf.d/**.fish)
   builtin source $f;
     and builtin test (command whoami) != root
