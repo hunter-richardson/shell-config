@@ -44,19 +44,19 @@ if builtin test $uname == cygwin
     command wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O $conf/fish/conf.d/$i/fundle.fish;
       and command chmod -c a+x $conf/fish/conf.d/$i/fundle.fish
   end
-  source $conf/fish/conf.d/*/fundle.fish
-  for i in (set -g | cut -d' ' -f1 | grep -E '^__fundle.*_plugin')
-    set -e $i
+  builtin source $conf/fish/conf.d/*/fundle.fish
+  for i in (builtin set -g | command cut -d' ' -f1 | command grep -E '^__fundle.*_plugin')
+    builtin set -e $i
   end
-  for i in (grep -Ev '^#' $conf/fish/fundle.plugins)
-    printf 'load plugin %s\n' $i | string replace / :
+  for i in (command grep -Ev '^#' $conf/fish/fundle.plugins)
+    builtin printf 'load plugin %s\n' $i | builtin string replace / :
     fundle plugin $i
   end
   fundle install;
     and fundle init
-  for i in (command ls -1 $conf/fish/fundle/**.fish | command grep -v '(/test/|uninstall.fish)')
-    chmod a+x $i
-    source $i
+  for i in (command ls -1 $conf/fish/fundle/**/{completions,functions}/*.fish)
+    command chmod a+x $i
+    builtin source $i
   end
 else
   for i in functions completions
@@ -64,19 +64,19 @@ else
       and sudo chmod -c o+x /root/.config/fish/conf.d/$i/fundle.fish
   end
   sudo ln -v $repo/ubuntu/fish/fundle.plugins /root/.config/fish/
-  source /root/.config/fish/conf.d/*/fundle.fish
-  for i in (set -g | cut -d' ' -f1 | grep -E '^__fundle.*_plugin')
-    set -e $i
+  builtin source /root/.config/fish/conf.d/*/fundle.fish
+  for i in (command set -g | command cut -d' ' -f1 | command grep -E '^__fundle.*_plugin')
+    builtin set -e $i
   end
-  for i in (grep -Ev '^#' /root/.config/fish/fundle.plugins)
-    printf 'load plugin %s\n' $i | string replace / :
+  for i in (command grep -Ev '^#' /root/.config/fish/fundle.plugins)
+    builtin printf 'load plugin %s\n' $i | builtin string replace / :
     fundle plugin $i
   end
   fundle install;
     and fundle init
-  for i in (ls -1 /root/.config/fish/fundle/**.fish | command grep -v '(/test/|uninstall.fish)')
-    chmod a+x $i
-    ln -v $i /etc/fish/conf.d/(basename (dirname $i))/
+  for i in (command ls -1 /root/.config/fish/fundle/**/{completions,functions}/*.fish)
+    command chmod a+x $i
+    command ln -v $i /etc/fish/conf.d/(basename (dirname $i))/
   end
 end
 
