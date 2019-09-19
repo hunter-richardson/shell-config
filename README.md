@@ -67,7 +67,7 @@ then
           && chmod -c o+x /root/.config/fish/conf.d/$i/fundle.fish
     done
     ln -v /path/to/repo/ubuntu/fish/fundle.plugins /root/.config/
-    fish --command="source /path/to/new/config/fish/conf.d/*/fundle.fish
+    fish --command="source /root/.config/fish/conf.d/*/fundle.fish
                     for i in (set -g | cut -d' ' -f1 | grep -E '^__fundle.*_plugin')
                       set -e $i
                     end
