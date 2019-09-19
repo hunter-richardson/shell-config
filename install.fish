@@ -42,16 +42,42 @@ end
 if builtin test $uname == cygwin
   for i in functions completions
     command wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O $conf/fish/conf.d/$i/fundle.fish;
-      and command chmod -c a+x $conf/fish/conf.d/$i/plugins.fish
+      and command chmod -c a+x $conf/fish/conf.d/$i/fundle.fish
   end
-  fish --command="source $conf/fish/config.fish"
+  source $conf/fish/conf.d/*/fundle.fish
+  for i in (set -g | cut -d' ' -f1 | grep -E '^__fundle.*_plugin')
+    set -e $i
+  end
+  for i in (grep -Ev '^#' $conf/fish/fundle.plugins)
+    printf 'load plugin %s\n' $i | string replace / :
+    fundle plugin $i
+  end
+  fundle install;
+    and fundle init
+  for i in (ls -1 $conf/fish/fundle/**.fish)
+    chmod a+x $i
+    source $i
+  end
 else
   for i in functions completions
     sudo wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /root/.config/fish/conf.d/$i/fundle.fish;
       and sudo chmod -c o+x /root/.config/fish/conf.d/$i/fundle.fish
   end
   sudo ln -v $repo/ubuntu/fish/fundle.plugins /root/.config/fish/
-  sudo fish --command="source /root/.config/fish/plugins.fish"
+  source /root/.config/fish/conf.d/*/fundle.fish
+  for i in (set -g | cut -d' ' -f1 | grep -E '^__fundle.*_plugin')
+    set -e $i
+  end
+  for i in (grep -Ev '^#' /root/.config/fish/fundle.plugins)
+    printf 'load plugin %s\n' $i | string replace / :
+    fundle plugin $i
+  end
+  fundle install;
+    and fundle init
+  for i in (ls -1 /root/.config/fish/fundle/**.fish)
+    chmod a+x $i
+    ln -v $i /etc/fish/conf.d/(basename (dirname $i))/
+  end
 end
 
 command ln -v $repo/agnostic/bash/conf.d/functions/*.sh $conf/bash/conf.d/functions/
