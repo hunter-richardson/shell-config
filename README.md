@@ -56,7 +56,7 @@ then
                     end
                     fundle install;
                       and fundle init
-                    for f in (ls -1 ~/.config/fish/fundle/**.fish)
+                    for i in (ls -1 ~/.config/fish/fundle/**.fish)
                       chmod a+x $i
                       source $i
                     end
@@ -79,7 +79,7 @@ then
                     end
                     fundle install;
                       and fundle init
-                    for f in (ls -1 /root/.config/fish/fundle/**.fish)
+                    for i in (ls -1 /root/.config/fish/fundle/**.fish)
                       chmod a+x $i
                       ln -v $i /etc/fish/conf.d/(basename (dirname $i))/
                     end
