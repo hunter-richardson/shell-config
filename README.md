@@ -56,9 +56,7 @@ then
                     end
                     fundle install;
                       and fundle init
-                    for i in (ls -1 ~/.config/fish/fundle/**/{completions,functions}/*.fish)
-                      chmod a+x $i
-                      source $i
+                    chmod a+x (ls -1 ~/.config/fish/fundle/**/{completions,functions}/*.fish)
                     end
                     exit"
   else
