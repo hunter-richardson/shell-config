@@ -32,21 +32,6 @@ then
   do
     [ -d $repo/$uname/$i ] && command ln -v $repo/$uname/$i/*.fish $conf/fish/$i/
   done
-  if [ $uname == 'cygwin' ]
-  then
-    for i in 'functions' 'completions'
-    do
-      command wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O $conf/fish/conf.d/$i/fundle.fish && command chmod -c a+x $conf/fish/conf.d/$i/fundle.fish
-    done
-    fish --command="source $conf/fish/plugins.fish"
-  else
-    for i in 'functions' 'completions'
-    do
-      sudo wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /root/.config/fish/conf.d/$i/fundle.fish && sudo chmod -c o+x /root/.config/fish/conf.d/$i/fundle.fish
-    done
-    sudo ln -v $repo/ubuntu/fish/fundle.plugins /root/.config/fish/
-    sudo fish --command="source /root/.config/fish/plugins.fish"
-  fi
 
   if [ $perms == 'global' ]
   then
