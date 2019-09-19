@@ -51,16 +51,14 @@ then
                       set -e $i
                     end
                     for i in (grep -Ev '^#' /path/to/repo/cygwin/fish/fundle.plugins)
+                      printf 'load plugin %s\n' $i | string replace / :
                       fundle plugin $i
                     end
                     fundle install;
                       and fundle init
-                    for i in (fundle list --short)
-                      printf 'load plugin %s\n' $i | string replace / :
-                      for f in (ls -1 ~/.config/fish/fundle/**.fish)
-                        chmod a+x $i
-                        source $i
-                      end
+                    for f in (ls -1 ~/.config/fish/fundle/**.fish)
+                      chmod a+x $i
+                      source $i
                     end
                     exit"
   else
@@ -76,16 +74,14 @@ then
                       set -e $i
                     end
                     for i in (grep -Ev '^#' /root/.config/fish/fundle.plugins)
+                      printf 'load plugin %s\n' $i | string replace / :
                       fundle plugin $i
                     end
                     fundle install;
                       and fundle init
-                    for i in (fundle list --short)
-                      printf 'load plugin %s\n' $i | string replace / :
-                      for f in (ls -1 /root/.config/fish/fundle/**.fish)
-                        chmod a+x $i
-                        ln -v $i /etc/fish/conf.d/(basename (dirname $i))/
-                      end
+                    for f in (ls -1 /root/.config/fish/fundle/**.fish)
+                      chmod a+x $i
+                      ln -v $i /etc/fish/conf.d/(basename (dirname $i))/
                     end
                     exit"
 fi
