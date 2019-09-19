@@ -17,9 +17,9 @@
 set --local MY_DIR (command dirname (builtin status filename))
 
 for i in (command ls -1 $MY_DIR/conf.d/**.fish)
-  builtin source $f;
+  builtin source $i;
     and builtin test (command whoami) != root
-    and builtin printf 'source %s\n' $f;
+    and builtin printf 'source %s\n' $i;
     or  true
 end
 
