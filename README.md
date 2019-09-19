@@ -82,8 +82,7 @@ then
                       ln -v $i /etc/fish/conf.d/(basename (dirname $i))/
                     end
                     exit"
-fi
- 
+  fi
 fi
 ```
 - The [agnostic:fish.lang](agnostic/fish/fish.lang) and [agnostic:fish.nanorc](agnostic/fish/fish.nanorc) files contain configuration for syntax-highlighting of Fish scripts, in [source-highlight](https://gnu.org/software/src-highlight), 
