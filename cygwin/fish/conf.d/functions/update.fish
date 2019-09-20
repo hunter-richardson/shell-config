@@ -28,10 +28,10 @@ function update -d 'automate software updates with git and fundle'
   function __update_fundle
     builtin source (command find ~ -type f -name fundle.fish);
       and fundle self-update;
-      and fundle clean;
       and for i in (fundle list --short | command shuf)
             fundle update $i
           end;
+      and fundle clean;
       and source ~/.config/fish/fundle/**/{completions,functions}/*.fish
   end
 
