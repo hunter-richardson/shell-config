@@ -44,7 +44,6 @@ then
              'completions'
     do
       wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /path/to/new/config/conf.d/$i/fundle.fish
-          && chmod -c a+x /path/to/new/config/fish/conf.d/$i/fundle.fish
     done
     fish --command="source /path/to/new/config/fish/conf.d/*/fundle.fish
                     for i in (set -g | cut -d' ' -f1 | grep -E '^__fundle.*_plugin')
@@ -56,7 +55,6 @@ then
                     end
                     fundle install;
                       and fundle init
-                    chmod a+x (ls -1 ~/.config/fish/fundle/**/{completions,functions}/*.fish)
                     end
                     exit"
   else
@@ -64,7 +62,6 @@ then
              'completions'
     do
       wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /root/.config/conf.d/$i/fundle.fish
-          && chmod -c o+x /root/.config/fish/conf.d/$i/fundle.fish
     done
     ln -v /path/to/repo/ubuntu/fish/fundle.plugins /root/.config/
     fish --command="source /root/.config/fish/conf.d/*/fundle.fish
@@ -78,7 +75,6 @@ then
                     fundle install;
                       and fundle init
                     for i in (ls -1 /root/.config/fish/fundle/**/{completions,functions}/*.fish)
-                      chmod a+x $i
                       ln -v $i /etc/fish/conf.d/(basename (dirname $i))/
                     end
                     exit"
