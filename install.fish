@@ -42,7 +42,6 @@ end
 if builtin test $uname == cygwin
   for i in functions completions
     command wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O $conf/fish/conf.d/$i/fundle.fish;
-      and command chmod -c a+x $conf/fish/conf.d/$i/fundle.fish
   end
   builtin source $conf/fish/conf.d/*/fundle.fish
   for i in (builtin set -g | command cut -d' ' -f1 | command grep -E '^__fundle.*_plugin')
@@ -54,14 +53,12 @@ if builtin test $uname == cygwin
   end
   fundle install;
     and fundle init
-  command chmod a+x (command ls -1 $conf/fish/fundle/**/{completions,functions}/*.fish)
   end
 else
   for i in functions completions
-    sudo wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /root/.config/fish/conf.d/$i/fundle.fish;
-      and sudo chmod -c o+x /root/.config/fish/conf.d/$i/fundle.fish
+    wget -v https://raw.githubusercontent.com/danhper/fundle/master/$i/fundle.fish -O /root/.config/fish/conf.d/$i/fundle.fish;
   end
-  sudo ln -v $repo/ubuntu/fish/fundle.plugins /root/.config/fish/
+  ln -v $repo/ubuntu/fish/fundle.plugins /root/.config/fish/
   builtin source /root/.config/fish/conf.d/*/fundle.fish
   for i in (command set -g | command cut -d' ' -f1 | command grep -E '^__fundle.*_plugin')
     builtin set -e $i
@@ -73,7 +70,6 @@ else
   fundle install;
     and fundle init
   for i in (command ls -1 /root/.config/fish/fundle/**/{completions,functions}/*.fish)
-    command chmod a+x $i
     command ln -v $i /etc/fish/conf.d/(basename (dirname $i))/
   end
 end
