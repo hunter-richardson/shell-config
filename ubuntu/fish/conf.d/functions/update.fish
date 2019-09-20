@@ -31,7 +31,17 @@ function update -d 'automate software updates from installed SPMs'
   end
 
   function __update_fundle
-    sudo --user=root fish --command='builtin source (command find ~ -type f -name fundle.fish); and fundle self-update; and for i in (fundle list --short | command shuf); fundle update $i; end; and fundle clean'
+    sudo --user=root fish --command="builtin source (command find ~ -type f -name fundle.fish);
+                                       and for i in (grep -Ev '^#' /root/.config/fish/fundle.plugins | command shuf)
+                                             fundle plugin $i;
+                                               and builtin printf 'load plugin %s\n' (builtin string replace / : $i)
+                                           end;
+                                       and fundle install;
+                                       and fundle self-update;
+                                       and for i in (fundle list --short | command shuf)
+                                             fundle update $i
+                                           end;
+                                       and fundle clean"
   end
 
   function __update_gem

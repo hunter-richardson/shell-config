@@ -31,7 +31,7 @@ builtin test -f $MY_DIR/alias.fish;
   and builtin printf 'source %s/alias.fish\n' $MY_DIR;
   or  true
 
-for i in (command grep -Ev '^#' (command find -type f -name fundle.plugins | command grep -v /git/));
+for i in (command grep -Ev '^#' (command find -type f -name fundle.plugins | command grep -v /git/) | command shuf);
   fundle plugin $i;
     and builtin printf 'load plugin %s\n' (builtin string replace / : $i)
 end
