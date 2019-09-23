@@ -26,21 +26,23 @@ function update -d 'automate software updates with git and fundle'
   end
 
   function __update_fundle
-    builtin source (command find ~ -type f -name fundle.fish);
-      and for i in (command grep -Ev '^#' (command find ~ -type f -name fundle.plugins | command grep -v /git/) | command shuf)
-            fundle plugin $i;
-          end;
-      and fundle install;
+    for i in (command find ~ -type f -name fundle.fish | command shuf)
+      builtin source $i
+    end;
+    and for i in (command grep -Ev '^#' (command find ~ -type f -name fundle.plugins | command grep -v /git/) | command shuf)
+          fundle plugin $i | builtin string replace / :;
+        end
+    fundle install;
       and fundle init;
       and fundle self-update;
       and for i in (fundle list --short | command shuf)
-            fundle update $i;
+            fundle update $i | builtin string replace / :;
               and for f in (command ls -1 ~/.config/fish/fundle/$i/{completions,functions}/*.fish | command shuf)
                     builtin source $f;
-                      and builtin printf 'source %s\n' $f
+                      and builtin printf 'source %s/%s/%s\n' (builtin string replace / : $i) (command basename (command dirname $f)) (command basename $f)
                   end;
           end;
-      and fundle clean;
+    and fundle clean;
   end
 
   if command ping -n 1 -w 1 github.com >/dev/null

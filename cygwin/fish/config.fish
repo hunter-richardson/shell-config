@@ -23,7 +23,7 @@ end
 
 for i in (command ls -1 $MY_DIR/fundle/**/{competions,functions}/*.fish)
   builtin source $i;
-    and builtin printf 'source %s\n' $i
+    and builtin printf 'source %s\n' (builtin string replace $MY_DIR/fundle/ '' $i | builtin string replace / :)
 end
 
 builtin test -f $MY_DIR/alias.fish;
