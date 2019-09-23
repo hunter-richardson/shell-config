@@ -53,6 +53,14 @@ function update {
     done
   }
 
+  function __update_pip {
+    for i in $(pip3 list --outdated | command cut -d' ' -f1 | command shuf)
+    do
+      [[ $@ =~ *--quiet* ]] && command pip3 show --verbose $i || builtin printf '%s\n' (command whereis $i | command cut -d' ' -f2)
+      sudo pip3 install --upgrade --upgrade-strategy only-if-needed $i
+    done
+  }
+
   function __update_snap {
     for i in $(sudo snap list | command sed -n '1!p' | command cut -d' ' -f1 | command shuf)
     do
@@ -64,15 +72,15 @@ function update {
   [ ! $(command members sudo | command grep $(command whoami)) -a ! $(command members root | command grep $(command whoami)) ] && builtin printf "You are not a sudoer!" && return 121
   [ $(command nmcli networking connectivity check) != 'full' ] && builtin printf 'Unable to open an Internet connection' && return 0
   [[ $@ =~ *--quiet* ]] && quiet='--quiet' || quiet=''
-  [ $# -eq 0 ] && SPMs='all' || SPMs=$(builtin printf "%s\n" $@ | command grep -E '^all|apt|brew|bundle|git|snap$')
+  [ $# -eq 0 ] && SPMs='all' || SPMs=$(builtin printf "%s\n" $@ | command grep -E '^all|apt|brew|bundle|gem|git|pip|snap$')
   if [[ $SPMs =~ all ]]
   then
-    for i in 'apt' 'brew' 'git' 'gem' 'snap'
+    for i in 'apt' 'brew' 'gem' 'git' 'pip' 'snap'
     do
       builtin eval __update_$i $quiet
     done
   else
-    for i in 'apt' 'brew' 'git' 'gem' 'snap'
+    for i in 'apt' 'brew' 'gem' 'git' 'pip' 'snap'
     do
       [[ $SPMs =~ $i ]] && builtin eval __update_$i $quiet
     done

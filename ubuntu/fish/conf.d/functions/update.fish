@@ -85,6 +85,15 @@ function update -d 'automate software updates from installed SPMs'
     end
   end
 
+  function __update_pip
+    for i in (pip3 list --outdated | command cut -d' ' -f1 | command shuf)
+      builtin printf '%s\n' (builtin string match -iqr -- '--quiet' $argv;
+                               and command whereis $i | command cut -d' ' -f2;
+                               or  command pip3 show --verbose $i);
+        and sudo pip3 install --upgrade --upgrade-strategy only-if-needed $i
+    end
+  end
+
   function __update_snap
     for i in (sudo snap list | command sed -n '1!p' | command cut -d' ' -f1 | command shuf)
       builtin printf '%s\n' (builtin string match -iqr -- '--quiet' $argv;
@@ -103,15 +112,15 @@ function update -d 'automate software updates from installed SPMs'
   builtin string match -iqr -- '--?q(uiet)?' $argv;
     and builtin set -l quiet -- '--quiet';
     or  builtin set -l quiet '';
-  builtin set -l SPMs (builtin printf '%s\n' $argv | command grep -E '^all|apt|brew|fundle|git|gem|snap$');
+  builtin set -l SPMs (builtin printf '%s\n' $argv | command grep -E '^all|apt|brew|fundle|gem|git|pip|snap$');
     or builtin set -l SPMs all
   builtin contains all $SPMs;
-    and for i in apt brew fundle git gem snap
+    and for i in apt brew fundle gem git pip snap
         builtin test $i = fundle;
           and eval __update_$i;
           or  eval __update_$i $quiet
       end;
-    or  for i in apt brew fundle git gem snap
+    or  for i in apt brew fundle gem git pip snap
           if builtin contains $i $SPMs
             builtin test $i = fundle;
               and eval __update_$i;
@@ -119,7 +128,7 @@ function update -d 'automate software updates from installed SPMs'
           end
         end
 
-  for i in apt brew fundle git snap
+  for i in apt brew fundle gem git pip snap
     functions -e __update_$i
   end
 end
