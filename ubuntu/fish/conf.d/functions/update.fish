@@ -35,7 +35,7 @@ function update -d 'automate software updates from installed SPMs'
                                        builtin source $i
                                      end;
                                        and for i in (command grep -Ev '^#' /root/.config/fish/fundle.plugins | command shuf)
-                                             fundle plugin $i | builtin string replace / : $i
+                                             fundle plugin $i | builtin string replace / :
                                            end
                                      fundle install;
                                        and fundle init;
