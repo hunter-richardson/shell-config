@@ -36,15 +36,15 @@ function fish_right_prompt -d 'the right prompt'
     and builtin printf ' %s%s🗑  %s' $bold $red $trsh
   builtin printf ' %s%s%s%s' $bold $magenta (
     if builtin test (command git rev-parse --is-inside-work=tree ^/dev/null)
-      builtin set -l url (command git config --get remote.origin.url | builtin string replace -r -i '^(https?://)?(git::0)?(hunter-richardson@)?' '')
+      builtin set -l url (command git config --get remote.origin.url | command cut -d/ -f3-5 | builtin string replace -r '\.(com|org|net)/' '/' | builtin string replace -a hunter-richardson \$ME)
       builtin printf '%s%s' (
         switch (builtin string split '/' $url)[1]
           case github.com
-            builtin printf '🐻/%s' (builtin string replace -r -i '^github.com/' '' $url)
+            builtin printf '🐻/%s' (builtin string replace -r -i '^github/' '' $url)
           case gitlab.com
-            builtin printf '🦊/%s' (builtin string replace -r -i '^gitlab.com/' '' $url)
+            builtin printf '🦊/%s' (builtin string replace -r -i '^gitlab/' '' $url)
           case '*'
-            builtin printf '%s' $url
+            builtin printf '%s/%s' (builtin string upper $url | command cut -d/ -f1) (builtin printf '%s' $url | command cut -d/ -f2-5)
         end) (builtin test -n (builtin string split -m1 (builtin string split '/' $url)[-1] (command pwd))[-1];
             and builtin printf '%s' (builtin string split -m1 (builtin string split '/' $url)[-1] (command pwd))[-1])
     else if builtin string split ~ (command pwd) >/dev/null

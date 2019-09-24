@@ -34,20 +34,25 @@ function update -d 'automate software updates from installed SPMs'
     sudo --user=root fish --command="for i in (command find /root -type f -name fundle.fish | command shuf)
                                        builtin source $i
                                      end;
-                                     for i in (command grep -Ev '^#' /root/.config/fish/fundle.plugins | command shuf)
-                                       fundle plugin $i
-                                     end;
-                                       and fundle install;
+                                       and for i in (command grep -Ev '^#' /root/.config/fish/fundle.plugins | command shuf)
+                                             fundle plugin $i | builtin string replace / : $i
+                                           end
+                                     fundle install;
                                        and fundle init;
                                        and fundle self-update;
+                                       and fundle clean;
                                        and for i in (fundle list --short | command shuf)
                                              fundle update $i | builtin string replace / :;
-                                               and for f in (command ls -1 /root/.config/fundle/$i/{completions,functions}/*.fish | command shuf)
-                                                     command ln -fv $f /etc/fish/conf.d/(command basename (command dirname $f))/ | builtin string replace /root/.config/fundle/ '' | builtin string replace / :
+                                               and for f in (command ls -1 /root/.config/fish/fundle/$i/{comple,func}tions/*.fish | command shuf)
+                                                     command ln -f $f /etc/fish/conf.d/(command basename (command dirname $f))/;
+                                                       and builtin printf 'global /etc/fish/conf.d/%s/%s => %s/%s %s fish %s' (command basename (command dirname $f)) (command basename $f | builtin string replace -r s '') (builtin printf '%s' $__fundle_plugin_urls | command grep $i | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper) (builtin string replace / : $i) (command basename $f .fish) (command basename (command dirname $f) | builtin string replace -r s '')
                                                    end
-                                           end;
-                                       and fundle clean";
-      and source /etc/fish/config.fish
+                                           end";
+      and for i in (sudo grep --color=never -Ev '^#' /root/.config/fish/fundle.plugins | command shuf);
+        for f in (sudo find /root/.config/fish/fundle/$i/{comple,func}tions/ -type f -name '*.fish' 2>&- | command shuf)
+          builtin source /etc/fish/conf.d/(command basename (command dirname $f))/(command basename $f);
+            and builtin printf 'source %s/%s %s fish %s' (builtin printf '%s' $__fundle_plugin_urls | command grep $i | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper) (builtin printf '%s' $i | builtin replace / :) (command basename $f .fish) (command basename (command dirname $f) | builtin string replace -r s '')
+        end
   end
 
   function __update_gem
