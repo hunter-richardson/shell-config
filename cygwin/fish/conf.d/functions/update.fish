@@ -32,7 +32,7 @@ function update -d 'automate software updates with git and fundle'
       and for i in (command grep -Ev '^#' (command find ~ -type f -name fundle.plugins | command grep -v /git/) | command shuf)
             fundle plugin $i | builtin string replace / :;
           end
-    fundle install;
+    fundle install | builtin string replace / :;
       and fundle init;
       and fundle self-update;
       and fundle clean;
