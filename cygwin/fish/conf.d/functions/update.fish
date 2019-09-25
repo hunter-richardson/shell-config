@@ -6,22 +6,21 @@ function update -d 'automate software updates with git and fundle'
       and builtin set -l verbosity '--quiet';
       or  builtin set -l verbosity '--verbose';
     for i in (command find ~ -type d -name .git | command grep -v /.config/ | command shuf)
-      builtin set --local current (command git -C $i rev-parse --short HEAD)
-      builtin set --local url (command git -C $i config --get remote.origin.url)
-      builtin printf 'Updating %s ...\n' $url;
-      builtin test $verbosity = '--verbose';
+      builtin set -l current (command git -C $i rev-parse --short HEAD);
+        and builtin printf 'Updating %s/%s ...\n' (command git -C $i config --get remote.origin.url | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper) (command git -C $i config --get remote.origin.url | command cut -d/ -f4,5 | builtin string replace / : | builtin string replace hunter-richardson \$ME);
+        and builtin test $verbosity = '--verbose';
         and command git -C (command dirname $i) status --porcelain | builtin string trim -q;
         and builtin printf '%sLocal Changes:%s\n' $red $normal;
         and builtin printf '\t%s\n' (command git -C (command dirname $i) status --porcelain)
       command git -C (command dirname $i) pull $verbosity;
-      if builtin test $current != (command git -C $i rev-parse --short HEAD)
-        if builtin string match -eq '/hunter-richardson/shell-config/.git' $i
-          builtin source ~/.config/fish/config.fish;
-            and command tmux source ~/tmux/conf
-        else if builtin string match '/tmux-plugins/tpm/.git' $i
-          command tmux source ~/tmux/conf
+        and if builtin test $current != (command git -C $i rev-parse --short HEAD)
+              if builtin string match -eq '/hunter-richardson/shell-config/.git' $i
+                builtin source ~/.config/fish/config.fish;
+                  and command tmux source ~/tmux/conf
+              else if builtin string match '/tmux-plugins/tpm/.git' $i
+                command tmux source ~/tmux/conf
+              end
         end
-      end
     end
   end
 
