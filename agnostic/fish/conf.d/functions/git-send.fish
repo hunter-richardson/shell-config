@@ -6,7 +6,8 @@ function git-send -d 'Adds, commits, and pushes all changes in the git repositor
   else if builtin test -d $argv[2] -a (command git -C $argv[2] rev-parse --is-inside-work=tree ^/dev/null);
     command git -C $argv[2] status --porcelain | builtin string length -q;
       and builtin printf '%sLocal Changes:%s\n' $red $normal;
-      and builtin printf '\t%s\n' (command git -C $argv[2] status --porcelain)
+      and builtin printf '\t%s\n' (command git -C $argv[2] status --porcelain);
+      and builtin printf '\n'
     command git -C $argv[2] pull --verbose;
       and command git -C $argv[2] diff --check | builtin string length -q;
       and builtin printf '\n%s%sPlease resolve merge conflicts!%s\n' $red $bold $normal;
