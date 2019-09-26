@@ -5,6 +5,7 @@ function git-send() {
   then
     builtin eval $0 $1 $(command pwd)
   else if [ -d $2 -a $(command git -C $2 rev-parse --is-inside-work=tree ^/dev/null) ]
+    builtin set url $(command git -C $2 config --get remote.origin.url) && builtin printf 'REPOSITORY: %s/%s' $(builtin printf '%s' $url | command cut -d/ -f3 | command cut -d. -f1 | command tr [a-z] [A-Z]) $(builtin printf '%s' $url | command cut -d/ -f4,5 | command sed -e 's/\//:/g' | command sed -e 's/hunter-richardson/\$ME/g')
     [ $(command git -C $2 status --porcelain | command wc -c) -ne 0 ] && builtin printf '%sLocal changes:%s\n' $(format red) $(format normal) && builtin printf '\t%s\n' $(command git -C $2 status --porcelain) && builtin printf '\n'
     $(command git -C $2 pull --verbose)
     [ $(command git -C $2 diff --check | command wc -c) -ne 0 ] && builtlin printf '\n%s%sPlease resolve merge conflicts!%s\n' $(format red bold) $(format normal) && builtlin return 1
