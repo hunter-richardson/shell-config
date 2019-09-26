@@ -9,7 +9,7 @@ function fish_right_prompt -d 'the right prompt'
   end
   builtin printf ' %s%s%s %s' $bold $cyan (command whoami)
   builtin printf ' %s%s%s%s' $bold $magenta (
-    if builtin test (command git rev-parse --is-inside-work=tree ^/dev/null)
+    if command git rev-parse --is-inside-work=tree ^/dev/null
       builtin set -l url (command git config --get remote.origin.url | command cut -d/ -f3-5 | builtin string replace -r '\.(com|org|net)/' '/' | builtin string replace -a hunter-richardson \$ME)
       builtin printf '%s/%s' (builtin string upper $url | command cut -d/ -f1) (builtin printf '%s' $url | command cut -d/ -f2-5)
     else

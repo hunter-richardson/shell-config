@@ -3,22 +3,22 @@
 function fish_prompt -d 'the left prompt'
   builtin set -l last_status $status
   builtin printf '%s%s┌[' $bold $white
-  if builtin test (command git rev-parse --is-inside-work-tree ^/dev/null)
+  if command git rev-parse --is-inside-work-tree ^/dev/null
     builtin set -l cdup (builtin count (command git rev-parse --show-cdup | builtin string split '../'))
     builtin test $cdup -gt 1;
       and builtin printf ' [¬] %s' (math -- $cdup - 1)
     builtin set -l branch (command git symbolic-ref --short HEAD)
     builtin test -n "$branch";
       and builtin printf ' %s⎇  %s' $cyan $branch
-    builtin test (command git diff-index --cached --quiet HEAD);
+    command git diff-index --cached --quiet HEAD;
       and builtin printf ' %s⏩' $magenta
-    builtin test (command git diff --no-ext-diff --quiet --exit-code);
+    command git diff --no-ext-diff --quiet --exit-code;
       and builtin printf ' %s%s[ %s%s✱ %u %s❓%u %s%s]%s' $nobold $white \
         $bold $blue (builtin count (command git ls-files --other --exclude-standard)) \
             $yellow (builtin count (command git status --porcelain | command grep -v '?')) $nobold $white $bold;
       or  builtin printf ' %s✔ ' $green
     builtin set -l commit (command git rev-parse --short HEAD)
-    if builtin test (string trim $commit)
+    if string trim $commit
       builtin printf ' %s⊷ %s' $magenta $commit
     end
   else if builtin test $last_status -ge 1 -a $last_status -le 121 -a (builtin functions -q strerror)
@@ -30,7 +30,7 @@ function fish_prompt -d 'the left prompt'
         or  builtin printf '<*)))><')
   end
   if builtin functions -q iwgetid
-    builtin test -n (iwgetid);
+    builtin test -n "(iwgetid)";
       and builtin printf ' %s%s' $green (iwgetid);
       or  builtin printf ' %s ????' $red
   end
