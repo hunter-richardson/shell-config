@@ -31,28 +31,10 @@ function update -d 'automate software updates from installed SPMs'
   end
 
   function __update_fundle
-    sudo --user=root fish --command="for i in (command find /root -type f -name fundle.fish | command shuf)
-                                       builtin source $i
-                                     end;
-                                       and for i in (command grep -Ev '^#' /root/.config/fish/fundle.plugins | command shuf)
-                                             fundle plugin $i
-                                           end
-                                     fundle install | builtin string replace / : | builtin string replace hunter-richardson \$ME;
-                                       and fundle init;
-                                       and fundle self-update;
-                                       and fundle clean;
-                                       and for i in (fundle list --short | command shuf)
-                                             fundle update $i | builtin string replace / : | builtin string replace hunter-richardson \$ME;
-                                             for f in (command ls -1 /root/.config/fish/fundle/$i/{comple,func}tions/*.fish | command shuf)
-                                               command ln -f $f /etc/fish/conf.d/(command basename (command dirname $f))/;
-                                                 and builtin printf 'global /etc/fish/conf.d/%s/%s => %s/%s %s fish %s' (command basename (command dirname $f)) (command basename $f | builtin string replace s '') (builtin printf '%s' $__fundle_plugin_urls | command grep $i | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper) (builtin string replace / : $i | builtin string replace hunter-richardson \$ME) (command basename $f .fish) (command basename (command dirname $f) | builtin string replace s '')
-                                             end
-                                           end";
-      and for i in (sudo grep --color=never -Ev '^#' /root/.config/fish/fundle.plugins | command shuf);
-        for f in (sudo find /root/.config/fish/fundle/$i/{comple,func}tions/ -type f -name '*.fish' 2>&- | command shuf)
-          builtin source /etc/fish/conf.d/(command basename (command dirname $f))/(command basename $f);
-            and builtin printf 'source %s/%s %s fish %s' (builtin printf '%s' $__fundle_plugin_urls | command grep $i | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper) (builtin replace / : $i | builtin string replace hunter-richardson \$ME) (command basename $f .fish) (command basename (command dirname $f) | builtin string replace s '')
-        end
+    sudo --user=root fish --command="source /root/.config/fish/conf.d/functions/update_fundle.fish";
+      and for i in (command ls -1 /etc/fish/conf.d/{comple,func}tions/*.fish | command shuf)
+            builtin source $i
+          end
   end
 
   function __update_gem
@@ -96,11 +78,13 @@ function update -d 'automate software updates from installed SPMs'
   end
 
   function __update_pip
-    for i in (pip3 list --outdated | command cut -d' ' -f1 | command shuf)
+    for i in (pip3 list | command cut -d' ' -f1 | command shuf)
       builtin printf '%s\n' (builtin string match -iqr -- '--quiet' $argv;
                                and command whereis $i | command cut -d' ' -f2;
                                or  command pip3 show --verbose $i);
+      builtin string match -iqr -- '--quiet' $argv;
         and sudo pip3 install --upgrade --upgrade-strategy only-if-needed $i
+        or  sudo pip3 --verbose install --upgrade --upgrade-strategy only-if-needed $i
     end
   end
 
@@ -129,7 +113,7 @@ function update -d 'automate software updates from installed SPMs'
         builtin test $i = fundle;
           and eval __update_$i;
           or  eval __update_$i $quiet
-      end;
+        end;
     or  for i in apt brew fundle gem git pip snap
           if builtin contains $i $SPMs
             builtin test $i = fundle;
