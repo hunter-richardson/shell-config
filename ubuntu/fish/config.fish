@@ -16,10 +16,20 @@
 
 set --local MY_DIR (command dirname (builtin status filename))
 
-for i in (command ls -1 $MY_DIR/conf.d/**.fish)
-  builtin source $i;
+for i in functions completions
+  builtin test -d $MY_DIR/conf.d/$i;
+    and for f in (command ls -1 $MY_DIR/conf.d/$i/*.fish | command shuf)
+          builtin source $f;
+            and builtin test (command whoami) != root
+            and builtin printf 'source %s\n' $f;
+            or  true
+        end
+end
+
+for f in (command ls -1 $MY_DIR/conf.d/*.fish | command shuf)
+  builtin source $f;
     and builtin test (command whoami) != root
-    and builtin printf 'source %s\n' $i;
+    and builtin printf 'source %s\n' $f;
     or  true
 end
 
