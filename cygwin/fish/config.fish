@@ -18,7 +18,7 @@ builtin set --local MY_DIR (command dirname (builtin status filename))
 
 for i in (command ls -1 $MY_DIR/conf.d/{comple,func}tions/fundle.fish | command shuf)
   builtin source $i;
-    and builtin printf 'load GITHUB/danhper:fundle fundle %s\n' (command basename (command dirname $i))
+    and builtin printf 'load GITHUB/danhper:fundle fundle %s\n' (command basename (command dirname $i) | builtin string replace s '')
 end
 
 for i in (command grep -Ev '^#' (command find -type f -name fundle.plugins | command grep -v /git/) | command shuf);
@@ -28,7 +28,7 @@ end
 
 for i in (command ls -1 $MY_DIR/conf.d/{comple,func}tions/*.fish | command grep -v 'fundle.fish$' | command shuf)
   builtin source $i;
-    and builtin printf 'load GITHUB/$ME:shell-config %s %s\n' (command basename $i .fish) (command basename (command dirname $i))
+    and builtin printf 'load GITHUB/$ME:shell-config %s %s\n' (command basename $i .fish) (command basename (command dirname $i) | builtin string replace s '')
 end
 
 for i in (command ls -1 $MY_DIR/conf.d/*.fish | command shuf)
