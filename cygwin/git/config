@@ -1,6 +1,6 @@
 [alias]      porcelain = status --porcelain
              addall = add -uv --renormalize
-             send = "!git pull --verbose; git add -A; git commit -av --message=\"$@\"; git push --verbose"
+             send = "!git pull --verbose; git add -A; git commit --all --verbose --message=\"$@\"; git push --verbose"
 [apply]      ignorewhitespace = change
 [blame]      coloring = highlightrecent
              date = format-local:%A %d %B %Y, %H%M %Z
