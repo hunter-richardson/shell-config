@@ -67,4 +67,3 @@ function update -d 'automate software updates with git and fundle'
   functions -e __update_fundle
 end
 
-test
