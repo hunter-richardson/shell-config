@@ -3,7 +3,7 @@
 function git-send() {
   if [ -z "$2" ]
   then
-    eval $0 $1 $(command pwd)
+    builtin eval $0 $1 $(command pwd)
   else if [ -d $2 -a $(command git -C $2 rev-parse --is-inside-work=tree ^/dev/null) ]
     [ $(command git -C $2 status --porcelain | command wc -c) -ne 0 ] && builtin printf '%sLocal changes:%s\n' $(format red) $(format normal) && builtin printf '\t%s\n' $(command git -C $2 status --porcelain)
     $(command git -C $2 pull --verbose)
