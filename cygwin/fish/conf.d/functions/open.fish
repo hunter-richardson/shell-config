@@ -18,7 +18,7 @@ function open -d 'open inputs in default application'
     and builtin return 0;
   switch $type;
       case b
-        builtin set -l mnt (command mount | command grep $argv[1] | command cut -d' ' -f3 | head -1)
+        builtin set -l mnt (command mount | builtin string match $argv[1] | command cut -d' ' -f3 | head -1)
         builtin test -z $mnt -o ! -r $mnt;
           and builtin printf '%s%s%s%s:  %s' $bold $red $argv[1] $normal $err;
           and builtin return 1;

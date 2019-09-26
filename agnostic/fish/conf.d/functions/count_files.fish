@@ -6,8 +6,8 @@ function count_files -d "count the files in a directory, or name the file if the
   builtin test ! -d $argv[1];
     and builtin printf '%d' (builtin count $argv[1]);
     and builtin return 0
-  builtin set -l file_count (builtin count (command ls -R --indicator-style=file-type $argv[1] | command grep -v / | builtin string match -v --regex '^$'))
-  builtin set -l file (command ls -R --indicator-style=file-type $argv[1] | command grep -v / | builtin string match -v --regex '^$')[1]
+  builtin set -l file_count (builtin count (command ls -R --indicator-style=file-type $argv[1] | builtin string match -v / | builtin string match -v --regex '^$'))
+  builtin set -l file (command ls -R --indicator-style=file-type $argv[1] | builtin string match -v / | builtin string match -v --regex '^$')[1]
   switch $file_count
     case 0
       builtin printf ''

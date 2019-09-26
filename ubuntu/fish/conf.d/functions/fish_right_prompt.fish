@@ -23,7 +23,7 @@ function fish_right_prompt -d 'the right prompt'
       builtin printf '👤'
     else if builtin test (sudo -nv ^/dev/null)
       builtin printf '🔓'
-    else if builtin test (command members root | command grep (command whoami)) -o (command members sudo | command grep (command whoami))
+    else if builtin test (command members root | builtin string match (command whoami)) -o (command members sudo | builtin string match (command whoami))
       builtin printf '🔐'
     else
       builtin printf '🔒'

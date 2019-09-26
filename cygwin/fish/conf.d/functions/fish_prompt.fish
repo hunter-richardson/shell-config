@@ -15,7 +15,7 @@ function fish_prompt -d 'the left prompt'
     command git diff --no-ext-diff --quiet --exit-code;
       and builtin printf ' %s%s[ %s%s✱ %u %s❓%u %s%s]%s' $nobold $white \
         $bold $blue (builtin count (command git ls-files --other --exclude-standard)) \
-            $yellow (builtin count (command git status --porcelain | command grep -v '?')) $nobold $white $bold;
+            $yellow (builtin count (command git status --porcelain | builtin string match -v '?')) $nobold $white $bold;
       or  builtin printf ' %s✔ ' $green
     builtin set -l commit (command git rev-parse --short HEAD)
     if string trim $commit

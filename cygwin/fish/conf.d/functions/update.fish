@@ -5,7 +5,7 @@ function update -d 'automate software updates with git and fundle'
     builtin string match -iqr -- '--quiet' $argv;
       and builtin set -l verbosity '--quiet';
       or  builtin set -l verbosity '--verbose';
-    for i in (command find ~ -type d -name .git | command grep -v /.config/ | command shuf)
+    for i in (command find ~ -type d -name .git | builtin string match -v /.config/ | command shuf)
       builtin set -l current (command git -C $i rev-parse --short HEAD);
         and builtin printf 'Updating %s/%s ...\n' (command git -C $i config --get remote.origin.url | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper) (command git -C $i config --get remote.origin.url | command cut -d/ -f4,5 | builtin string replace / : | builtin string replace hunter-richardson \$ME);
         and builtin test $verbosity = '--verbose';
@@ -28,7 +28,7 @@ function update -d 'automate software updates with git and fundle'
     for i in (command find ~ -type f -name fundle.fish | command shuf)
       builtin source $i
     end;
-      and for i in (command grep -Ev '^#' (command find ~ -type f -name fundle.plugins | command grep -v /git/) | command shuf)
+      and for i in (builtin string match -Ev '^#' (command find ~ -type f -name fundle.plugins | builtin string match -v /git/) | command shuf)
             fundle plugin $i;
           end
     fundle install | builtin string replace / : | builtin string replace hunter-richardson \$ME;
@@ -39,7 +39,7 @@ function update -d 'automate software updates with git and fundle'
             fundle update $i | builtin string replace / : | builtin string replace hunter-richardson \$ME;
             for f in (command ls -1 ~/.config/fish/fundle/$i/{comple,func}tions/*.fish | command shuf)
               builtin source $f;
-                and builtin printf 'source %s/%s %s fish %s\n' (builtin printf '%s' $__fundle_plugin_urls | command grep $i | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper) (builtin string replace / : $i | builtin string replace hunter-richardson \$ME) (command basename $f .fish) (command basename (command dirname $f) | builtin string replace s '')
+                and builtin printf 'source %s/%s %s fish %s\n' (builtin printf '%s' $__fundle_plugin_urls | builtin string match $i | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper) (builtin string replace / : $i | builtin string replace hunter-richardson \$ME) (command basename $f .fish) (command basename (command dirname $f) | builtin string replace s '')
             end;
           end;
   end

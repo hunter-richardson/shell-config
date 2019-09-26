@@ -1,7 +1,7 @@
 #!/usr/bin/fish
 
 function gclone -d 'default git options'
-  builtin test ! (command members sudo | command grep (command whoami)) -a ! (command members root | command grep (command whoami));
+  builtin test ! (command members sudo | builtin string match (command whoami)) -a ! (command members root | builtin string match (command whoami));
     and echo 'You are not a sudoer!'
     and return 121
   for i in $argv

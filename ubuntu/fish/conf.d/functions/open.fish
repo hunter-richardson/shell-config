@@ -22,7 +22,7 @@ function open -d 'open inputs in default application'
     and builtin return 0;
   switch $type;
       case b
-        builtin set -l mnt (command mount | command grep "$1" | command cut -d' ' -f3 | head -1)
+        builtin set -l mnt (command mount | builtin string match $argv[1] | command cut -d' ' -f3 | head -1)
         builtin test -z $mnt -o ! -r $mnt;
           and builtin set_color -o red;
           and echo $argv[1];

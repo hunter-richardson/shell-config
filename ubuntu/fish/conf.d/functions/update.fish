@@ -49,7 +49,7 @@ function update -d 'automate software updates from installed SPMs'
             command gem info $i -ae;
               and sudo gem update $i --verbose
           end
-    command gem list | command grep -q rubygems-update;
+    command gem list | builtin string match -q rubygems-update;
       and sudo update_rubygems $verbosity
   end
 
@@ -97,7 +97,7 @@ function update -d 'automate software updates from installed SPMs'
     end
   end
 
-  builtin test ! (command members sudo | command grep (command whoami)) -a ! (command members root | command grep (command whoami));
+  builtin test ! (command members sudo | builtin string match (command whoami)) -a ! (command members root | builtin string match (command whoami));
     and builtin printf 'You are not a sudoer!'
     and return 121
   builtin test (command nmcli networking connectivity check) != full;
