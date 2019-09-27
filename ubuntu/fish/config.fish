@@ -20,7 +20,7 @@ for i in functions completions
   builtin test -d $MY_DIR/conf.d/$i;
     and for f in (command ls -1 $MY_DIR/conf.d/$i/*.fish | command shuf)
           builtin source $f;
-            and builtin test (command whoami) != root
+            and builtin test (command whoami) != root;
             and builtin printf 'source %s\n' $f;
             or  true
         end
@@ -28,20 +28,20 @@ end
 
 for f in (command ls -1 $MY_DIR/conf.d/*.fish | command shuf)
   builtin source $f;
-    and builtin test (command whoami) != root
+    and builtin test (command whoami) != root;
     and builtin printf 'source %s\n' $f;
     or  true
 end
 
 builtin test -f $MY_DIR/alias.fish;
   and builtin source $MY_DIR/alias.fish;
-  and builtin test (command whoami) != root
+  and builtin test (command whoami) != root;
   and builtin printf 'source %s/alias.fish\n' $MY_DIR;
   or  true
 
 builtin command -v albert >/dev/null;
   and builtin bind \e\e 'command albert show 1>/dev/null 2>/dev/null';
-  and builtin test (command whoami) != root
+  and builtin test (command whoami) != root;
   and builtin printf 'bind ESC-ESC albert\n';
   or  true
 
