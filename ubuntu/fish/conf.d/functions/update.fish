@@ -59,18 +59,18 @@ function update -d 'automate software updates from installed SPMs'
       or  builtin set -l verbosity '--verbose';
     sudo updatedb
     for i in (sudo locate -eiqr '\/.git$' | command grep -Ev '/\.(config|linuxbrew)/' | command shuf)
-      builtin set -l current (command git -C $i rev-parse --short HEAD);
-        and builtin printf 'Updating %s/%s ...\n' (command git -C $i config --get remote.origin.url | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper) (command git -C $i config --get remote.origin.url | command cut -d/ -f4,5 | builtin string replace / : | builtin string replace hunter-richardson \$ME);
+      builtin set -l current (command git -C (command dirname $i) rev-parse --short HEAD);
+        and builtin printf 'Updating %s/%s ...\n' (command git -C (command dirname $i) config --get remote.origin.url | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper) (command git -C (command dirname $i) config --get remote.origin.url | command cut -d/ -f4,5 | builtin string replace / : | builtin string replace hunter-richardson \$ME);
         and builtin test $verbosity = '--verbose';
         and command git -C (command dirname $i) status --porcelain >/dev/null | builtin string trim -q;
         and builtin printf '%sLocal Changes:%s\n' $red $normal;
         and builtin printf '\t%s\n' (command git -C (command dirname $i) status --porcelain);
       sudo git -C (command dirname $i) pull $verbosity;
         and if builtin test $current != (command git -C $i rev-parse --short HEAD)
-              if builtin string match '/hunter-richardson/shell-config/.git' $i
+              if builtin string match -eq '/hunter-richardson/shell-config' (command dirname $i)
                 builtin source /etc/fish/config.fish;
                   and command tmux source /etc/tmux/conf
-              else if builtin string match '/tmux-plugins/tpm/.git' $i
+              else if builtin string match -eq '/tmux-plugins/tpm' (command dirname $i)
                 command tmux source /etc/tmux/conf
               end
         end

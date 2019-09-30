@@ -5,19 +5,19 @@ function update -d 'automate software updates with git and fundle'
     builtin string match -iqr -- '--quiet' $argv;
       and builtin set -l verbosity '--quiet';
       or  builtin set -l verbosity '--verbose';
-    for i in (command find ~ -type d -name .git | builtin string match -v /.config/ | command shuf)
-      builtin set -l current (command git -C $i rev-parse --short HEAD);
-        and builtin printf 'Updating %s/%s ...\n' (command git -C $i config --get remote.origin.url | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper) (command git -C $i config --get remote.origin.url | command cut -d/ -f4,5 | builtin string replace / : | builtin string replace hunter-richardson \$ME);
+    for i in (command find ~ -type d -name .git | command grep -v /.config/ | command shuf)
+      builtin set -l current (command git -C (command dirname $i) rev-parse --short HEAD);
+        and builtin printf 'Updating %s/%s ...\n' (command git -C (command dirname $i) config --get remote.origin.url | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper) (command git -C (command dirname $i) config --get remote.origin.url | command cut -d/ -f4,5 | builtin string replace / : | builtin string replace hunter-richardson \$ME);
         and builtin test $verbosity = '--verbose';
         and command git -C (command dirname $i) status --porcelain | builtin string trim -q;
         and builtin printf '%sLocal Changes:%s\n' $red $normal;
         and builtin printf '\t%s\n' (command git -C (command dirname $i) status --porcelain)
       command git -C (command dirname $i) pull $verbosity;
-        and if builtin test $current != (command git -C $i rev-parse --short HEAD)
-              if builtin string match -eq '/hunter-richardson/shell-config/.git' $i
+        and if builtin test $current != (command git -C (command dirname $i) rev-parse --short HEAD)
+              if builtin string match -eq '/hunter-richardson/shell-config' (command dirname $i)
                 builtin source ~/.config/fish/config.fish;
                   and command tmux source ~/tmux/conf
-              else if builtin string match '/tmux-plugins/tpm/.git' $i
+              else if builtin string match -eq '/tmux-plugins/tpm' (command dirname $i)
                 command tmux source ~/tmux/conf
               end
         end
@@ -28,7 +28,7 @@ function update -d 'automate software updates with git and fundle'
     for i in (command find ~ -type f -name fundle.fish | command shuf)
       builtin source $i
     end;
-      and for i in (builtin string match -Ev '^#' (command find ~ -type f -name fundle.plugins | builtin string match -v /git/) | command shuf)
+      and for i in (builtin string match -Ev '^#' (command find ~ -type f -name fundle.plugins | command grep -v /git/) | command shuf)
             fundle plugin $i;
           end
     fundle install | builtin string replace / : | builtin string replace hunter-richardson \$ME;
