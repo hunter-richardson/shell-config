@@ -73,7 +73,7 @@ function update -d 'automate software updates from installed SPMs'
               else if builtin string match -eq '/tmux-plugins/tpm' (command dirname $i)
                 command tmux source /etc/tmux/conf
               end
-        end
+            end
     end
   end
 

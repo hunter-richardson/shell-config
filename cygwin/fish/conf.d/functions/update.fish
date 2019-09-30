@@ -20,7 +20,7 @@ function update -d 'automate software updates with git and fundle'
               else if builtin string match -eq '/tmux-plugins/tpm' (command dirname $i)
                 command tmux source ~/tmux/conf
               end
-        end
+            end
     end
   end
 
@@ -28,7 +28,7 @@ function update -d 'automate software updates with git and fundle'
     for i in (command find ~ -type f -name fundle.fish | command shuf)
       builtin source $i
     end;
-      and for i in (builtin string match -Ev '^#' (command find ~ -type f -name fundle.plugins | command grep -v /git/) | command shuf)
+      and for i in (command grep -Ev '^#' (command find ~ -type f -name fundle.plugins | command grep -v /git/) | command shuf)
             fundle plugin $i;
           end
     fundle install | builtin string replace / : | builtin string replace hunter-richardson \$ME;
@@ -39,7 +39,7 @@ function update -d 'automate software updates with git and fundle'
             fundle update $i | builtin string replace / : | builtin string replace hunter-richardson \$ME;
             for f in (command ls -1 ~/.config/fish/fundle/$i/{comple,func}tions/*.fish | command shuf)
               builtin source $f;
-                and builtin printf 'source %s/%s %s fish %s\n' (builtin printf '%s' $__fundle_plugin_urls | builtin string match $i | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper) (builtin string replace / : $i | builtin string replace hunter-richardson \$ME) (command basename $f .fish) (command basename (command dirname $f) | builtin string replace s '')
+                and builtin printf 'load %s/%s %s fish %s\n' (builtin printf '%s' $__fundle_plugin_urls | builtin string match $i | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper) (builtin string replace / : $i | builtin string replace hunter-richardson \$ME) (command basename $f .fish) (command basename (command dirname $f) | builtin string replace s '')
             end;
           end;
   end
