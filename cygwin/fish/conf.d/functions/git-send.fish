@@ -5,7 +5,8 @@ function git-send -d 'Adds, commits, and pushes all changes in the git repositor
     eval (builtin status current-function) $argv[1] (command pwd)
   else if builtin test -d $argv[2] -a (command git -C $argv[2] rev-parse --is-inside-work=tree ^/dev/null);
     builtin set -l url (command git -C $argv[2] config --get remote.origin.url);
-      and builtin printf 'REPOSITORY: %s/%s\n' (builtin printf '%s' $url | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper) (builtin printf '%s' $url | command cut -d/ -f4,5 | builtin string replace / : | builtin string replace hunter-richardson \$ME)
+      and builtin printf 'REPOSITORY: %s/%s\n' (builtin printf '%s' $url | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper) \
+                                               (builtin printf '%s' $url | command cut -d/ -f4,5 | builtin string replace / : | builtin string replace hunter-richardson \$ME)
     command git -C $argv[2] status --porcelain | builtin string length -q;
       and builtin printf '%sLocal Changes:%s\n' $red $normal;
       and builtin printf '\t%s\n' (command git -C $argv[2] status --porcelain);
