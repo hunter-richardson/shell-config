@@ -23,6 +23,7 @@
 [core]       autocrlf = false
              editor = nano
              eol = lf
+             filemode = true
              sharedrepository = umask
              pager = less
              untrackedcache = keep
