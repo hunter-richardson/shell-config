@@ -4,6 +4,8 @@ function git-send() {
   if [ -z "$2" ]
   then
     builtin eval $0 $1 $(command pwd)
+  else if [ ! -w $2 || -x $2 ]
+    builtin printf 'fatal: %s does not have sufficient permissions to modify the local repository %s' $(command whoami) $2 && builtin return 1
   else if [ -d $2 -a $(command git -C $2 rev-parse --is-inside-work=tree ^/dev/null) ]
     builtin set url $(command git -C $2 config --get remote.origin.url) && builtin printf 'REPOSITORY: %s/%s\n' $(builtin printf '%s' $url | command cut -d/ -f3 | command cut -d. -f1 | command tr [a-z] [A-Z]) $(builtin printf '%s' $url | command cut -d/ -f4,5 | command sed -e 's/\//:/g' | command sed -e 's/hunter-richardson/\$ME/g')
     [ $(command git -C $2 status --porcelain | command wc -c) -ne 0 ] && builtin printf '%sLocal Changes:%s\n' $(format red) $(format normal) && builtin printf '\t%s\n' $(command git -C $2 status --porcelain) && builtin printf '\n'
@@ -22,6 +24,6 @@ function git-send() {
     fi
     builtin unset url
   else
-    builtin printf 'fatal: not a git repository' $2
+    builtin printf 'fatal: not a git repository' $2 && builtin return 1
   fi
 }

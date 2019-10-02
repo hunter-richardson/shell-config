@@ -4,9 +4,8 @@ function git-send -d 'Adds, commits, and pushes all changes in the git repositor
   if builtin test -z "$argv[2]"
     eval (builtin status current-function) $argv[1] (command pwd)
   else if builtin test -d $argv[2] -a (command git -C $argv[2] rev-parse --is-inside-work=tree ^/dev/null);
-    builtin set -l perms (builtin test (builtin printf '%s' $argv[2] | command cut -d/ -f1-3) = /home/(command whoami);
-                       or builtin test (builtin printf '%s' $argv[2] | command cut -d/ -f1-3) = /apartment/(command whoami);
-                       or builtin test (command whoami) = root);
+    builtin set -l perms (    builtin test -w $2;
+                          and builtin test -x $2);
       and builtin set -l url (command git -C $argv[2] config --get remote.origin.url);
       and builtin printf '%sREPOSITORY: %s/%s\n' (builtin test $perms;
                                                     and builtin printf 'GLOBAL ';
