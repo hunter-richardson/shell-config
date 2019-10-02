@@ -42,7 +42,7 @@ end
 for i in functions completions
   for f in (command ls -1 $MY_DIR/conf.d/$i/*.fish | builtin string match -vr 'fundle.fish$' | command shuf)
     builtin source $f;
-      and builtin printf 'load %s%sGITHUB/%s$ME:shell-config%s %s %s\n' $bold $blue $red (command basename $f .fish) (builtin string replace s '' $i) $normal
+      and builtin printf 'load %s%sGITHUB/%s$ME:shell-config%s %s %s\n' $bold $blue $red $normal (command basename $f .fish) (builtin string replace s '' $i)
   end
 end
 

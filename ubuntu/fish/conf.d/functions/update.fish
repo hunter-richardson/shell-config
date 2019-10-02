@@ -20,6 +20,9 @@ function update -d 'automate software updates from installed SPMs'
   end
 
   function __update_brew
+    builtin test (command whoami) = root;
+      and builtin printf 'Running brew as root is dangerous!';
+      and builtin return 1
     builtin string match -iqr -- '--quiet' $argv;
       and builtin set -l verbosity '-q';
       or  builtin set -l verbosity '-v';
@@ -32,8 +35,13 @@ function update -d 'automate software updates from installed SPMs'
 
   function __update_fundle
     sudo --user=root fish --command="source /root/.config/fish/conf.d/functions/update_fundle.fish";
-      and for i in (command ls -1 /etc/fish/conf.d/{comple,func}tions/*.fish | command shuf)
-            builtin source $i
+      and for i in (sudo ls -1 /root/.config/fish/fundle/**.fish | command shuf)
+            builtin test -r /etc/fish/conf.d/(command basename (command dirname $i))/(command basename $i);
+              and builtin source /etc/fish/conf.d/(command basename (command dirname $i))/(command basename $i);
+              and if builtin test ! (builtin string match -iqr -- '--quiet' $argv)
+                    builtin set -l iden (builtin printf '%s' $i | command cut -d/ -f6,7 | builtin string replace / : | builtin string replace hunter-richardson \$ME)
+                    builtin printf 'load %s%s%s %s fish %s\n' $bold $red $iden $normal (command basename $f .fish) (command basename (command dirname $f) | builtin string replace s '')
+                  end
           end
   end
 
@@ -60,17 +68,19 @@ function update -d 'automate software updates from installed SPMs'
     sudo updatedb
     for i in (sudo locate -eiqr '\/.git$' | command grep -Ev '/\.(config|linuxbrew)/' | command shuf)
       builtin set -l current (command git -C (command dirname $i) rev-parse --short HEAD);
-        and builtin printf 'Updating %s/%s ...\n' (command git -C (command dirname $i) config --get remote.origin.url | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper) (command git -C (command dirname $i) config --get remote.origin.url | command cut -d/ -f4,5 | builtin string replace / : | builtin string replace hunter-richardson \$ME);
+        and builtin set -l src (command git -C (command dirname $i) config --get remote.origin.url | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper);
+        and builtin set -l iden (command basename (command git -C (command dirname $i) config --get remote.origin.url | command cut -d/ -f4,5 | builtin string replace / : | builtin string replace hunter-richardson \$ME) .git);
+        and builtin printf 'Updating %s%s%s/%s%s%s ...\n' $bold $blue $src $red $iden $normal;
         and builtin test $verbosity = '--verbose';
         and command git -C (command dirname $i) status --porcelain >/dev/null | builtin string trim -q;
         and builtin printf '%sLocal Changes:%s\n' $red $normal;
-        and builtin printf '\t%s\n' (command git -C (command dirname $i) status --porcelain);
+        and builtin printf '\t%s\n' (command git -C (command dirname $i) status --porcelain)
       sudo git -C (command dirname $i) pull $verbosity;
         and if builtin test $current != (command git -C $i rev-parse --short HEAD)
-              if builtin string match -eq '/hunter-richardson/shell-config' (command dirname $i)
+              if builtin string match -eq '$ME:shell-config' $iden
                 builtin source /etc/fish/config.fish;
                   and command tmux source /etc/tmux/conf
-              else if builtin string match -eq '/tmux-plugins/tpm' (command dirname $i)
+              else if builtin string match -eq 'tmux-plugins:tpm' $iden
                 command tmux source /etc/tmux/conf
               end
             end
@@ -81,9 +91,9 @@ function update -d 'automate software updates from installed SPMs'
     for i in (pip3 list | command cut -d' ' -f1 | command shuf)
       builtin printf '%s\n' (builtin string match -iqr -- '--quiet' $argv;
                                and command whereis $i | command cut -d' ' -f2;
-                               or  command pip3 show --verbose $i);
+                               or  command pip3 show --verbose $i)
       builtin string match -iqr -- '--quiet' $argv;
-        and sudo pip3 install --upgrade --upgrade-strategy only-if-needed $i
+        and sudo pip3 install --upgrade --upgrade-strategy only-if-needed $i;
         or  sudo pip3 --verbose install --upgrade --upgrade-strategy only-if-needed $i
     end
   end
@@ -105,24 +115,18 @@ function update -d 'automate software updates from installed SPMs'
     and return 0
   builtin string match -iqr -- '--?q(uiet)?' $argv;
     and builtin set -l quiet -- '--quiet';
-    or  builtin set -l quiet '';
+    or  builtin set -l quiet ''
   builtin set -l SPMs (builtin printf '%s\n' $argv | command grep -E '^all|apt|brew|fundle|gem|git|pip|snap$');
     or builtin set -l SPMs all
   builtin contains all $SPMs;
     and for i in apt brew fundle gem git pip snap
-        builtin test $i = fundle;
-          and eval __update_$i;
-          or  eval __update_$i $quiet
+          eval __update_$i $quiet
         end;
     or  for i in apt brew fundle gem git pip snap
-          if builtin contains $i $SPMs
-            builtin test $i = fundle;
-              and eval __update_$i;
-              or  eval __update_$i $quiet
+          builtin contains $i $SPMs;
+            and eval __update_$i $quiet
           end
         end
 
-  for i in apt brew fundle gem git pip snap
-    functions -e __update_$i
-  end
+  functions -e __update_{apt,brew,fundle,gem,git,pip,snap}
 end
