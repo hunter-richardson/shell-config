@@ -26,20 +26,29 @@ function update -d 'automate software updates with git and fundle'
 
   function __update_fundle
     for i in (command find ~ -type f -name fundle.fish | command shuf)
-      builtin source $i
+      builtin source $i;
+        and builtin printf 'load %s%sGITHUB/danhper:fundle fundle %s) $bold $blue $red $normal (command basename (command dirname $i))
     end;
       and for i in (command grep -Ev '^#' (command find ~ -type f -name fundle.plugins | command grep -v /git/) | command shuf)
             fundle plugin $i;
           end
-    fundle install | builtin string replace / : | builtin string replace 'installed in' '=>' | builtin string replace hunter-richardson \$ME;
+      for i in (fundle install)
+        builtin set -l iden (builtin printf '%s' $i | command cut -d' ' -f1);
+          and builtin set -l src (builtin printf '%s\n' $__fundle_plugin_urls | command grep $iden | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper);
+          and builtin set -l path (builtin printf '%s' $i | command awk '{print $NF}');
+          and builtin printf '%s%s%s/%s%s%s => %s\n' $bold $blue $src $red (builtin string replace / : $iden | builtin string replace hunter-richardson \$ME) $normal $path
+      end
       and fundle init;
       and fundle self-update;
       and fundle clean;
       and for i in (fundle list --short | command shuf)
-            fundle update $i | builtin string replace / : | builtin string replace hunter-richardson \$ME;
+            builtin set -l src (builtin printf '%s\n' $__fundle_plugin_urls | command grep $i | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper);
+              and for j in (fundle update $i)
+                    builtin printf 'Updating %s%s%s/%s%s%s\n' $bold $blue $src $red (builtin string replace / : $i | builtin string replace hunter-richardson \$ME) $normal
+                  end
             for f in (command ls -1 ~/.config/fish/fundle/$i/{comple,func}tions/*.fish | command shuf)
               builtin source $f;
-                and builtin printf 'load %s/%s %s fish %s\n' (builtin printf '%s' $__fundle_plugin_urls | command grep $i | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper) (builtin string replace / : $i | builtin string replace hunter-richardson \$ME) (command basename $f .fish) (command basename (command dirname $f) | builtin string replace s '')
+                and builtin printf 'load %s%s%s/%s%s%s %s fish %s\n' $bold $blue $src $red (builtin string replace / : $i | builtin string replace hunter-richardson \$ME) $normal (command basename $f .fish) (command basename (command dirname $f) | builtin string replace s '')
             end;
           end;
   end
