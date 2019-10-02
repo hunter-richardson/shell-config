@@ -24,10 +24,16 @@ for i in functions completions
             and builtin test (command whoami) != root;
             and builtin printf 'load %s\n' (
               builtin contains (command basename $f) $MY_FILES;
-                and builtin printf '%s%sGITHUB/%s$ME:shell-config%s %s %s' $bold $blue $red $normal (command basename $f .fish) (builtin string replace s '' $i);
-                or  builtin printf '%s %s from fundle plugin' (builtin string replace s '' $i) (command basename $f .fish));
+                and builtin printf '%s%sGITHUB/%s$ME:shell-config%s %s,%s' $bold $blue $red $normal (command basename $f .fish) (builtin string replace s '' $i);
+                or  builtin printf 'fundle plugin %s,%s' (builtin string replace s '' $i) (command basename $f .fish));
             or  true
-        end
+        end | command column -t -s, -o' '
+end
+
+for i in (command ls -1 $MY_DIR/conf.d/init/*.fish)
+  builtin source $i;
+    and builtin test (command whoami) != root;
+    and builtin printf 'initialize plugin %s' (command basename (command dirname $i))
 end
 
 for f in (command ls -1 $MY_DIR/conf.d/*.fish | command shuf)
@@ -47,13 +53,10 @@ builtin test -f $MY_DIR/alias.fish;
   or  true
 
 builtin test (command whoami) != root;
-  and builtin command -v albert >/dev/null;
-  and builtin bind \e\e 'command albert show 1>/dev/null 2>/dev/null';
-  and builtin printf 'bind ESC-ESC albert\n';
-  or  true
-
-builtin test (command whoami) != root;
   and builtin command -v brew >/dev/null;
   and builtin functions -q bax;
-  command brew shellenv
+  and command brew shellenv;
+  and builtin command -v albert >/dev/null;
+  and builtin bind \e\e 'command albert show 1>/dev/null 2>/dev/null';
+  and builtin printf 'bind ESC-ESC albert\n'
 

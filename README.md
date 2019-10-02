@@ -74,10 +74,23 @@ then
                     end
                     fundle install;
                       and fundle init
-                    for i in (ls -1 /root/.config/fish/fundle/**/{completions,functions}/*.fish)
-                      ln -v $i /etc/fish/conf.d/(basename (dirname $i))/
+                    for i in (fundle list --short)
+                      chmod a+x /root/.config/fish/fundle/$i;
+                      for d in functions completions
+                        test -d /root/.config/fish/fundle/$i/$d;
+                          and chmod a+x /root/.config/fish/fundle/$i/$d
+                      end
                     end
-                    exit"
+                    for i in (ls -1 /root/.config/fish/fundle/**/{completions,functions}/*.fish)
+                      chmod a+r $i;
+                        and ln -v $i /etc/fish/conf.d/(basename (dirname $i))/
+                    end
+                    for i in (ls -1 /root/.config/fish/fundle/**/init.fish)
+                      chmod a+r $i;
+                        and test -d /etc/fish/conf.d/init;
+                        or  mkdir -p /etc/fish/conf.d/init
+                      ln -v $i /etc/fish/conf.d/init/(command basename (command dirname $i)).fish
+                    end"
   fi
 fi
 ```
