@@ -18,7 +18,7 @@ set --local MY_DIR (command dirname (builtin status filename))
 
 for i in functions completions
   builtin test -d $MY_DIR/conf.d/$i;
-    and builtin set -l MY_FILES (command ls -1 (command find / -type d -name shell-config)/{agnostic,ubuntu}/fish/conf.d/$i/*.fish | command xargs -n 1 basename);
+    and builtin set -l MY_FILES (command ls -1 (command dirname (command locate -ieq 'shell-config'))/{agnostic,ubuntu}/fish/conf.d/$i/*.fish | command xargs -n 1 basename);
     and for f in (command ls -1 $MY_DIR/conf.d/$i/*.fish | command shuf)
           builtin source $f;
             and builtin test (command whoami) != root;
