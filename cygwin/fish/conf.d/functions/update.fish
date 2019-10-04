@@ -37,21 +37,21 @@ function update -d 'automate software updates with git and fundle'
               and if builtin test ! (builtin string match -iqr -- '--quiet' $argv)
                     builtin set -l src (builtin printf '%s' $__fundle_plugin_urls | command grep $i | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper);
                       and builtin set -l iden (builtin string replace / : $i | builtin string replace hunter-richardson \$ME)
-                    builtin printf 'load plugin %s%s%s/%s%s%s\n' $bold $blue $src $red $iden $normal
+                    builtin printf 'load %s%s%s/%s%s%s,fundle plugin\n' $bold $blue $src $red $iden $normal
                   end
-          end
+          end | command column -t -s, -o' '
     for i in (fundle install | command shuf)
       switch (builtin printf '%s' $i | command cut -d' ' -f1)
         case Installing
           builtin set -l iden (builtin printf '%s' $i | command awk '{print $NF}');
             and builtin set -l src (builtin printf '%s' $__fundle_plugin_urls | command grep $iden | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper);
             and builtin set -l path (builtin string join / (command find ~ -type d -name fundle) $iden);
-            and builtin printf 'Installing %s%s%s/%s%s%s,=> %s\n' $bold $blue $src $red (builtin string replace / : $iden | builtin string replace hunter-richardson \$ME) $normal $path
+            and builtin printf 'Installing plugin %s%s%s/%s%s%s,=> %s\n' $bold $blue $src $red (builtin string replace / : $iden | builtin string replace hunter-richardson \$ME) $normal $path
         case '*'
           builtin set -l iden (builtin printf '%s' $i | command cut -d' ' -f1);
             and builtin set -l src (builtin printf '%s\n' $__fundle_plugin_urls | command grep $iden | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper);
             and builtin set -l path (builtin printf '%s' $i | command awk '{print $NF}');
-            and builtin printf '%s%s%s/%s%s%s,=> %s\n' $bold $blue $src $red (builtin string replace / : $iden | builtin string replace hunter-richardson \$ME) $normal $path
+            and builtin printf 'plugin %s%s%s/%s%s%s,=> %s\n' $bold $blue $src $red (builtin string replace / : $iden | builtin string replace hunter-richardson \$ME) $normal $path
       end
     end | command column -t -s, -o' ';
       and fundle init;
@@ -60,12 +60,12 @@ function update -d 'automate software updates with git and fundle'
     for i in (fundle list --short | command shuf)
         builtin set -l src (builtin printf '%s\n' $__fundle_plugin_urls | command grep $i | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper);
           and builtin set -l iden (builtin string replace / : $i | builtin string replace hunter-richardson \$ME)
-        fundle update $i | builtin string replace $i (builtin printf '%s%s%s/%s%s%s ...' $bold $blue $src $red $iden $normal);
+        fundle update $i | builtin string replace $i (builtin printf 'plugin %s%s%s/%s%s%s ...' $bold $blue $src $red $iden $normal);
           and for f in (command ls -1 ~/.config/fish/fundle/$i/{comple,func}tions/*.fish | command shuf)
                 builtin source $f;
                   and builtin string match -iqr -- '--quiet' $argv;
                   and true;
-                  or  builtin printf 'load %s%s%s/%s%s%s %s,%s\n' $bold $blue $src $red $iden $normal (command basename $f .fish) (command basename (command dirname $f) | builtin string replace s '')
+                  or  builtin printf 'load plugin %s%s%s/%s%s%s %s,%s\n' $bold $blue $src $red $iden $normal (command basename $f .fish) (command basename (command dirname $f) | builtin string replace s '')
               end | command column -t -s, -o' '
     end
   end

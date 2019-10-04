@@ -40,17 +40,17 @@ function update -d 'automate software updates from installed SPMs'
               and builtin source /etc/fish/conf.d/(command basename (command dirname $i))/(command basename $i);
               and if builtin test ! (builtin string match -iqr -- '--quiet' $argv)
                     builtin set -l iden (builtin printf '%s' $i | command cut -d/ -f6,7 | builtin string replace / : | builtin string replace hunter-richardson \$ME)
-                    builtin printf 'load %s%s%s %s,%s\n' $bold $red $iden $normal (command basename $f .fish) (command basename (command dirname $f) | builtin string replace s '')
+                    builtin printf 'load %s%s%s %s,%s,fundle plugin\n' $bold $red $iden $normal (command basename $f .fish) (command basename (command dirname $f) | builtin string replace s '')
                   end
-          end | command column -t -s, -o' ';
+          end | command column -t -s,;
       and for i in (sudo ls -1 --format single-column /root/.config/fish/fundle/**/init.fish | command shuf)
             builtin test -r /etc/fish/conf.d/init/(command basename (command dirname $i)).fish;
               and builtin source /etc/fish/conf.d/init/(command basename (command dirname $i)).fish;
               and if builtin test ! (builtin string match -iqr -- '--quiet' $argv)
                     builtin set -l iden (builtin printf '%s' $i | command cut -d/ -f6,7 | builtin string replace / : | builtin string replace hunter-richardson \$ME)
-                    builtin printf 'initialize %s%s%s%s plugin' $bold $red $iden $normal
+                    builtin printf 'initialize %s%s%s%s,plugin' $bold $red $iden $normal
                   end
-          end
+          end | command column -t -s,
   end
 
   function __update_gem
