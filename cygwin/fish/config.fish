@@ -18,7 +18,7 @@ builtin set --local MY_DIR (command dirname (builtin status filename))
 
 for i in functions completions
   builtin source $MY_DIR/conf.d/$i/fundle.fish;
-    and builtin printf 'load %s%sGITHUB/%sdanhper:fundle%s fundle %s\n' $bold $blue $red $normal (builtin string replace s '' $i)
+    and builtin printf 'load %s%sGITHUB/%sdanhper:fundle%s fundle %s%s%s\n' $bold $blue $red $normal $yellow (builtin string replace s '' $i) $normal
 end
 
 for i in (command grep -Ev '^#' (command find -type f -name fundle.plugins | command grep -v /git/) | command shuf);
@@ -35,7 +35,7 @@ for i in (fundle list --short | command shuf)
     builtin test -d $MY_DIR/fundle/$i/$d;
       and for f in (command ls -1 $MY_DIR/fundle/$i/$d/*.fish | command shuf)
             builtin source $f;
-              and builtin printf 'load plugin %s%s%s/%s%s%s,%s,%s\n' $bold $blue $src $red $iden $normal (command basename $f .fish) (builtin string replace s '' $d)
+              and builtin printf 'load plugin %s%s%s/%s%s%s,%s,%s%s%s\n' $bold $blue $src $red $iden $normal (command basename $f .fish) $yellow (builtin string replace s '' $d) $normal
           end
   end | command column -t -s, -o' '
 end
@@ -43,7 +43,7 @@ end
 for i in functions completions
   for f in (command ls -1 $MY_DIR/conf.d/$i/*.fish | builtin string match -vr 'fundle.fish$' | command shuf)
     builtin source $f;
-      and builtin printf 'load %s%sGITHUB/%s$ME:shell-config%s %s,%s\n' $bold $blue $red $normal (command basename $f .fish) (builtin string replace s '' $i)
+      and builtin printf 'load %s%sGITHUB/%s$ME:shell-config%s %s,%s%s%s\n' $bold $blue $red $normal (command basename $f .fish) $yellow (builtin string replace s '' $i) $normal
   end | command column -t -s, -o' '
 end
 

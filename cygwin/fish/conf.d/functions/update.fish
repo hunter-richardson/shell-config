@@ -30,7 +30,7 @@ function update -d 'automate software updates with git and fundle'
     for i in functions completions
       builtin source ~/.config/fish/conf.d/$i/fundle.fish;
         and builtin string match -iqr -- '--quiet' $argv;
-        or  builtin printf 'load %s%sGITHUB/%sdanhper:fundle%s fundle %s\n' $bold $blue $red $normal (builtin string replace s '' $i)
+        or  builtin printf 'load %s%sGITHUB/%sdanhper:fundle%s fundle %s%s%s\n' $bold $blue $red $normal $yellow (builtin string replace s '' $i) $normal
     end;
       and for i in (command grep -Ev '^#' (command find ~ -type f -name fundle.plugins | command grep -v /git/) | command shuf)
             fundle plugin $i;
@@ -65,7 +65,7 @@ function update -d 'automate software updates with git and fundle'
                 builtin source $f;
                   and builtin string match -iqr -- '--quiet' $argv;
                   and true;
-                  or  builtin printf 'load plugin %s%s%s/%s%s%s %s,%s\n' $bold $blue $src $red $iden $normal (command basename $f .fish) (command basename (command dirname $f) | builtin string replace s '')
+                  or  builtin printf 'load plugin %s%s%s/%s%s%s %s,%s%s%s\n' $bold $blue $src $red $iden $normal (command basename $f .fish) $yellow (command basename (command dirname $f) | builtin string replace s '') $normal
               end | command column -t -s, -o' '
     end
   end
