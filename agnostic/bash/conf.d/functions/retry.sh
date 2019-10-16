@@ -7,14 +7,14 @@ function retry()
   builtin shift
   until "$@"
   do
+    builtin local status=$?
     if [ $count -eq $retries ]
     then
-      builtin local exit=$?
-      builtin printf 'Final try #%s#%d%s exited %s%d%s.\n' $(format bold green) $i $(format normal) $(format bold red) $exit $(format normal)
-      builtin return $exit
+      builtin printf 'Final try #%s#%d%s exited %s%d%s.\n' $(format bold green) $i $(format normal) $(format bold red) $status $(format normal)
+      builtin return $status
     else
       builtin local wait=$((2 ** $count))
-      builtin printf 'Try %s%d%s of %s#%d%s exited %s%d%s, retrying in %s%s%s...\n' $(format bold green) $i $(format normal) $(format bold blue) $retries $(format normal) $(format bold red) $? $(format normal) $(format bold yellow) $(command expr 1000 \* $wait | humanize_duration) $(format normal)
+      builtin printf 'Try %s%d%s of %s#%d%s exited %s%d%s, retrying in %s%s%s...\n' $(format bold green) $i $(format normal) $(format bold blue) $retries $(format normal) $(format bold red) $status $(format normal) $(format bold yellow) $(command expr 1000 \* $wait | humanize_duration) $(format normal)
       command sleep $wait
     fi
   done
