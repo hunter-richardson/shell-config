@@ -14,10 +14,7 @@ function retry -d 'Retry a command up to a specified number of times, until it e
       builtin return $exit
     else
       builtin set -l wait (math "2 ^ ($i - 1)")
-      builtin printf 'Try %s%s%d%s of %s%s%d%s exited %s%s%d%s, retrying in %s%s%d%s %s...\n' $bold $green $i $normal $bold $blue $retries $normal $bold $red $status $normal $bold $yellow $wait $normal (
-        builtin test $wait -gt 1;
-          and builtin printf 'seconds';
-          or  builtin printf 'second ')
+      builtin printf 'Try %s%s%d%s of %s%s%d%s exited %s%s%s%s, retrying in %s%s%s%s...\n' $bold $green $i $normal $bold $blue $retries $normal $bold $red $status $normal $bold $yellow (math "1000 * $wait" | humanize_duration) $normal
       command sleep $wait
     end
   end
