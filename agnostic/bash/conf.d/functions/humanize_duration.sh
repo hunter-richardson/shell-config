@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function humanize_duration()
 {
   command awk '
