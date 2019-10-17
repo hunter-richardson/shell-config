@@ -18,11 +18,9 @@ function git-send -d 'Adds, commits, and pushes all changes in the git repositor
       and command git -C $argv[2] diff --check | builtin string length -q;
       and builtin printf '\n%s%sPlease resolve merge conflicts!%s\n' $red $bold $normal;
       and builtin return 1;
-    command git -C $argv[2] status --porcelain | grep '^\?' | builtin string length -q;
-      and commmand git -C $argv[2] add .;
     command git -C $argv[2] diff | builtin string length -q;
       and command git -C $argv[2] add --all --renormalize;
-    command git -C $argv[2] diff --cached | builtin string length -q;
+      and command git -C $argv[2] diff --cached | builtin string length -q;
       and builtin printf '\n%sStaged Changes:%s\n' $red $normal;
       and command git -C $argv[2] diff --cached;
       and builtin printf '\n';
