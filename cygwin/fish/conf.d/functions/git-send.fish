@@ -22,7 +22,7 @@ function git-send -d 'Adds, commits, and pushes all changes in the git repositor
       and command git -C $argv[2] add --all --renormalize;
       and command git -C $argv[2] diff --cached | builtin string length -q;
       and builtin printf '\n%sStaged Changes:%s\n' $red $normal;
-      and command git -C $argv[2] diff --cached;
+      and command git --no-pager -C $argv[2] diff --cached;
       and builtin printf '\n';
     if builtin test -z "$argv[1]"
       command git -C $argv[2] commit --allow-empty-message --verbose
