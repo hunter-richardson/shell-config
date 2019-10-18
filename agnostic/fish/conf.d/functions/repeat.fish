@@ -1,9 +1,14 @@
 #!/usr/bin/fish
 
 function repeat -d 'Retry a command infinitely, until it exits successfully or a signal is caught'
+  builtin test (builtin count $argv) -lt 1;
+    and builtin printf 'Proper use: %s%s [command to attempt]%s\n' $bold (builtin status function) $normal;
+    and builtin return 23
   builtin set -l num 0
+  builtin set -l command $argv
+  builtin printf 'eval %s%s%s\n' $bold (builtin printf '%s ' $command) $normal
   while builtin test $num -ge 0
-    eval $argv
+    eval $command
     builtin set -l cmd_status $status
     builtin set -l num (math "1 + $num")
     if builtin test $cmd_status -eq 0

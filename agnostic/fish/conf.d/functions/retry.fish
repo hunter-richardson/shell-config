@@ -1,9 +1,16 @@
 #!/usr/bin/fish
 
 function retry -d 'Retry a command up to a specified number of times, until it exits successfully'
+  builtin test (builtin count $argv) -lt 2;
+    and builtin printf 'Proper use: %s%s [number of attempts until giving up] [command to attempt]%s\n' $bold (builtin status function) $normal;
+    and builtin return 23
+  builtin string match -irqv '^[0-9]+$' $argv[1];
+    and builtin printf 'Proper use: %s%s [number of attempts until giving up] [command to attempt]%s\n' $bold (builtin status function) $normal;
+    and builtin return 23
   builtin set -l retries $argv[1];
     and builtin set -e argv[1]
   builtin set -l command $argv;
+    and builtin printf 'eval %s%s%s\n\n' $bold (builtin printf '%s ' $argv) $normal
   for i in (command seq $retries)
     eval $command
     builtin set -l cmd_status $status
@@ -15,7 +22,7 @@ function retry -d 'Retry a command up to a specified number of times, until it e
       builtin return $cmd_status
     else
       builtin set -l wait (math "2 ^ ($i - 1)")
-      builtin printf 'Try %s%s#%d%s of %s%s%d%s exited %s%s%s%s, retrying in %s%s%s%s...\n' $bold $green $i $normal $bold $blue $retries $normal $bold $red $cmd_status $normal $bold $yellow (math "1000 * $wait" | humanize_duration) $normal
+      builtin printf 'Try %s%s#%d%s of %s%s%d%s exited %s%s%s%s, retrying in %s%s%s%s...\n\n' $bold $green $i $normal $bold $blue $retries $normal $bold $red $cmd_status $normal $bold $yellow (math "1000 * $wait" | humanize_duration) $normal
       command sleep $wait
     end
   end
