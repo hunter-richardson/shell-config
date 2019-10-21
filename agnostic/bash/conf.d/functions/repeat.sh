@@ -13,7 +13,7 @@ function retry()
     do
       builtin local status=$?
       builtin local wait=$((2 ** $count))
-      builtin printf 'Try %s%d%s exited %s%d%s, retrying in %s%s%s...\n' $(format bold green) $i $(format normal) $(format bold red) $status $(format normal) $(format bold yellow) $(command expr 1000 \* $wait | humanize_duration) $(format normal)
+      [ $(builtin declare -p humanize_duration >/dev/null 2>/dev/null) ] && builtin printf 'Try %s%d%s exited %s%d%s, retrying in %s%s%s...\n' $(format bold green) $i $(format normal) $(format bold red) $status $(format normal) $(format bold yellow) $(command expr 1000 \* $wait | humanize_duration) $(format normal) || builtin printf 'Try %s%d%s exited %s%d%s, retrying in %s%d seconds%s...\n' $(format bold green) $i $(format normal) $(format bold red) $status $(format normal) $(format bold yellow) $wait $(format normal)
       command sleep $wait
       fi
     done

@@ -15,7 +15,9 @@ function repeat -d 'Retry a command infinitely, until it exits successfully or a
       builtin return 0
     else
       builtin set -l wait (math "2 ^ ($num - 1)")
-      builtin printf 'Try %s%s#%d%s exited %s%s%s%s, retrying in %s%s%s%s...\n' $bold $green $num $normal $bold $red $cmd_status $normal $bold $yellow (math "1000 * $wait" | humanize_duration) $normal
+      builtin functions -q humanize_duration;
+        and builtin printf 'Try %s%s#%d%s exited %s%s%s%s, retrying in %s%s%s%s...\n' $bold $green $num $normal $bold $red $cmd_status $normal $bold $yellow (math "1000 * $wait" | humanize_duration) $normal;
+        or  builtin printf 'Try %s%s#%d%s exited %s%s%s%s, retrying in %s%s%d seconds%s...\n' $bold $green $num $normal $bold $red $cmd_status $normal $bold $yellow $wait $normal;
       command sleep $wait
     end
   end
