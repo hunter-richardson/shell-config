@@ -46,22 +46,14 @@ function update -d 'automate software updates with git and fundle'
           builtin set -l iden (builtin printf '%s' $i | command awk '{print $NF}');
             and builtin set -l src (builtin printf '%s' $__fundle_plugin_urls | command grep $iden | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper);
             and builtin set -l path (builtin string join / (command find ~ -type d -name fundle) $iden);
-<<<<<<< HEAD
-            and builtin printf 'Installing %s%s%s/%s%s%s => %s\n' $bold $blue $src $red (builtin string replace / : $iden | builtin string replace hunter-richardson \$ME) $normal $path
-=======
-            and builtin printf 'Installing plugin %s%s%s/%s%s%s,=> %s\n' $bold $blue $src $red (builtin string replace / : $iden | builtin string replace hunter-richardson \$ME) $normal $path
->>>>>>> 9339244652bfd3bfadeada5d4952835fac5d11f5
+            and builtin printf 'Installing plugin %s%s%s/%s%s%s,=> %s%s%s%s\n' $bold $blue $src $red (builtin string replace / : $iden | builtin string replace hunter-richardson \$ME) $normal $bold $yellow $path $normal
         case '*'
           builtin set -l iden (builtin printf '%s' $i | command cut -d' ' -f1);
             and builtin set -l src (builtin printf '%s\n' $__fundle_plugin_urls | command grep $iden | command cut -d/ -f3 | command cut -d. -f1 | builtin string upper);
             and builtin set -l path (builtin printf '%s' $i | command awk '{print $NF}');
-<<<<<<< HEAD
-            and builtin printf '%s%s%s/%s%s%s => %s\n' $bold $blue $src $red (builtin string replace / : $iden | builtin string replace hunter-richardson \$ME) $normal $path
-=======
-            and builtin printf 'plugin %s%s%s/%s%s%s,=> %s\n' $bold $blue $src $red (builtin string replace / : $iden | builtin string replace hunter-richardson \$ME) $normal $path
->>>>>>> 9339244652bfd3bfadeada5d4952835fac5d11f5
+            and builtin printf 'plugin %s%s%s/%s%s%s,=> %s%s%s%s\n' $bold $blue $src $red (builtin string replace / : $iden | builtin string replace hunter-richardson \$ME) $normal $bold $yellow $path $normal
       end
-    end;
+    end | command column -t -s, -o' ';
       and fundle init;
       and fundle self-update | builtin string replace fundle (builtin printf '%s%sGITHUB/%sdanhper:fundle%s' $bold $blue $red $normal);
       and fundle clean
@@ -73,13 +65,8 @@ function update -d 'automate software updates with git and fundle'
                 builtin source $f;
                   and builtin string match -iqr -- '--quiet' $argv;
                   and true;
-<<<<<<< HEAD
-                  or  builtin printf 'load %s%s%s/%s%s%s %s fish %s\n' $bold $blue $src $red $iden $normal (command basename $f .fish) (command basename (command dirname $f) | builtin string replace s '')
-              end
-=======
                   or  builtin printf 'load plugin %s%s%s/%s%s%s %s,%s%s%s\n' $bold $blue $src $red $iden $normal (command basename $f .fish) $yellow (command basename (command dirname $f) | builtin string replace s '') $normal
               end | command column -t -s, -o' '
->>>>>>> 9339244652bfd3bfadeada5d4952835fac5d11f5
     end
   end
 

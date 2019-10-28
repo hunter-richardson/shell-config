@@ -7,8 +7,7 @@ function fish_prompt -d 'the left prompt'
     builtin set -l cdup (builtin count (command git rev-parse --show-cdup | builtin string split '../'))
     builtin test $cdup -gt 1;
       and builtin printf ' 📂 %s' (builtin math -- $cdup - 1)
-    builtin set -l branch (command git symbolic-ref --short HEAD)
-    builtin test -n "$branch";
+    builtin set -l branch (command git symbolic-ref --short HEAD);
       and builtin printf ' %s⎇  %s' $cyan $branch
     builtin test (command git diff-index --cached --quiet HEAD);
       and builtin printf ' %s⏩' $magenta
@@ -17,8 +16,7 @@ function fish_prompt -d 'the left prompt'
         $bold $blue (builtin count (command git ls-files --other --exclude-standard)) \
             $yellow (builtin count (command git status --porcelain | builtin string match -v '?')) $nobold $white $bold;
       or  builtin printf ' %s✔ ' $green
-    builtin set -l commit (command git rev-parse --short HEAD)
-    if builtin test (builtin string trim $commit)
+    if builtin set -l commit (command git rev-parse --short HEAD)
       if builtin test (sudo -nv ^/dev/null)
         builtin set -l tally (sudo git fetch --all; command git rev-list --count --left-right @{u}...HEAD)
         builtin set -l upstr ''

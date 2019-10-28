@@ -15,7 +15,7 @@ function git-send() {
     if [ $(command git -C $2 diff | command wc -c) -ne 0 ]
     then
       [ $perms ] && sudo git -C $2 add --all --renormalize || command git -C $2 add --all --renormalize
-      [ $(command git -C $2 diff --cached | command wc -c) -ne 0 ] && builtin printf '\n%sStaged Changes:%s\n' $(format red) $(format normal) && builtin printf '\t%s\n' $(command git -C $2 diff --cached) && builtin printf '\n'
+      [ $(command git -C $2 diff --cached | command wc -c) -ne 0 ] && builtin printf '\n%sStaged Changes:%s\n' $(format red) $(format normal) && command git --no-pager -C $2 diff --cached && builtin printf '\n'
     fi
     if [ builtin test -z "$1" ]
     then
