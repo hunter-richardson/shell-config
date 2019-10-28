@@ -35,25 +35,11 @@ function update -d 'automate software updates from installed SPMs'
 
   function __update_fundle
     sudo --user=root fish --command="source /root/.config/fish/conf.d/functions/update_fundle.fish";
-      and for i in (sudo ls -1 /root/.config/fish/fundle/**.fish | command shuf)
-            builtin test -r /etc/fish/conf.d/(command basename (command dirname $i))/(command basename $i);
-              and builtin source /etc/fish/conf.d/(command basename (command dirname $i))/(command basename $i);
-              and if builtin test ! (builtin string match -iqr -- '--quiet' $argv)
-                    builtin set -l iden (builtin printf '%s' $i | command cut -d/ -f6,7 | builtin string replace / : | builtin string replace hunter-richardson \$ME)
-<<<<<<< HEAD
-                    builtin printf 'load %s%s%s %s fish %s\n' $bold $red $iden $normal (command basename $f .fish) (command basename (command dirname $f) | builtin string replace s '')
-=======
-                    builtin printf 'load %s%s%s %s,%s,fundle plugin\n' $bold $red $iden $normal (command basename $f .fish) (command basename (command dirname $f) | builtin string replace s '')
-                  end
-          end | command column -t -s,;
-      and for i in (sudo ls -1 --format single-column /root/.config/fish/fundle/**/init.fish | command shuf)
-            builtin test -r /etc/fish/conf.d/init/(command basename (command dirname $i)).fish;
-              and builtin source /etc/fish/conf.d/init/(command basename (command dirname $i)).fish;
-              and if builtin test ! (builtin string match -iqr -- '--quiet' $argv)
-                    builtin set -l iden (builtin printf '%s' $i | command cut -d/ -f6,7 | builtin string replace / : | builtin string replace hunter-richardson \$ME)
-                    builtin printf 'initialize %s%s%s%s,plugin' $bold $red $iden $normal
->>>>>>> 9339244652bfd3bfadeada5d4952835fac5d11f5
-                  end
+      and for i in (command ls -1 /etc/fish/conf.d/{init,functions,completions}/*.fish | command shuf)
+            builtin test -r $i;
+              and builtin source $i;
+              and builtin test (builtin string match -iqr -- '--quiet' $argv);
+              or builtin printf 'load %s%s%s%s,%s%s%s\n' $bold $blue (command basename $i .fish) $normal $yellow (command basename (command dirname $i) | builtin string replace s '' | builtin string replace init initialization) $normal
           end | command column -t -s,
   end
 
@@ -137,7 +123,6 @@ function update -d 'automate software updates from installed SPMs'
     or  for i in apt brew fundle gem git pip snap
           builtin contains $i $SPMs;
             and eval __update_$i $quiet
-          end
         end
 
   functions -e __update_{apt,brew,fundle,gem,git,pip,snap}

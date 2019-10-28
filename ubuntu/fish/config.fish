@@ -16,32 +16,27 @@
 
 set --local MY_DIR (command dirname (builtin status filename))
 
-for i in (command ls -1 $MY_DIR/conf.d/init/*.fish)
-  builtin source $i;
-    and builtin test (command whoami) != root;
-    and builtin printf 'initialize %s,plugin' (command basename (command dirname $i))
-end | command column -t -s,
+builtin test -d $MY_DIR/conf.d/init;
+  and builtin test (builtin count $MY_DIR/conf.d/init/*.fish) -ge 1;
+  and for i in (command ls -1 $MY_DIR/conf.d/init/*.fish)
+        builtin source $i;
+          and builtin test (command whoami) != root;
+          and builtin printf 'initialize %s%s%s%s,plugin\n' $bold $red (command basename $i .fish) $normal
+      end | command column -t -s,
 
-for i in functions completions
-  builtin test -d $MY_DIR/conf.d/$i;
-    and builtin set -l MY_FILES (command ls -1 (command dirname (command locate -ieq 'shell-config'))/{agnostic,ubuntu}/fish/conf.d/$i/*.fish | command xargs -n 1 basename);
-    and for f in (command ls -1 $MY_DIR/conf.d/$i/*.fish | command shuf)
-          builtin source $f;
-            and builtin test (command whoami) != root;
-            and builtin printf 'load %s\n' (
-              builtin contains (command basename $f) $MY_FILES;
-<<<<<<< HEAD
-                and builtin printf '%s%sGITHUB/%s$ME:shell-config%s %s %s' $bold $blue $red $normal (command basename $f .fish) (builtin string replace s '' $i);
-                or  builtin printf '%s %s from fundle plugin' (builtin string replace s '' $i) (command basename $f .fish));
-            or  true
-        end
-=======
-                and builtin printf '%s%sGITHUB/%s$ME:shell-config%s %s,%s%s%s' $bold $blue $red $normal (command basename $f .fish) $yellow (builtin string replace s '' $i) $normal;
-                or  builtin printf 'plugin %s,%s%s%s' (command basename $f .fish) $yellow (builtin string replace s '' $i) $normal);
-            or  true
-        end | command column -t -s,
->>>>>>> 9339244652bfd3bfadeada5d4952835fac5d11f5
-end
+builtin set -l MY_FILES (command ls -1 (command locate -ieq 'shell-config' | command head -1)/{agnostic,ubuntu}/fish/conf.d/*/*.fish | command xargs -n 1 basename);
+  and for i in functions completions
+        builtin test -d $MY_DIR/conf.d/$i;
+          and for f in (command ls -1 $MY_DIR/conf.d/$i/*.fish | command shuf)
+                builtin source $f;
+                  and builtin test (command whoami) != root;
+                  and builtin printf 'load %s\n' (
+                    builtin contains (command basename $f) $MY_FILES;
+                      and builtin printf '%s%sGITHUB/%s$ME:shell-config%s %s,%s%s%s' $bold $blue $red $normal (command basename $f .fish) $yellow (builtin string replace s '' $i) $normal;
+                      or  builtin printf 'plugin %s,%s%s%s' (command basename $f .fish) $yellow (builtin string replace s '' $i) $normal);
+                  or  true
+              end | command column -t -s,
+      end
 
 for f in (command ls -1 $MY_DIR/conf.d/*.fish | command shuf)
   builtin source $f;
