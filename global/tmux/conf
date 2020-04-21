@@ -47,7 +47,7 @@ set -g detach-on-destroy on
 # colored pane-indicator
 set -g display-panes-active-colour brightgreen
 set -g display-panes-colour brightwhite
-set -g pane-border-fg brightwhite
+#set -g pane-border-fg brightwhite
 set -g pane-border-format '#P: #T'
 
 # set indicator refresh
@@ -66,10 +66,10 @@ bind f command-prompt -p "(find-window)" "find-window -T '%%'"
 bind r source-file /etc/tmux/conf \; display "/etc/tmux/conf reloaded."
 
 # format messages
-set -g message-attr bold
-set -g message-fg brightwhite
-set -g message-command-attr bold
-set -g message-command-fg brightwhite
+#set -g message-attr bold
+#set -g message-fg brightwhite
+#set -g message-command-attr bold
+#set -g message-command-fg brightwhite
 
 # activate status
 set -g status on
@@ -132,9 +132,3 @@ set-environment -g PATH "/usr/local/bin:/bin:/usr/bin"
 # run plugins
 run '/etc/tmux/tpm/tpm'
 
-# set up panes layout
-#split-window -h
-#send-keys -t "0:0.2" 'command htop' Enter
-#resize-pane -R 35
-#send-keys -t "0:0.1" 'command clear' Enter
-#select-pane -t "0:0.1"

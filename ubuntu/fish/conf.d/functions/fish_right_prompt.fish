@@ -14,8 +14,6 @@ function fish_right_prompt -d 'the right prompt'
     builtin set -q fish_private_mode;
       and builtin printf '📕';
       or  builtin printf '📖')
-  builtin test (command grep -v closed /proc/asound/card{0,1}/pcm*/sub0/status)
-    and builtin printf ' %s%s🕪 ' $bold $white
   builtin test (command xsel -ko ^/dev/null);
     and builtin printf ' %s%s📋' $bold $yellow
   builtin printf ' %s%s%s %s' $bold $cyan (
@@ -23,7 +21,7 @@ function fish_right_prompt -d 'the right prompt'
       builtin printf '👤'
     else if builtin test (sudo -nv ^/dev/null)
       builtin printf '🔓'
-    else if builtin test (command members root | builtin string match (command whoami)) -o (command members sudo | builtin string match (command whoami))
+    else if builtin test (command members sudo | builtin string match (command whoami))
       builtin printf '🔐'
     else
       builtin printf '🔒'

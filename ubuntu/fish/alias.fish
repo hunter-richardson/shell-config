@@ -1,10 +1,7 @@
 #!/usr/bin/fish
 
 alias albert 'command albert show'
-<<<<<<< HEAD
-=======
 alias column "command column -t"
->>>>>>> 9339244652bfd3bfadeada5d4952835fac5d11f5
 alias copy 'command xset -b --input'
 alias cp 'command scp -v'
 alias cpdir 'command scp -rv'
