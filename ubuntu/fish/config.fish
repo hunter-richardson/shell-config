@@ -61,7 +61,6 @@ builtin test (command whoami) != root;
   or  true
 
 builtin test (command whoami) != root;
-  and builtin command -v brew >/dev/null;
-  and builtin functions -q bax;
-  command brew shellenv
+  and builtin command -v /home/linuxbrew/.linuxbrew/bin/brew shellenv;
+  and builtin functions -q bax
 
