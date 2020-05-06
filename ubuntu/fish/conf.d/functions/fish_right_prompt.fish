@@ -14,7 +14,7 @@ function fish_right_prompt -d 'the right prompt'
     builtin set -q fish_private_mode;
       and builtin printf '📕';
       or  builtin printf '📖')
-  builtin test -n (command xsel -ko ^/dev/null);
+  command xsel -bko | builtin string trim | builtin string length;
     and builtin printf ' %s%s📋' $bold $yellow
   builtin printf ' %s%s%s %s' $bold $cyan (
     if builtin test (command whoami) = root -o (builtin string match ~ (command pwd))
