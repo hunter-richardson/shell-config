@@ -43,15 +43,9 @@ function fish_prompt -d 'the left prompt'
     builtin printf '%s%u : %s\a ⋜ *)))>∈ ' $red $last_status (strerror $last_status)
   else
     builtin printf '%s%s :D' $cyan (
-      if builtin test (date '+%p' -d "now - 6 hour") = AM
-        builtin printf '∋ <(((*> '
-        builtin test ! (command gsettings get org.gnome.settings-daemon.plugins.color night-light-enabled) = false;
-          and command gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled false
-      else
-        builtin printf '<*)))>∈ '
-        builtin test ! (command gsettings get org.gnome.settings-daemon.plugins.color night-light-enabled) = true;
-          and command gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
-      end)
+      builtin test (date '+%p' -d "now - 6 hour") = AM;
+        and builtin printf '∋ <(((*> ';
+        or  builtin printf '<*)))>∈ ')
   end
   if builtin test ! (builtin string trim $SSH_CONNECTION)
     builtin test (command nmcli networking connectivity check) = full;
