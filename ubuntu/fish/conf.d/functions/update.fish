@@ -4,16 +4,16 @@ function update -d 'automate software updates from installed SPMs'
   function __update_apt
     if builtin string match -iqr -- '--quiet' $argv;
           sudo apt-fast -qq update;
-      and sudo apt-fast -qq autoclean --purge -y;
-      and sudo apt-fast -qq autoremove --purge -y;
+      and sudo apt-fast -qq autoclean -y;
+      and sudo apt-fast -qq autoremove -y;
       and sudo apt-fast -qq install (command apt-fast list --upgradable | command cut -d/ -f1 | command shuf) --only-upgrade -y;
       and sudo apt-fast -qq install -fy;
       and sudo apt-fast -qq clean -y
     else
           sudo apt-fast update;
-      and sudo apt-fast autoclean --purge -y;
-      and sudo apt-fast autoremove --purge -y;
-      and sudo apt-fast install (command apt-fast list --upgradable | command cut -d/ -f1 | command shuf) --only-upgrade -y;
+      and sudo apt-fast autoclean -y;
+      and sudo apt-fast autoremove -y;
+      and sudo apt-fast upgrade -y;
       and sudo apt-fast install -fy;
       and sudo apt-fast clean -y
     end
@@ -26,10 +26,10 @@ function update -d 'automate software updates from installed SPMs'
     builtin string match -iqr -- '--quiet' $argv;
       and builtin set -l verbosity '-q';
       or  builtin set -l verbosity '-v';
-    command brew update $verbosity;
-      and command brew cleanup
-    builtin test -n (command brew outdated);
-      and command brew upgrade $verbosity;
+    command /home/linuxbrew/.linuxbrew/bin/brew update $verbosity;
+      and /home/linuxbrew/.linuxbrew/bin/brew cleanup
+    builtin test -n (/home/linuxbrew/.linuxbrew/bin/brew outdated);
+      and /home/linuxbrew/.linuxbrew/bin/brew upgrade $verbosity;
       or  true
   end
 
@@ -105,11 +105,16 @@ function update -d 'automate software updates from installed SPMs'
     end
   end
 
-  builtin test ! (command members sudo | builtin string match (command whoami)) -a ! (command members root | builtin string match (command whoami));
-    and builtin printf 'You are not a sudoer!'
-    and return 121
+  if builtin test (command whoami) = root
+  else if builtin test (command members sudo | builtin string match (command whoami))
+  else
+    builtin printf 'You are not a sudoer!';
+      and functions -e __update_{apt,brew,fundle,gem,git,pip,snap}
+      and builtin return 121
+  end
   builtin test (command nmcli networking connectivity check) != full;
     and builtin printf 'Unable to establish Internet connection!';
+    and functions -e __update_{apt,brew,fundle,gem,git,pip,snap}
     and return 0
   builtin string match -iqr -- '--?q(uiet)?' $argv;
     and builtin set -l quiet -- '--quiet';
