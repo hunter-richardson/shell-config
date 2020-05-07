@@ -49,7 +49,7 @@ function fish_prompt -d 'the left prompt'
   end
   if builtin test ! (builtin string trim $SSH_CONNECTION)
     builtin test (command nmcli networking connectivity check) = full;
-      and builtin printf ' %s%s≪  %s ≫ ' $bold $green (command nmcli connection show | command head -2 | command tail -1 | builtin string split ' ' -m1)[1];
+      and builtin printf ' %s%s≪ %s ≫ ' $bold $green (command nmcli connection show | command head -2 | command tail -1 | builtin string split ' ' -m1)[1];
       or  builtin printf '%s❮ ❔❯ ' $red
   end
   builtin test $SHLVL -gt 1;
