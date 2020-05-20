@@ -8,14 +8,18 @@ function update -d 'automate software updates from installed SPMs'
       and sudo apt-fast -qq autoremove -y;
       and sudo apt-fast -qq install (command apt-fast list --upgradable | command cut -d/ -f1 | command shuf) --only-upgrade -y;
       and sudo apt-fast -qq install -fy;
-      and sudo apt-fast -qq clean -y
+      and sudo apt-fast -qq clean -y;
+      and builtin test -n (command apt-fast list --installed | command grep upgradeable);
+      and sudo apt-fast reinstall -y (command apt-fast list --installed | command grep upgradeable | command cut -d/ -f1)
     else
           sudo apt-fast update;
       and sudo apt-fast autoclean -y;
       and sudo apt-fast autoremove -y;
       and sudo apt-fast upgrade -y;
       and sudo apt-fast install -fy;
-      and sudo apt-fast clean -y
+      and sudo apt-fast clean -y;
+      and builtin test -n (command apt-fast list --installed | command grep upgradeable);
+      and sudo apt-fast reinstall -y (command apt-fast list --installed | command grep upgradeable | command cut -d/ -f1)
     end
   end
 
