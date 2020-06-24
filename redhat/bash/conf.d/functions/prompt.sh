@@ -7,7 +7,7 @@ function prompt {
     branch=$(command git symbolic-ref --short HEAD)
     cdup=$(command expr $(command git rev-parse --show-cdup | command wc -c) / 3)
     subdir=$(command pwd | command cut -d/ -f$(command expr $(command pwd | command tr / '\n' | command wc -l) - $cdup)-)
-    commit=$(command git rev-parse --short HEAD)
+    commit=$(command git rev-parse --long HEAD | command grep -v long)
     changes=$(command git status --porcelain | command wc -l)
     [ $cdup -le 0 ] && cdup=''
     colored_repo="\[\033[1;36m\]$repo/$subdir\[\033[1;37m\]"
