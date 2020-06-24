@@ -4,15 +4,16 @@ function rm {
   [ $# -eq 0 ] && builtin return 0 || builtin local retval=0
   for i in $*
   do
-    if [ -d "$i/.git/objects" -a -w $1/.git/objects ]
+    if [ -d "$i/.git/objects" ] && [ -w $i/.git/objects ]
     then
-      command shred -fuvxz --remove=unlink --iterations=1 $1/.git/objects/*/*
-      command rm -dv $i/.git/objects/* $i/.git/objects && eval $_ $1
-    elif [ -d $1 -a -w $1 ]
+      command shred -fuvxz --remove=unlink --iterations=1 $i/.git/objects/*/*
+      command rm -dv $i/.git/objects/* $i/.git/objects
+      rm $0 $i
+    elif [ -d "$i" ] && [ -w $i ]
     then
-      eval $_ $i/*
+      [ -a "$i/*" ] && rm $0 $i/*
       command rm -dv $i
-    elif [ -f $i -a -w $i -a "$(command stat --printf="%U" $i)" == "$(command whoami)" ]
+    elif [ -f "$i" ] && [ -w $i ] && [ "$(command stat --printf="%U" $i)" == "$(command whoami)" ]
     then
       command shred -fuvxz --remove=unlink --iterations=1 $i
     elif [ -w $i ]
