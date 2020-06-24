@@ -16,7 +16,7 @@ function fish_prompt -d 'the left prompt'
         $bold $blue (builtin count (command git ls-files --other --exclude-standard)) \
             $yellow (builtin count (command git status --porcelain | builtin string match -v '?')) $nobold $white $bold;
       or  builtin printf ' %s✔ ' $green
-    if builtin set -l commit (command git rev-parse --short HEAD)
+    if builtin set -l commit (command git rev-parse --long HEAD | command grep -v long)
       if builtin test (sudo -nv ^/dev/null)
         builtin set -l tally (sudo git fetch --all; command git rev-list --count --left-right @{u}...HEAD)
         builtin set -l upstr ''
