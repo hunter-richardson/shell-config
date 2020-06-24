@@ -12,5 +12,5 @@ function man {
   LESS='-R -s'
 
   [ -z "$MANPATH" ] && MANPATH=$(builtin command -v manpath) || MANPATH=$(builtin printf '%s' $MANPATH | command tr ' ' ':')
-  command man $argv
+  command man $*
 }
