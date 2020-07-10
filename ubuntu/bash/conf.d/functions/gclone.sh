@@ -4,7 +4,7 @@ function gclone() {
   if [ $(command members sudo | command grep $(command whoami)) ] || [ $(command members root | command grep $(command whoami)) ]
   then
     [ $# -eq 0 ] && builtin "No repository selected!" && return 2
-    for i in $@
+    for i
     do
       IFS='/' builtin read -ra URL_PARTS <<< $i
       repo=$(builtin echo ${URL_PARTS[-1]} | command cut -d'.' -f1)

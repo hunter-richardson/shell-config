@@ -3,7 +3,7 @@
 function errcode {
   if [ -z "$1" ]
   then
-    for errno in (seq 1 121)
+    for errno in $(seq 1 121)
     do
       eval $_ $errno
     done
