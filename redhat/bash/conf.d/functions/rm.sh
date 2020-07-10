@@ -2,7 +2,7 @@
 
 function rm {
   [ $# -eq 0 ] && builtin return 0 || builtin local retval=0
-  for i in $*
+  for i
   do
     if [ -a "$i" ]
     then
