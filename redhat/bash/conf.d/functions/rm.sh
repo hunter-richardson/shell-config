@@ -16,12 +16,12 @@ function rm {
         [ $? -eq 0 ] && command rm -drv $i
       elif [ -f $i ]
       then
-        command shred -fuvxz --remove=unlink --iterations=1 $i
+        command chmod -c u+w $i && command shred -fuvxz --remove=unlink --iterations=1 $i
       else
-        command rm -fv $i
+        command chmod -c u+w $i && command rm -fv $i
       fi
     else
-      builtin printf '%s: No such file or directory' $i
+      builtin printf '%s: No such file or directory' "$i"
     fi
   done
 }
