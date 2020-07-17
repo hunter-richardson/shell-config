@@ -1,6 +1,7 @@
 #!/usr/bin/fish
 
 function fish_prompt -d 'the left prompt'
+  builtin printf '\n'
   builtin set -l last_status $status
   builtin printf '%s%s┌[' $bold $white
   if builtin test (command git rev-parse --is-inside-work-tree ^/dev/null)

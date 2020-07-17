@@ -1,6 +1,7 @@
 #!/bin/bash
 
 function prompt {
+  builtin printf '\n'
   status=$?
   user="\[\033[1;36m\]\u\[\033[1;37m\]"
   dirs="\[\033[1;33m\]$(builtin dirs)\[\033[1;37m\]"

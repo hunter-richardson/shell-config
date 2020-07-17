@@ -1,6 +1,7 @@
 #!/bin/bash
 
 function prompt {
+  builtin printf '\n'
   if [ "$(command git rev-parse --is-inside-work-tree 2>/dev/null)" == "true" ]
   then
     repo=$(command git config --get remote.origin.url | command awk -F/ '{print $(NF-1)}' | command tr ' ' / | command cut -d. -f1)
