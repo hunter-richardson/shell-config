@@ -9,16 +9,13 @@ function rm {
       command chmod -cR u+w $i
       if [ -d $i ]
       then
-        for f in $(command find $i -type f)
-        do
-          command shred -fuvxz --remove=unlink --iterations=1 $f
-        done
+        command shred -fuvxz --remove=unlink --iterations=1 $(command find $i -type f)
         [ $? -eq 0 ] && command rm -drv $i
       elif [ -f $i ]
       then
-        command chmod -c u+w $i && command shred -fuvxz --remove=unlink --iterations=1 $i
+        command shred -fuvxz --remove=unlink --iterations=1 $i
       else
-        command chmod -c u+w $i && command rm -fv $i
+        command rm -fv $i
       fi
     else
       builtin printf '%s: No such file or directory' "$i"
