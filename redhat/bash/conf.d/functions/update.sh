@@ -5,7 +5,12 @@ update() {
   do
     builtin printf '%s\n' $i
     builtin cd $i/..
-    command git pull --verbose
-    builtin cd -
+    if [[ $1 == "--quiet" || $1 == "-q" ]]
+    then
+      command git pull
+    else
+      command git pull --verbose
+    fi
+    builtin cd - >/dev/null
   done
 }
