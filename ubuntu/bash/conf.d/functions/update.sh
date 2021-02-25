@@ -44,7 +44,7 @@ function update {
       current=$(command git -C $i rev-parse --short HEAD)
       url=$(command git -C $i config --get remote.origin.url)
       builtin printf 'Updating %s ...\n' $url
-      [[ $@ != *"--quiet"* ]] && [ ! $(command git -C $(command dirname $i) diff-index --quiet HEAD) ] && builtin printf '%sLocal Changes:%s\n' $(format red) $(format normal) && builtin printf '\t%s\n' (command git -C (command dirname $i) status --porcelain) && sudo git -C $(command dirname $i) pull --verbose || sudo git -C $(command dirname $i) pull
+      [[ $@ != *"--quiet"* ]] && [ ! $(command git -C $(command dirname $i) diff-index --quiet HEAD) ] && builtin printf '%sLocal Changes:%s\n' $(format red) $(format normal) && builtin printf '\t%s\n' $(command git -C $(command dirname $i) status --porcelain) && sudo git -C $(command dirname $i) pull --verbose || sudo git -C $(command dirname $i) pull
       if [ $current != $(command git -C $i rev-parse --short HEAD) ]
       then
         [[ $i =~ */hunter-richardson/shell-config/.git ] && builtin source /etc/bash/config.sh && command tmux source /etc/tmux/conf || [[ $i =~ */tmux-plugins/tpm/.git ]] && command tmux source /etc/tmux/conf
