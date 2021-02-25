@@ -76,7 +76,7 @@ function update -d 'automate software updates from installed SPMs'
         and builtin test $verbosity = '--verbose';
         and command git -C (command dirname $i) status --porcelain >/dev/null | builtin string trim -q;
         and builtin printf '%sLocal Changes:%s\n' $red $normal;
-        and builtin printf '\t%s\n' (command git -C (command dirname $i) status --porcelain)
+        and builtin printf '\t%s\n' (command git -C (command dirname $i) status --porcelain | builtin string replace ' ' :)
       sudo git -C (command dirname $i) pull $verbosity;
         and if builtin test $current != (command git -C $i rev-parse --short HEAD)
               if builtin string match -eq '$ME:shell-config' $iden
