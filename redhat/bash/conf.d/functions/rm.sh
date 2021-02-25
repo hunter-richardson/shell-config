@@ -9,7 +9,15 @@ function rm {
       command chmod -cR u+w $i
       if [ -d $i ]
       then
-        command shred -fuvxz --remove=unlink --iterations=1 $(command find $i -type f) && command rm -drv $i
+        command shred -fuvxz --remove=unlink --iterations=1 $(command find $i -type f)
+        if [ $? -ne 0 ]
+        then
+          for f in $(command find $i -type f)
+          do
+            command shred -fuxvz --remove=unlink --iterations=1 $f
+          done
+        fi
+        command rm -drv $i
       elif [ -f $i ]
       then
         command shred -fuvxz --remove=unlink --iterations=1 $i
